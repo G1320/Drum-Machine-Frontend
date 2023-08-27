@@ -1,0 +1,21 @@
+.container-404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  background-color: #111111;
+}
+
+.header-404 {
+  color: #f44336;
+}
+
+.subheader-404 {
+  margin-bottom: 1rem;
+}
+
+.paragraph-404 {
+  margin-bottom: 2rem;
+}
