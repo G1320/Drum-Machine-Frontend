@@ -6,6 +6,7 @@ import Read from './components/read';
 import Update from './components/update';
 import Show from './components/show';
 import FourOhFour from './components/404';
+import DrumMachine from './components/drum-machine';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/create" element={<Create />} />
           <Route path="/read" element={<Read />} />
           <Route path="/update" element={<Update />} />
+          <Route path="/drum" element={<DrumMachine />} />
           <Route path="/pages/:pageName" element={<Show />} />
           <Route path="*" element={<FourOhFour />} /> {/* Catch-all route for 404 */}
         </Routes>

@@ -1,0 +1,30 @@
+.drum-table {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.drum-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100px;
+  color: black;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  transition: background-color 0.2s;
+}
+
+.drum-cell.active {
+  background-color: #3f51b5;
+}
+
+.drum-cell.inactive {
+  background-color: #f0f0f0;
+}
