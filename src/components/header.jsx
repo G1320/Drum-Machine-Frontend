@@ -1,4 +1,3 @@
-// Header.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/header.css';
@@ -6,7 +5,7 @@ import '../styles/header.css';
 function Header() {
   return (
     <header>
-      <h1>My App</h1>
+      <h1>Drum Machine App</h1>
       <nav>
         <div className="dropdown">
           <button className="dropbtn">Pages</button>

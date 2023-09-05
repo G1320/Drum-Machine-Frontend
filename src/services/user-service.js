@@ -1,11 +1,11 @@
-import axios from 'axios';
+import { httpService } from '../services/http-service'; // Replace 'path-to-your-httpService-file' with the actual path to the httpService file
 
-const baseURL = 'http://localhost:3000/api/users';
+const userEndpoint = 'api/users';
 
 export const createUser = async (userData) => {
   try {
-    const res = await axios.post(baseURL, userData);
-    return res.data;
+    const res = await httpService.post(userEndpoint, userData);
+    return res;
   } catch (error) {
     throw error;
   }
@@ -13,20 +13,20 @@ export const createUser = async (userData) => {
 
 export const getUsers = async () => {
   try {
-    const res = await axios.get(baseURL);
-    return res.data;
+    const res = await httpService.get(userEndpoint);
+    return res;
   } catch (error) {
     throw error;
   }
 };
 
 export const updateUser = async (id, data) => {
-  return await axios.put(`${baseURL}/${id}`, data);
+  return await httpService.put(`${userEndpoint}/${id}`, data);
 };
 
 export const deleteUser = async (id) => {
   try {
-    return await axios.delete(`${baseURL}/${id}`);
+    return await httpService.delete(`${userEndpoint}/${id}`);
   } catch (error) {
     throw error;
   }

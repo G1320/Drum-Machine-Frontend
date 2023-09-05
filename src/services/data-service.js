@@ -1,9 +1,10 @@
-import axios from 'axios';
-
+// import axios from 'axios';
+import { httpService } from './http-service';
+const pageDataEndpoint = 'api/pageData';
 export const getPageData = async (pageName) => {
   try {
-    const response = await axios.get(`/api/pageData/${pageName}`);
-    return response.data;
+    const pageData = await httpService.get(`${pageDataEndpoint}/${pageName}`);
+    return pageData;
   } catch (error) {
     console.error(error);
     throw error;

@@ -1,10 +1,9 @@
-/* Header.css */
 header {
-  position: fixed; /* Stick to the top */
+  position: fixed;
   top: 0;
-  left: 0; /* Make sure it spans the full width */
+  left: 0;
   right: 0;
-  z-index: 100; /* Ensure header is always on top */
+  z-index: 100;
   width: 100%;
   padding: 10px;
   background-color: #333;
@@ -13,10 +12,10 @@ header {
 }
 
 .dropdown {
-  position: absolute; /* Absolute positioning within header */
-  left: 10px; /* Slight padding from the left */
-  top: 50%; /* Center vertically */
-  transform: translateY(-50%); /* True vertical centering */
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .dropdown-content {
@@ -52,7 +51,6 @@ header {
   border: none;
 }
 
-/* Responsive Design */
 @media screen and (max-width: 768px) {
   header {
     padding: 5px; /* Reduce padding on smaller screens */
