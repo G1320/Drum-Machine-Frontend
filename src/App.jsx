@@ -1,6 +1,6 @@
 import './styles/App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-
+import Header from './components/header';
 import Create from './components/create';
 import Read from './components/read';
 import Update from './components/update';
@@ -15,6 +15,7 @@ function App() {
   return (
     <div>
       <Router>
+        <Header />
         <Routes>
           <Route path="/" element={<Navigate to="/create" />} />
           <Route path="/create" element={<Create />} />
