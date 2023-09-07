@@ -2,14 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Button, TextField, Box, FormGroup } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { updateUser } from '../services/user-service';
+// import showErrorAlert from '../helpers/showErrorAlert';
+import { useDispatch } from 'react-redux';
+import { setError } from '../slices/errorSlice'; // Adjust the path to your slice file
 
 import '../styles/create.css';
 
 export default function Update() {
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [password, setPassword] = useState('');
+
   const [avatar, setAvatar] = useState('');
   const [role, setRole] = useState('');
   const [id, setID] = useState(null);
@@ -25,12 +32,25 @@ export default function Update() {
     setRole(localStorage.getItem('Role'));
   }, []);
 
+  const handleError = (error) => {
+    dispatch(setError(error.response?.data || 'Something went wrong!'));
+  };
+
   const updateData = async () => {
     try {
-      const response = await updateUser(id, { username, email, firstName, lastName, avatar, role });
+      const response = await updateUser(id, {
+        username,
+        email,
+        firstName,
+        lastName,
+        avatar,
+        role,
+        password,
+      });
       console.log('response: ', response);
       navigate('/read');
     } catch (error) {
+      handleError(error);
       console.error(error);
     }
   };
@@ -76,6 +96,16 @@ export default function Update() {
           variant="outlined"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+        />
+      </FormGroup>
+      <FormGroup>
+        <TextField
+          label="Password"
+          name="password"
+          variant="outlined"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
       </FormGroup>
       <FormGroup>

@@ -10,10 +10,13 @@ import DrumMachine from './components/drum-Machine';
 import Synth from './components/synth';
 import Sequencer from './components/sequencer';
 import Counter from './components/counter';
+import { Provider } from 'react-redux';
+import ErrorAlert from './components/error-alert';
+import store from './store/store';
 
 function App() {
   return (
-    <div>
+    <Provider store={store}>
       <Router>
         <Header />
         <Routes>
@@ -29,7 +32,8 @@ function App() {
         </Routes>
       </Router>
       <Counter />
-    </div>
+      <ErrorAlert />
+    </Provider>
   );
 }
 

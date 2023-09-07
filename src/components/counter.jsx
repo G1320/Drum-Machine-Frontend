@@ -26,7 +26,7 @@ class Counter extends React.Component {
   render() {
     return (
       <div style={{ marginTop: '20px', textAlign: 'center' }}>
-        <p>Counter: {this.state.counter}</p>
+        <p>Counter: {this.state.counter.counter}</p>
         <button onClick={this.incrementCounter}>Increment Counter</button>
       </div>
     );

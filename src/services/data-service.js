@@ -1,4 +1,3 @@
-// import axios from 'axios';
 import { httpService } from './http-service';
 const pageDataEndpoint = 'api/pageData';
 export const getPageData = async (pageName) => {

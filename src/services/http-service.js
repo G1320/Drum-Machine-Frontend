@@ -1,6 +1,4 @@
 import Axios from 'axios';
-// import { router } from '@/router'
-
 const BASE_URL = '//localhost:3000/';
 
 const axios = Axios.create({
