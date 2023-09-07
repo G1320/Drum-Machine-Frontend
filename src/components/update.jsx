@@ -33,7 +33,7 @@ export default function Update() {
   }, []);
 
   const handleError = (error) => {
-    dispatch(setError(error.response?.data || 'Something went wrong!'));
+    dispatch(setError(error?.response?.data || 'Something went wrong!'));
   };
 
   const updateData = async () => {

@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, FormControlLabel, Checkbox, Box, FormGroup } from '@mui/material';
 import { createUser } from '../services/user-service';
+import { useDispatch } from 'react-redux';
+import { setError } from '../slices/errorSlice';
 import '../styles/create.css';
 
 export default function Create() {
+  const dispatch = useDispatch();
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,6 +17,10 @@ export default function Create() {
   const [terms, setTerms] = useState(false);
 
   let navigate = useNavigate();
+
+  const handleError = (error) => {
+    dispatch(setError(error?.response?.data || 'Something went wrong!'));
+  };
 
   const postData = async () => {
     try {
@@ -26,6 +34,7 @@ export default function Create() {
       });
       navigate('/read');
     } catch (error) {
+      handleError(error);
       console.error(error);
     }
   };
