@@ -9,7 +9,7 @@ import FourOhFour from './components/404';
 import DrumMachine from './components/drum-Machine';
 import Synth from './components/synth';
 import Sequencer from './components/sequencer';
-import Counter from './components/counter';
+import CreateKit from './components/create-kit';
 import { Provider } from 'react-redux';
 import ErrorAlert from './components/error-alert';
 import store from './store/store';
@@ -31,7 +31,7 @@ function App() {
           <Route path="*" element={<FourOhFour />} /> {/* Catch-all route for 404 */}
         </Routes>
       </Router>
-      <Counter />
+      <CreateKit />
       <ErrorAlert />
     </Provider>
   );

@@ -17,7 +17,7 @@ const Cell = ({ pad, isActive, toggleActive, audioRef }) => {
         className="clip"
         src={pad.src}
         preload="auto"
-        onError={() => console.error(`Error loading audio for ${pad.text}`)}
+        onError={(e) => console.error(`Error loading audio for ${pad.text}`, e)}
       ></audio>
     </div>
   );

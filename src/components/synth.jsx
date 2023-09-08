@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as Tone from 'tone';
 import SynthKeys from './synthKeys';
-import StartAudioContext from './StartAudioContext';
+// import StartAudioContext from './StartAudioContext';
 
 const Synth = () => {
   const synth = new Tone.Synth({
@@ -23,7 +23,7 @@ const Synth = () => {
 
   return (
     <div>
-      <StartAudioContext />
+      {/* <StartAudioContext /> */}
       <SynthKeys playNote={playNote} stopNote={stopNote} />
     </div>
   );

@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/header.css';
+import StartMicrophoneAccess from './start-mic-access';
 
 function Header() {
   return (
     <header>
       <h1>Drum Machine App</h1>
+      <StartMicrophoneAccess />
       <nav>
         <div className="dropdown">
           <button className="dropbtn">Pages</button>

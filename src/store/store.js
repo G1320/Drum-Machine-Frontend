@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterReducer from '../reducers/index';
-import errorReducer from '../slices/errorSlice'; // Adjust the path to your new slice file
+import errorReducer from '../slices/errorSlice';
 
 const store = configureStore({
   reducer: {

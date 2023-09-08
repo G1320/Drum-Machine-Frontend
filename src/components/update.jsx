@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, TextField, Box, FormGroup } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { updateUser } from '../services/user-service';
-// import showErrorAlert from '../helpers/showErrorAlert';
 import { useDispatch } from 'react-redux';
-import { setError } from '../slices/errorSlice'; // Adjust the path to your slice file
+import { setError } from '../slices/errorSlice';
 
 import '../styles/create.css';
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Cell from './drum-cell';
 import { playAudio } from '../services/sound-service';
 import '../styles/drum-machine.css';
+
 import drumPadsConfig from '../config/drum-machineConfig';
 
 const DrumMachine = () => {

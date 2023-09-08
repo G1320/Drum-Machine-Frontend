@@ -1,14 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Tone from 'tone';
 import Controls from './sequencer-controls';
 
 function SequencerTrack({ track, setTrackState }) {
-  const sampler = new Tone.Sampler({
-    urls: {
-      C4: track.soundURL,
-    },
-    envelope: track.envelope,
-  }).toDestination();
+  const [sampler, setSampler] = useState(null);
+
+  useEffect(() => {
+    setSampler(
+      new Tone.Sampler({
+        urls: {
+          C4: track.soundURL,
+        },
+        envelope: track.envelope,
+      }).toDestination()
+    );
+  }, [track]);
 
   return (
     <div>
