@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Box, FormGroup } from '@mui/material';
 import { createKit } from '../services/kit-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../slices/errorSlice';
+import { setSuccess } from '../slices/successSlice';
 import '../styles/create.css';
 
 export default function CreateKit() {
@@ -13,7 +14,7 @@ export default function CreateKit() {
   const [description, setDescription] = useState('');
   const [sounds, setSounds] = useState([{ name: '', src: '', keyCode: '' }]);
 
-  // let navigate = useNavigate();
+  let navigate = useNavigate();
 
   const handleError = (error) => {
     dispatch(setError(error?.response?.data || 'Something went wrong!'));
@@ -22,7 +23,8 @@ export default function CreateKit() {
   const addKit = async (kit) => {
     try {
       await createKit(kit);
-      // navigate(`/kits/${kitName}`);
+      dispatch(setSuccess('Kit created successfully!'));
+      navigate(`/pages/${kit.name}`);
     } catch (error) {
       handleError(error);
       console.error(error);
@@ -60,7 +62,6 @@ export default function CreateKit() {
           onChange={(e) => setDescription(e.target.value)}
         />
       </FormGroup>
-      {/* Add other fields for each property in the sound objects in the sounds array here */}
       <FormGroup>
         <Button variant="contained" color="primary" type="submit">
           Submit

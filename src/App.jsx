@@ -12,6 +12,8 @@ import Sequencer from './components/sequencer';
 import CreateKit from './components/create-kit';
 import { Provider } from 'react-redux';
 import ErrorAlert from './components/error-alert';
+import SuccessAlert from './components/success-alert';
+
 import store from './store/store';
 
 function App() {
@@ -27,12 +29,13 @@ function App() {
           <Route path="/drum" element={<DrumMachine />} />
           <Route path="/synth" element={<Synth />} />
           <Route path="/sequencer" element={<Sequencer />} />
+          <Route path="/makekit" element={<CreateKit />} />
           <Route path="/pages/:pageName" element={<Show />} />
           <Route path="*" element={<FourOhFour />} /> {/* Catch-all route for 404 */}
         </Routes>
       </Router>
-      <CreateKit />
       <ErrorAlert />
+      <SuccessAlert />
     </Provider>
   );
 }

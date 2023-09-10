@@ -1,4 +1,4 @@
-import { httpService } from '../services/http-service'; // Replace 'path-to-your-httpService-file' with the actual path to the httpService file
+import { httpService } from '../services/http-service';
 
 const userEndpoint = 'api/users';
 
