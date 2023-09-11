@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/header.css';
 import StartMicrophoneAccess from './start-mic-access';
+import KitDropdown from '../components/kit-dropdown';
 
 function Header() {
   return (
@@ -21,6 +22,7 @@ function Header() {
           </div>
         </div>
       </nav>
+      <KitDropdown />
     </header>
   );
 }

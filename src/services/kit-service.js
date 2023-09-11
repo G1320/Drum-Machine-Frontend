@@ -11,9 +11,9 @@ export const createKit = async (kitData) => {
   }
 };
 
-export const getKits = async () => {
+export const getKits = async (params = {}) => {
   try {
-    const res = await httpService.get(kitEndpoint);
+    const res = await httpService.get(kitEndpoint, params);
     return res;
   } catch (error) {
     throw error;

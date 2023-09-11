@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setError } from '../slices/errorSlice';
 import { setSuccess } from '../slices/successSlice';
 import { TextField, Button, Box, FormGroup } from '@mui/material';
+import CreateKit from './create-kit';
 
 function Show() {
   const dispatch = useDispatch();
@@ -97,6 +98,7 @@ function Show() {
       <Button variant="contained" color="secondary" onClick={() => setIsEditing(true)}>
         Edit
       </Button>
+      <CreateKit />
     </div>
   );
 }
