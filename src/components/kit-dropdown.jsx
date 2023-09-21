@@ -6,6 +6,8 @@ import { setError } from '../slices/errorSlice';
 
 function KitDropdown() {
   const [kits, setKits] = useState([]);
+  const [selectedKit, setSelectedKit] = useState('');
+
   const [filter, setFilter] = useState('');
   const [sortBy, setSortBy] = useState('');
   const [order, setOrder] = useState('asc');
@@ -49,10 +51,11 @@ function KitDropdown() {
 
   const handleChange = (e) => {
     const selectedKitId = e.target.value;
+    setSelectedKit(selectedKitId);
     if (selectedKitId) {
       const selectedKit = kits.find((kit) => kit._id === selectedKitId);
       if (selectedKit) {
-        navigate(`/pages/${selectedKit.name}`);
+        navigate(`/pages/id/${selectedKit._id}`);
       }
     }
   };
@@ -84,7 +87,10 @@ function KitDropdown() {
       <div>
         <label>
           Kits:
-          <select onChange={handleChange}>
+          <select value={selectedKit} onChange={handleChange}>
+            <option value="" disabled>
+              Select a kit
+            </option>
             {kits.map((kit) => (
               <option key={kit._id} value={kit._id}>
                 {kit.name}

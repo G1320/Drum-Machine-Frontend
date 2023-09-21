@@ -1,8 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Tone from 'tone';
 
 function StartMicrophoneAccess() {
   const [accessGranted, setAccessGranted] = useState(null);
+
+  useEffect(() => {
+    const checkMicrophoneAccess = async () => {
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        console.log('Microphone access granted');
+        setAccessGranted(true);
+      } catch (error) {
+        console.log('Microphone access not granted');
+        setAccessGranted(false);
+      }
+    };
+
+    checkMicrophoneAccess();
+  }, []);
 
   const requestMicrophoneAccess = async () => {
     try {
@@ -23,8 +38,10 @@ function StartMicrophoneAccess() {
 
   return (
     <div>
-      <button onClick={requestMicrophoneAccess}>Request Microphone Access</button>
-      {accessGranted === true && <p>Access granted</p>}
+      {accessGranted === false && (
+        <button onClick={requestMicrophoneAccess}>Request Microphone Access</button>
+      )}
+      {accessGranted === true && <p></p>}
       {accessGranted === false && <p>Access denied</p>}
     </div>
   );

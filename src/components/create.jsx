@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, FormControlLabel, Checkbox, Box, FormGroup } from '@mui/material';
-import { createUser } from '../services/user-service';
+import { register } from '../services/auth-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../slices/errorSlice';
 import '../styles/create.css';
@@ -24,7 +24,7 @@ export default function Create() {
 
   const postData = async () => {
     try {
-      await createUser({
+      await register({
         username,
         email,
         password,

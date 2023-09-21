@@ -1,4 +1,4 @@
-import { httpService } from '../services/http-service';
+import { httpService } from './http-service';
 
 const userEndpoint = 'api/users';
 
