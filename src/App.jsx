@@ -4,6 +4,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useDispatch } from 'react-redux';
 
 import Cookies from 'js-cookie';
+import { Provider } from 'react-redux';
+import { useSelector } from 'react-redux';
+
 import About from './components/about';
 // import NotAvailable from './components/not-available';
 import Header from './components/header';
@@ -18,30 +21,20 @@ import Sequencer from './components/sequencer';
 import CreateKit from './components/create-kit';
 import Login from './components/login';
 import User from './components/user';
-import { Provider } from 'react-redux';
 import ErrorAlert from './components/error-alert';
 import SuccessAlert from './components/success-alert';
-import { fetchUserDetails } from './services/auth-service'; // import the new function
+import { getUserDetails } from './services/auth-service';
 
 import store from './store/store';
 import { login as loginAction } from './slices/authSlice';
 
 function App() {
   // const dispatch = useDispatch();
-
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      const fetchDetails = async () => {
-        try {
-          const userDetails = await fetchUserDetails(token);
-          // dispatch(loginAction(userDetails));
-        } catch (error) {
-          console.error('Failed to fetch user details', error);
-          throw error;
-        }
-      };
-      fetchDetails();
+    const userJson = sessionStorage.getItem('user');
+    if (userJson) {
+      const user = JSON.parse(userJson);
+      // dispatch(loginAction(user));
     }
   }, []);
 
@@ -61,8 +54,8 @@ function App() {
           <Route path="/makekit" element={<CreateKit />} />
           <Route path="/pages/id/:pageId" element={<Show />} />
           <Route path="/pages/:pageName" element={<Show />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/user" element={<User />} />
+          <Route path="/login" element={<Login />} />
           <Route path="*" element={<FourOhFour />} />
         </Routes>
       </Router>

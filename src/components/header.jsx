@@ -1,11 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout as logoutService } from '../services/auth-service';
+import { logout as logoutAction } from '../slices/authSlice';
+
 import '../styles/header.css';
 import StartMicrophoneAccess from './start-mic-access';
 import KitDropdown from '../components/kit-dropdown';
 import AuthInfo from './authInfo';
 
 function Header() {
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await logoutService();
+      dispatch(logoutAction());
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  };
   return (
     <header>
       <h1>Drum Machine App</h1>
@@ -25,7 +39,8 @@ function Header() {
         </div>
       </nav>
       <KitDropdown />
-      <AuthInfo /> {/* Rendering the AuthInfo component */}
+      <AuthInfo />
+      <button onClick={handleLogout}>Logout</button>
     </header>
   );
 }

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 
 import { useDispatch } from 'react-redux';
-import { login as loginService } from '../services/auth-service'; // Import the login service with an alias
-import { login as loginAction } from '../slices/authSlice'; // Import the login action with an alias
-import { setError } from '../slices/errorSlice'; // Import the setError action
-import { setSuccess } from '../slices/successSlice'; // Import the setError action
+import { login as loginService } from '../services/auth-service';
+import { login as loginAction } from '../slices/authSlice';
+import { setError } from '../slices/errorSlice';
+import { setSuccess } from '../slices/successSlice';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -14,10 +14,15 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const data = await loginService({ username, password });
-      dispatch(loginAction({ username }));
+      const user = await loginService({ username, password });
+      if (!user) return dispatch(setError('Already logged in!'));
+
+      dispatch(loginAction(user));
       dispatch(setSuccess('Login successful!'));
-      Cookies.set('token', data.token, { expires: 7 }); // Token expires in 7 days
+      // sessionStorage.setItem('authToken', data.authToken);
+      // Cookies.set('authToken', data.authToken, { expires: 7 });
+      // sessionStorage.setItem('user', JSON.stringify(data.user));
+      // localStorage.setItem('user', JSON.stringify(data.user));
     } catch (error) {
       console.error('Login failed', error);
       dispatch(setError(error?.response?.data || 'Login failed. Please try again.'));

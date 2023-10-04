@@ -1,30 +1,57 @@
 import { httpService } from './http-service';
+import Cookies from 'js-cookie';
+
+const authEndpoint = 'api/auth';
+
+// export const getUserDetails = async () => {
+//   try {
+//     const response = await httpService.get(`${authEndpoint}/me`);
+//     return response.data;
+//   } catch (error) {
+//     console.error('Failed to get user details:', error);
+//     throw error;
+//   }
+// };
 
 export const register = async (userData) => {
   try {
-    return await httpService.post('api/auth/register', userData);
+    const response = await httpService.post(`${authEndpoint}/register`, userData);
+    const token = response.data.token;
+    sessionStorage.setItem('authToken', token);
+    return response;
   } catch (error) {
+    console.error('Registration failed', error);
+    if (error.response && error.response.status === 400) {
+      throw new Error(
+        'A user with that email or username already exists. Please choose a different email or username.'
+      );
+    }
     throw error;
   }
 };
 
 export const login = async (credentials) => {
   try {
-    return await httpService.post('api/auth/login', credentials);
+    const { user, authToken } = await httpService.post(`${authEndpoint}/login`, credentials);
+    if (user) {
+      sessionStorage.setItem('user', JSON.stringify(user));
+      Cookies.set('authToken', authToken, { expires: 7 });
+      return user;
+    }
   } catch (error) {
+    console.error('Login failed', error);
     throw error;
   }
 };
 
-export const fetchUserDetails = async (token) => {
+export const logout = async () => {
   try {
-    return await httpService.get('api/auth/me', null, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await httpService.post(`${authEndpoint}/logout`);
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('user');
+    Cookies.remove('authToken');
   } catch (error) {
-    console.error('Failed to fetch user details', error);
+    console.error('Logout failed', error);
     throw error;
   }
 };

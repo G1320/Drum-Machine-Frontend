@@ -20,6 +20,15 @@ export const getKits = async (params = {}) => {
   }
 };
 
+export const getUserKits = async (userId) => {
+  try {
+    const res = await httpService.get(`${kitEndpoint}/my-kits/${userId}`);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getKit = async (kitId) => {
   try {
     const res = await httpService.get(`${kitEndpoint}/${kitId}`);

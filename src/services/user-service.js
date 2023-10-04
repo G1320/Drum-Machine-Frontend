@@ -11,6 +11,15 @@ export const createUser = async (userData) => {
   }
 };
 
+// export const getUserById = async (id) => {
+//   try {
+//     const res = await httpService.get(`${userEndpoint}/${id}`);
+//     return res;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
 export const getUsers = async () => {
   try {
     const res = await httpService.get(userEndpoint);
