@@ -16,7 +16,7 @@ const authEndpoint = 'api/auth';
 export const register = async (userData) => {
   try {
     const response = await httpService.post(`${authEndpoint}/register`, userData);
-    const token = response.data.token;
+    const token = response.authToken;
     sessionStorage.setItem('authToken', token);
     return response;
   } catch (error) {
