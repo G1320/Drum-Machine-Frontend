@@ -40,3 +40,11 @@ export const deleteUser = async (id) => {
     throw error;
   }
 };
+
+export const getLocalUser = () => {
+  const user = sessionStorage.getItem('user');
+  if (user) {
+    return JSON.parse(user);
+  }
+  return null;
+};

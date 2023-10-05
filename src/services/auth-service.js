@@ -15,10 +15,10 @@ const authEndpoint = 'api/auth';
 
 export const register = async (userData) => {
   try {
-    const response = await httpService.post(`${authEndpoint}/register`, userData);
-    const token = response.authToken;
-    sessionStorage.setItem('authToken', token);
-    return response;
+    const { authToken, user } = await httpService.post(`${authEndpoint}/register`, userData);
+    sessionStorage.setItem('user', JSON.stringify(user));
+    Cookies.set('authToken', authToken, { expires: 7 });
+    return user;
   } catch (error) {
     console.error('Registration failed', error);
     if (error.response && error.response.status === 400) {
@@ -47,7 +47,6 @@ export const login = async (credentials) => {
 export const logout = async () => {
   try {
     await httpService.post(`${authEndpoint}/logout`);
-    sessionStorage.removeItem('authToken');
     sessionStorage.removeItem('user');
     Cookies.remove('authToken');
   } catch (error) {

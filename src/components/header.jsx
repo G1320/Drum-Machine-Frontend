@@ -7,7 +7,7 @@ import { logout as logoutAction } from '../slices/authSlice';
 import '../styles/header.css';
 import StartMicrophoneAccess from './start-mic-access';
 import KitDropdown from '../components/kit-dropdown';
-import AuthInfo from './authInfo';
+import UserInfo from './userInfo';
 
 function Header() {
   const dispatch = useDispatch();
@@ -39,7 +39,7 @@ function Header() {
         </div>
       </nav>
       <KitDropdown />
-      <AuthInfo />
+      <UserInfo />
       <button onClick={handleLogout}>Logout</button>
     </header>
   );

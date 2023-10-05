@@ -21,6 +21,7 @@ export const getKits = async (params = {}) => {
 };
 
 export const getUserKits = async (userId) => {
+  console.log('userId: ', userId);
   try {
     const res = await httpService.get(`${kitEndpoint}/my-kits/${userId}`);
     return res;

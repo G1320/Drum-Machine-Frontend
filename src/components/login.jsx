@@ -13,7 +13,7 @@ function Login() {
   const handleLogin = async () => {
     try {
       const user = await loginService({ username, password });
-      if (!user) return dispatch(setError('Already logged in!'));
+      if (!user) return;
 
       dispatch(loginAction(user));
       dispatch(setSuccess('Login successful!'));

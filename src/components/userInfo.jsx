@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getUserKits } from '../services/kit-service';
+import { getLocalUser } from '../services/user-service';
 
-function AuthInfo() {
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
+function UserInfo() {
+  const [user, setUser] = useState(null);
   const [kits, setKits] = useState([]);
 
   useEffect(() => {
-    setUser(JSON.parse(sessionStorage.getItem('user')));
-    if (user) {
-      // getUserKits(user.id)
-      //   .then((data) => setKits(data))
-      //   .catch((error) => console.log(error));
-    }
-  }, [user]);
+    const localUser = getLocalUser();
+    if (!localUser) return;
+
+    setUser(localUser);
+    getUserKits(localUser._id).then((userKits) => {
+      setKits(userKits);
+    });
+  }, []);
 
   if (user) {
     return (
@@ -35,4 +37,4 @@ function AuthInfo() {
   }
 }
 
-export default AuthInfo;
+export default UserInfo;

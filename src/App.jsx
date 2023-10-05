@@ -20,22 +20,24 @@ import Synth from './components/synth';
 import Sequencer from './components/sequencer';
 import CreateKit from './components/create-kit';
 import Login from './components/login';
-import User from './components/user';
+// import User from './components/user';
 import ErrorAlert from './components/error-alert';
 import SuccessAlert from './components/success-alert';
 import { getUserDetails } from './services/auth-service';
+import { getLocalUser } from './services/user-service';
 
 import store from './store/store';
 import { login as loginAction } from './slices/authSlice';
 
 function App() {
   // const dispatch = useDispatch();
+
   useEffect(() => {
-    const userJson = sessionStorage.getItem('user');
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      // dispatch(loginAction(user));
-    }
+    const user = getLocalUser();
+    console.log('user: ', user);
+    // if (user) {
+    //   // dispatch(loginAction(user));
+    // }
   }, []);
 
   return (
@@ -54,7 +56,7 @@ function App() {
           <Route path="/makekit" element={<CreateKit />} />
           <Route path="/pages/id/:pageId" element={<Show />} />
           <Route path="/pages/:pageName" element={<Show />} />
-          <Route path="/user" element={<User />} />
+          {/* <Route path="/user" element={<User />} /> */}
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<FourOhFour />} />
         </Routes>
