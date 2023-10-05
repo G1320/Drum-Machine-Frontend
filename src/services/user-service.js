@@ -11,14 +11,24 @@ export const createUser = async (userData) => {
   }
 };
 
-// export const getUserById = async (id) => {
-//   try {
-//     const res = await httpService.get(`${userEndpoint}/${id}`);
-//     return res;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
+export const getUserKits = async (userId) => {
+  console.log('userId: ', userId);
+  try {
+    const res = await httpService.get(`${userEndpoint}/my-kits/${userId}`);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const addKitToUser = async (userId, kitId) => {
+  try {
+    const res = await httpService.post(`${userEndpoint}/${userId}/add-kit/${kitId}`);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getUsers = async () => {
   try {

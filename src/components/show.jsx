@@ -7,6 +7,8 @@ import { setError } from '../slices/errorSlice';
 import { setSuccess } from '../slices/successSlice';
 import { TextField, Button, Box, FormGroup, Typography, Container } from '@mui/material';
 import CreateKit from './create-kit';
+import { addKitToUser, updateUser, getUserKits, getLocalUser } from '../services/user-service';
+// import { addKitToUser } from '../services/user-service';
 
 function Show() {
   const dispatch = useDispatch();
@@ -64,6 +66,24 @@ function Show() {
     handleUpdate();
   };
 
+  const handleAddToKits = async () => {
+    const user = getLocalUser();
+
+    if (user) {
+      console.log('userID in comp: ', user._id);
+      console.log('KitId in Comp', data._id);
+      try {
+        await addKitToUser(user._id, data._id);
+        dispatch(setSuccess('Kit added to your kits!'));
+      } catch (error) {
+        console.error('Failed to add kit to user', error);
+        dispatch(setError(error?.response?.data || 'Failed to add kit to user'));
+      }
+    } else {
+      dispatch(setError('Please log in to add kits to your account.'));
+    }
+  };
+
   if (error) {
     return <div>Error loading page. Please try again later.</div>;
   }
@@ -112,6 +132,9 @@ function Show() {
       </Button>
       <Button variant="contained" color="error" onClick={handleDelete} sx={{ mr: 2 }}>
         Delete
+      </Button>
+      <Button variant="contained" onClick={handleAddToKits} sx={{ mr: 2 }}>
+        Add to my kits
       </Button>
       <CreateKit />
     </Container>

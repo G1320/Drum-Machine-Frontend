@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getUserKits } from '../services/kit-service';
-import { getLocalUser } from '../services/user-service';
+import { getUserKits, getLocalUser } from '../services/user-service';
 
 function UserInfo() {
   const [user, setUser] = useState(null);
