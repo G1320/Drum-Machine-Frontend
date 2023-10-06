@@ -30,6 +30,15 @@ export const addKitToUser = async (userId, kitId) => {
   }
 };
 
+export const removeKitFromUser = async (userId, kitId) => {
+  try {
+    const res = await httpService.post(`${userEndpoint}/${userId}/remove-kit/${kitId}`);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getUsers = async () => {
   try {
     const res = await httpService.get(userEndpoint);

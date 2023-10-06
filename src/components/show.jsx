@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getPageData } from '../services/data-service';
 import { updateKit, deleteKit } from '../services/kit-service';
 import { useDispatch } from 'react-redux';
@@ -7,8 +7,7 @@ import { setError } from '../slices/errorSlice';
 import { setSuccess } from '../slices/successSlice';
 import { TextField, Button, Box, FormGroup, Typography, Container } from '@mui/material';
 import CreateKit from './create-kit';
-import { addKitToUser, updateUser, getUserKits, getLocalUser } from '../services/user-service';
-// import { addKitToUser } from '../services/user-service';
+import { addKitToUser, getLocalUser } from '../services/user-service';
 
 function Show() {
   const dispatch = useDispatch();
@@ -17,7 +16,6 @@ function Show() {
   const [error, setErrorState] = useState(false);
 
   const { pageId } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,17 +33,17 @@ function Show() {
 
   const handleUpdate = async () => {
     if (tempData.name === data.name && tempData.description === data.description) {
-      dispatch(setError('No changes were made.'));
+      dispatch(setError('No changes were made, please try again.'));
       return;
     }
     try {
       const response = await updateKit(data._id, tempData);
       console.log('response: ', response);
       setData(tempData);
-      dispatch(setSuccess('Data updated successfully!'));
+      dispatch(setSuccess('Kit updated successfully!'));
     } catch (error) {
-      console.log('Failed to update data', error);
-      dispatch(setError(error?.response?.data || 'Failed to update data'));
+      console.error('Failed to update kit', error);
+      dispatch(setError('Failed to update kit'));
     }
   };
 
@@ -56,7 +54,7 @@ function Show() {
       setTempData({ name: '', description: '' });
       // navigate('/pages/about');
     } catch (error) {
-      console.error('Failed to delete data', error);
+      console.error('Failed to delete kit', error);
       dispatch(setError(error?.response?.data || 'Failed to delete data'));
     }
   };
@@ -70,8 +68,6 @@ function Show() {
     const user = getLocalUser();
 
     if (user) {
-      console.log('userID in comp: ', user._id);
-      console.log('KitId in Comp', data._id);
       try {
         await addKitToUser(user._id, data._id);
         dispatch(setSuccess('Kit added to your kits!'));

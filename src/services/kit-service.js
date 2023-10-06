@@ -30,8 +30,8 @@ export const getKit = async (kitId) => {
 };
 
 export const updateKit = async (kitId, updatedData) => {
-  console.log('Kit ID:', kitId);
-  console.log('Updated Data:', updatedData);
+  console.log('Kit ID in front:', kitId);
+  console.log('Updated Data in front:', updatedData);
   try {
     const res = await httpService.put(`${kitEndpoint}/${kitId}`, updatedData);
     return res;
