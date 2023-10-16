@@ -1,0 +1,44 @@
+header {
+  min-height: 340px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 0.25fr 1fr;
+}
+
+.btn-logout,
+.btn-login {
+  grid-column: 4;
+  grid-row: 1;
+}
+
+.btn-login-link {
+  display: grid;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.hero {
+  grid-column: 2/4;
+  font-size: 2rem;
+  color: white;
+  font-weight: bold;
+  align-self: center;
+  margin: 0;
+}
+
+button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #d32f2f;
+}

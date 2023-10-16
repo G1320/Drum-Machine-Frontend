@@ -12,7 +12,6 @@ export const createUser = async (userData) => {
 };
 
 export const getUserKits = async (userId) => {
-  console.log('userId: ', userId);
   try {
     const res = await httpService.get(`${userEndpoint}/my-kits/${userId}`);
     return res;

@@ -1,0 +1,14 @@
+.user-info * {
+  color: #ccc !important;
+}
+
+.user-info {
+  padding: 1rem;
+  grid-column: 2/3;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: color 0.25s;
+}

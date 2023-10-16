@@ -3,17 +3,8 @@ import Cookies from 'js-cookie';
 
 const authEndpoint = 'api/auth';
 
-// export const getUserDetails = async () => {
-//   try {
-//     const response = await httpService.get(`${authEndpoint}/me`);
-//     return response.data;
-//   } catch (error) {
-//     console.error('Failed to get user details:', error);
-//     throw error;
-//   }
-// };
-
 export const register = async (userData) => {
+  console.log('userData: ', userData);
   try {
     const { authToken, user } = await httpService.post(`${authEndpoint}/register`, userData);
     sessionStorage.setItem('user', JSON.stringify(user));
@@ -22,9 +13,7 @@ export const register = async (userData) => {
   } catch (error) {
     console.error('Registration failed', error);
     if (error.response && error.response.status === 400) {
-      throw new Error(
-        'A user with that email or username already exists. Please choose a different email or username.'
-      );
+      throw new Error('A user with that email or username already exists.');
     }
     throw error;
   }

@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const kitsSlice = createSlice({
-  name: 'kits',
+const userKitsSlice = createSlice({
+  name: 'userKits',
   initialState: {
-    kits: [],
+    userKits: [],
   },
   reducers: {
-    setKits(state, action) {
-      state.kits = action.payload;
+    setUserKits(state, action) {
+      state.userKits = action.payload;
     },
-    addKit(state, action) {
-      state.kits.push(action.payload);
+    addUserKit(state, action) {
+      state.userKits.push(action.payload);
     },
   },
 });
 
-export const { setKits, addKit } = kitsSlice.actions;
-export default kitsSlice.reducer;
+export const { setKits, addKit } = userKitsSlice.actions;
+export default userKitsSlice.reducer;
