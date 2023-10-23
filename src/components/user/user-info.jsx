@@ -45,7 +45,7 @@ function UserInfo() {
   const handleChange = (event) => {
     const selectedKit = userKits.find((kit) => kit.name === event.target.value);
     if (selectedKit) {
-      navigate(`/pages/id/${selectedKit._id}`);
+      navigate(`/drum/id/${selectedKit._id}`);
     }
   };
 

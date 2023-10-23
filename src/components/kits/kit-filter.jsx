@@ -97,7 +97,7 @@ function KitFilter() {
       </div>
       <div>
         <label>
-          Kits:
+          All kits:
           <select value={selectedKit} onChange={handleChange}>
             <option value="" disabled>
               Select a kit

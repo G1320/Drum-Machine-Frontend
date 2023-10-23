@@ -10,7 +10,7 @@ import Read from './components/admin/read-users';
 import Update from './components/user/update-user';
 import Show from './components/kits/show-kit';
 import FourOhFour from './components/basic/404';
-import DrumMachine from './components/drum-machine/drum-Machine';
+import DrumMachine from './components/drum-machine/drum-machine';
 import Synth from './components/synth/synth';
 import Sequencer from './components/sequencer/sequencer';
 
@@ -43,6 +43,8 @@ function App() {
             <Route path="/update" element={<Update />} />
             <Route path="/about" element={<About />} />
             <Route path="/drum" element={<DrumMachine />} />
+            <Route path="/drum/id/:kitId" element={<DrumMachine />} />
+
             <Route path="/synth" element={<Synth />} />
             <Route path="/sequencer" element={<Sequencer />} />
             <Route path="/pages/id/:pageId" element={<Show />} />

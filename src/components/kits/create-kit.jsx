@@ -36,7 +36,7 @@ export default function CreateKit() {
     const kitData = {
       name: kitName,
       description,
-      sounds,
+      sounds: [],
       subscribers: 0,
     };
     addKit(kitData);

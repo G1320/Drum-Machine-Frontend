@@ -32,7 +32,6 @@ export const getKits = async (params = {}) => {
 export const getKitSounds = async (kitId) => {
   try {
     const res = await httpService.get(`${kitEndpoint}/${kitId}/sounds`);
-    console.log('res: ', res);
     return res;
   } catch (error) {
     throw error;

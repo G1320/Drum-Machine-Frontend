@@ -5,8 +5,21 @@ import '../../assets/styles/components/drum-machine/drum-machine.css';
 
 import drumPadsConfig from '../../config/drum-machineConfig';
 
+import { getKitSounds, getKit } from '../../services/kit-service';
+import { useParams } from 'react-router-dom';
 const DrumMachine = () => {
+  const { kitId } = useParams();
+  console.log('kitId: ', kitId);
+
+  // const [drumPadsConfig, setDrumPadsConfig] = useState([]);
+  // useEffect(() => {
+  //   getKitSounds(kitId).then((sounds) => {
+  //     setDrumPadsConfig(sounds);
+  //   });
+  // }, [kitId]);
+
   const [activePad, setActivePad] = useState(null);
+
   const audioRefs = drumPadsConfig.map(() => useRef(null));
 
   const toggleActive = (keyCode) => {
