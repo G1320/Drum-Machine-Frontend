@@ -20,11 +20,11 @@ export default function CreateKit() {
     dispatch(setError(error?.response?.data || 'Something went wrong!'));
   };
 
-  const addKit = async (kit) => {
+  const addKit = async (kitData) => {
     try {
-      await createKit(kit);
+      const kit = await createKit(kitData);
       dispatch(setSuccess('Kit created successfully!'));
-      navigate(`/pages/${kit.name}`);
+      navigate(`/pages/id/${kit._id}`);
     } catch (error) {
       handleError(error);
       console.error(error);
@@ -33,41 +33,47 @@ export default function CreateKit() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const kit = {
+    const kitData = {
       name: kitName,
       description,
       sounds,
       subscribers: 0,
     };
-    console.log('kit: ', kit);
-
-    addKit(kit);
+    addKit(kitData);
   };
 
   return (
-    <Box component="form" className="create-form" noValidate autoComplete="off" onSubmit={handleSubmit}>
-      <h3>Create new kit</h3>
-      <FormGroup>
-        <TextField
-          label="Kit Name"
-          variant="outlined"
-          value={kitName}
-          onChange={(e) => setKitName(e.target.value)}
-        />
-      </FormGroup>
-      <FormGroup>
-        <TextField
-          label="Description"
-          variant="outlined"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Button variant="contained" color="primary" type="submit">
-          Submit
-        </Button>
-      </FormGroup>
-    </Box>
+    <div className="create-kit">
+      <Box
+        component="form"
+        className="create-form"
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit}
+      >
+        <h3>Create new kit</h3>
+        <FormGroup>
+          <TextField
+            label="Kit Name"
+            variant="outlined"
+            value={kitName}
+            onChange={(e) => setKitName(e.target.value)}
+          />
+        </FormGroup>
+        <FormGroup>
+          <TextField
+            label="Description"
+            variant="outlined"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </FormGroup>
+        <FormGroup>
+          <Button variant="contained" color="primary" type="submit">
+            Submit
+          </Button>
+        </FormGroup>
+      </Box>
+    </div>
   );
 }

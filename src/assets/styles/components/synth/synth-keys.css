@@ -1,32 +1,30 @@
 .keyboard {
-    display: flex;
-    align-items: flex-start;
-    position: relative;
-  }
-  
-  .key {
-    height: 100px;
-    width: 40px;
-    margin: 1px;
-    border: 1px solid #000;
-    cursor: pointer;
-  }
-  
-  .sharp {
-    background-color: #000;
-    color: #fff;
-    height: 60px;
-    width: 20px;
-    position: relative;
-    left: -11px;
-    z-index: 1;
-  }
-  
-  .natural {
-    background-color: #fff;
-  }
-  
-  .active {
-    background-color: #ff0000;
-  }
-  
+  display: flex;
+  justify-content: center;
+}
+
+.key {
+  height: 100px;
+  width: 40px;
+  margin: 1px;
+  border: 1px solid #000;
+  cursor: pointer;
+}
+
+.sharp {
+  background-color: #000;
+  color: #fff;
+  height: 60px;
+  width: 20px;
+  position: relative;
+  left: -11px;
+  z-index: 1;
+}
+
+.natural {
+  background-color: #fff;
+}
+
+.active {
+  background-color: #ff0000;
+}

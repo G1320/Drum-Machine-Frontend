@@ -1,48 +1,48 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import * as Tone from 'tone';
 
 function StartMicrophoneAccess() {
   const [accessGranted, setAccessGranted] = useState(null);
-
-  useEffect(() => {
-    const checkMicrophoneAccess = async () => {
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-        console.log('Microphone access granted');
-        setAccessGranted(true);
-      } catch (error) {
-        console.log('Microphone access not granted');
-        setAccessGranted(false);
-      }
-    };
-
-    checkMicrophoneAccess();
-  }, []);
 
   const requestMicrophoneAccess = async () => {
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });
       console.log('Microphone access granted');
       setAccessGranted(true);
-      try {
-        await Tone.start();
-        console.log('Tone.js initialized');
-      } catch (toneError) {
-        console.error('Failed to initialize Tone.js:', toneError);
-      }
     } catch (error) {
       console.error('Microphone access denied:', error);
       setAccessGranted(false);
     }
   };
 
+  const handleButtonClick = async () => {
+    try {
+      await Tone.start();
+      console.log('Tone.js initialized');
+    } catch (toneError) {
+      console.error('Failed to initialize Tone.js:', toneError);
+    }
+  };
+
   return (
     <div>
       {accessGranted === false && (
-        <button onClick={requestMicrophoneAccess}>Request Microphone Access</button>
+        <div>
+          <p>Microphone access denied.</p>
+        </div>
       )}
-      {accessGranted === true && <p></p>}
-      {accessGranted === false && <p>Access denied</p>}
+      {accessGranted === true && (
+        <div>
+          <p>Microphone access granted.</p>
+          <button onClick={handleButtonClick}>Initialize Tone.js</button>
+        </div>
+      )}
+      {accessGranted === null && (
+        <div>
+          <p>Requesting microphone access...</p>
+          <button onClick={requestMicrophoneAccess}>Request access</button>
+        </div>
+      )}
     </div>
   );
 }

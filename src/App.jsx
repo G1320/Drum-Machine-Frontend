@@ -13,9 +13,10 @@ import FourOhFour from './components/basic/404';
 import DrumMachine from './components/drum-machine/drum-Machine';
 import Synth from './components/synth/synth';
 import Sequencer from './components/sequencer/sequencer';
-import CreateKit from './components/kits/create-kit';
-import KitFilter from './components/kits/kit-filter';
+
 import Login from './components/auth/login';
+
+// import StartMicrophoneAccess from './components/misc/start-mic-access';
 
 import ErrorAlert from './components/alerts/error-alert';
 import SuccessAlert from './components/alerts/success-alert';
@@ -24,32 +25,34 @@ import { getLocalUser } from './services/user-service';
 import store from './store/index';
 
 function App() {
-  useEffect(() => {
-    const user = getLocalUser();
-    console.log('user: ', user);
-  }, []);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   const user = getLocalUser();
+  //   console.log('user: ', user);
+  // }, []);
 
   return (
     <Provider store={store}>
       <Router>
         <Header />
-        <Routes>
-          <Route path="/" element={<Navigate to="/create" />} />
-          <Route path="/create" element={<Create />} />
-          <Route path="/read" element={<Read />} />
-          <Route path="/update" element={<Update />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/drum" element={<DrumMachine />} />
-          <Route path="/synth" element={<Synth />} />
-          <Route path="/sequencer" element={<Sequencer />} />
-          <Route path="/makekit" element={<CreateKit />} />
-          <Route path="/pages/id/:pageId" element={<Show />} />
-          <Route path="/pages/:pageName" element={<Show />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<FourOhFour />} />
-        </Routes>
-        <KitFilter />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Navigate to="/create" />} />
+            <Route path="/create" element={<Create />} />
+            <Route path="/read" element={<Read />} />
+            <Route path="/update" element={<Update />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/drum" element={<DrumMachine />} />
+            <Route path="/synth" element={<Synth />} />
+            <Route path="/sequencer" element={<Sequencer />} />
+            <Route path="/pages/id/:pageId" element={<Show />} />
+            <Route path="/pages/:pageName" element={<Show />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<FourOhFour />} />
+          </Routes>
+        </div>
       </Router>
+      {/* <StartMicrophoneAccess /> */}
       <ErrorAlert />
       <SuccessAlert />
     </Provider>

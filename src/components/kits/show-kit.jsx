@@ -2,12 +2,19 @@ import React, { useEffect, useState } from 'react';
 import '../../assets/styles/components/kits/show-kit.css';
 import { useParams } from 'react-router-dom';
 import { getPageData } from '../../services/data-service';
-import { updateKit, deleteKit } from '../../services/kit-service';
+import { updateKit, deleteKit, getKitSounds } from '../../services/kit-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
 import { setSuccess } from '../../slices/successSlice';
-import { TextField, Button, Box, FormGroup, Typography, Container } from '@mui/material';
-import CreateKit from './create-kit';
+import {
+  TextField,
+  Button,
+  Box,
+  FormGroup,
+  Typography,
+  Container,
+  CircularProgress,
+} from '@mui/material';
 import { addKitToUser, getLocalUser } from '../../services/user-service';
 
 function Show() {
@@ -15,6 +22,7 @@ function Show() {
   const [data, setData] = useState(null);
   const [tempData, setTempData] = useState({ name: '', description: '' });
   const [error, setErrorState] = useState(false);
+  const [sounds, setSounds] = useState([]);
 
   const { pageId } = useParams();
 
@@ -24,6 +32,9 @@ function Show() {
         const pageData = await getPageData(pageId);
         setData(pageData);
         setTempData({ name: pageData.name, description: pageData.description });
+
+        const sounds = await getKitSounds(pageId);
+        setSounds(sounds);
       } catch (error) {
         console.error(error);
         setErrorState(true);
@@ -43,7 +54,7 @@ function Show() {
       dispatch(setSuccess('Kit updated successfully!'));
     } catch (error) {
       console.error('Failed to update kit', error);
-      dispatch(setError('Failed to update kit'));
+      dispatch(setError(error?.response?.data || 'Failed to update kit'));
     }
   };
 
@@ -84,7 +95,11 @@ function Show() {
   }
 
   if (!data) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loader-container">
+        <CircularProgress />
+      </div>
+    );
   }
 
   const handleSubscribe = () => {
@@ -103,7 +118,7 @@ function Show() {
       >
         <FormGroup>
           <TextField
-            label="Name"
+            label="Kit name"
             variant="outlined"
             fullWidth
             margin="normal"
@@ -116,7 +131,7 @@ function Show() {
             fullWidth
             margin="normal"
             multiline
-            rows={4}
+            rows={3}
             value={tempData.description}
             onChange={(e) => setTempData((prevData) => ({ ...prevData, description: e.target.value }))}
           />
@@ -138,7 +153,15 @@ function Show() {
       <Button variant="contained" onClick={handleAddToKits} sx={{ mr: 2 }}>
         Add to my kits
       </Button>
-      <CreateKit />
+
+      <Typography variant="h6" gutterBottom>
+        Sounds:
+      </Typography>
+      {sounds.map((sound) => (
+        <Typography key={sound._id} variant="body1">
+          {sound.title}
+        </Typography>
+      ))}
     </Container>
   );
 }

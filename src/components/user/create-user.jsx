@@ -46,6 +46,7 @@ export default function Create() {
 
   return (
     <Box component="form" className="create-form" noValidate autoComplete="off" onSubmit={handleSubmit}>
+      <h3>Create new user</h3>
       <FormGroup>
         <TextField
           label="Username"

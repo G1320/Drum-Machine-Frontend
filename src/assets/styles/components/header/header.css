@@ -1,8 +1,14 @@
 header {
-  min-height: 340px;
+  padding-block-start: 1rem;
+  min-height: 200px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 0.25fr 1fr;
+  grid-template-rows: 35px 1fr;
+  border-bottom: #ccc 1px solid;
+}
+
+.header-container {
+  max-height: 285px;
 }
 
 .btn-logout,

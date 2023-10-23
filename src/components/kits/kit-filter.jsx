@@ -71,19 +71,22 @@ function KitFilter() {
   return (
     <div className="kit-filter">
       <div>
-        <label>
+        <h3>
           Filter by name:
           <input type="text" ref={filterRef} onChange={handleFilterChange} />
-        </label>
+        </h3>
       </div>
-      <div>
+      <div className="sort-by">
         <label>
           Sort by:
           <select ref={sortByRef} onChange={handleSortChange}>
             <option value="">None</option>
             <option value="name">Name</option>
           </select>
+          <br />
         </label>
+      </div>
+      <div className="order">
         <label>
           Order:
           <select ref={orderRef} onChange={handleSortChange}>
