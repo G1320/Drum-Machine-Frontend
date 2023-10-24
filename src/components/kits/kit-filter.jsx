@@ -21,10 +21,6 @@ function KitFilter() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleError = (error) => {
-    dispatch(setError(error?.response?.data || 'Something went wrong!'));
-  };
-
   useEffect(() => {
     const fetchKits = async () => {
       try {
@@ -35,7 +31,7 @@ function KitFilter() {
         const data = await getKits(params);
         setKits(data);
       } catch (error) {
-        handleError(error);
+        dispatch(setError(error?.response?.data || 'Something went wrong!'));
         console.error('Failed to load kit', error);
       }
     };

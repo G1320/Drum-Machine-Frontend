@@ -80,11 +80,12 @@
 // export default ShowKit;
 
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
+
 import '../../assets/styles/components/kits/show-kit.css';
-import { useParams } from 'react-router-dom';
 import { getPageData } from '../../services/data-service';
 import { updateKit, deleteKit, getKitSounds } from '../../services/kit-service';
-import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
 import { setSuccess } from '../../slices/successSlice';
 import {
@@ -100,6 +101,7 @@ import { addKitToUser, getLocalUser } from '../../services/user-service';
 
 function Show() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [tempData, setTempData] = useState({ name: '', description: '' });
   const [error, setErrorState] = useState(false);
@@ -142,8 +144,9 @@ function Show() {
   const handleDelete = async () => {
     try {
       await deleteKit(data._id);
-      dispatch(setSuccess('Data deleted successfully!'));
+      dispatch(setSuccess('Kit deleted successfully!'));
       setTempData({ name: '', description: '' });
+      navigate('/pages/id/64e61e8b7aecdc67f8632329');
     } catch (error) {
       console.error('Failed to delete kit', error);
       dispatch(setError(error?.response?.data || 'Failed to delete data'));
