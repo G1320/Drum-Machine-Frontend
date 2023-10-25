@@ -98,6 +98,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { addKitToUser, getLocalUser } from '../../services/user-service';
+import SoundsList from '../sounds/sounds-list';
 
 function Show() {
   const dispatch = useDispatch();
@@ -105,7 +106,6 @@ function Show() {
   const [data, setData] = useState(null);
   const [tempData, setTempData] = useState({ name: '', description: '' });
   const [error, setErrorState] = useState(false);
-  const [sounds, setSounds] = useState([]);
 
   const { pageId } = useParams();
 
@@ -115,9 +115,6 @@ function Show() {
         const pageData = await getPageData(pageId);
         setData(pageData);
         setTempData({ name: pageData.name, description: pageData.description });
-
-        const sounds = await getKitSounds(pageId);
-        setSounds(sounds);
       } catch (error) {
         console.error(error);
         setErrorState(true);
@@ -224,12 +221,7 @@ function Show() {
       <Typography variant="h6" gutterBottom>
         Sounds:
       </Typography>
-      {sounds.map((sound) => (
-        <div key={sound._id}>
-          <Typography variant="body1">{sound.title}</Typography>
-          <img src={sound.img} alt={sound.title} style={{ width: '80px', height: '40px' }} />
-        </div>
-      ))}
+      <SoundsList kitId={pageId} />
 
       <Typography variant="h6" gutterBottom>
         Subscribers: {data.subscribers}

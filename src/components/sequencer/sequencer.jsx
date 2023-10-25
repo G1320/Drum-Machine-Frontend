@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import drumPadsConfig from '../../config/drum-machineConfig';
+import drumPadsConfig from '../../config/drumMachineDefaultConfig';
 import SequencerTrack from './sequencer-track';
 import '../../assets/styles/components/sequencer/sequencer.css';
 

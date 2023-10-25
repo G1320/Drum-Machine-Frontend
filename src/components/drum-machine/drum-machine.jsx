@@ -1,26 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Cell from './drum-cell';
-import { playAudio } from '../../services/sound-service';
+import React, { useState, useEffect, useRef, createRef } from 'react';
 import '../../assets/styles/components/drum-machine/drum-machine.css';
-
-import drumPadsConfig from '../../config/drum-machineConfig';
-
-import { getKitSounds, getKit } from '../../services/kit-service';
+import { getKitSounds } from '../../services/kit-service';
 import { useParams } from 'react-router-dom';
+import drumMachineDefaultConfig from '../../config/drumMachineDefaultConfig';
+import SoundsList from '../sounds/sounds-list';
+import Pad from './drum-pad';
+
 const DrumMachine = () => {
   const { kitId } = useParams();
-  console.log('kitId: ', kitId);
-
-  // const [drumPadsConfig, setDrumPadsConfig] = useState([]);
-  // useEffect(() => {
-  //   getKitSounds(kitId).then((sounds) => {
-  //     setDrumPadsConfig(sounds);
-  //   });
-  // }, [kitId]);
-
   const [activePad, setActivePad] = useState(null);
+  const [sounds, setSounds] = useState([]);
 
-  const audioRefs = drumPadsConfig.map(() => useRef(null));
+  const audioRefs = useRef([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let fetchedSounds;
+        if (kitId) {
+          fetchedSounds = await getKitSounds(kitId);
+          console.log('fetchedSounds: ', fetchedSounds);
+          if (fetchedSounds.length === 0) fetchedSounds = drumMachineDefaultConfig;
+        } else {
+          console.log('drumMachineDefaultConfig: ', drumMachineDefaultConfig);
+          fetchedSounds = drumMachineDefaultConfig;
+        }
+        setSounds(fetchedSounds);
+        audioRefs.current = fetchedSounds.map((_, index) => audioRefs.current[index] ?? createRef());
+      } catch (error) {}
+    };
+
+    fetchData();
+  }, [kitId]);
 
   const toggleActive = (keyCode) => {
     if (activePad === keyCode) {
@@ -30,34 +41,21 @@ const DrumMachine = () => {
     }
   };
 
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      const index = drumPadsConfig.findIndex((pad) => pad.keyCode === e.keyCode);
-      if (index !== -1) {
-        toggleActive(drumPadsConfig[index].keyCode);
-        playAudio(audioRefs[index]);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [drumPadsConfig]);
-
   return (
-    <div className="drum-table">
-      {drumPadsConfig.map((pad, index) => (
-        <Cell
-          key={pad.keyCode}
-          pad={pad}
-          isActive={activePad === pad.keyCode}
-          toggleActive={toggleActive}
-          audioRef={audioRefs[index]}
-        />
-      ))}
-    </div>
+    <section>
+      <div className="drum-table">
+        {sounds.map((sound, index) => (
+          <Pad
+            key={sound.keyCode}
+            sound={sound}
+            isActive={activePad === sound.keyCode}
+            toggleActive={toggleActive}
+            audioRef={audioRefs.current[index]}
+          />
+        ))}
+      </div>
+      <SoundsList kitId={kitId} />
+    </section>
   );
 };
 

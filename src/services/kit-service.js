@@ -4,8 +4,7 @@ const kitEndpoint = 'api/kits';
 
 export const createKit = async (kitData) => {
   try {
-    const res = await httpService.post(kitEndpoint, kitData);
-    return res;
+    return await httpService.post(kitEndpoint, kitData);
   } catch (error) {
     throw error;
   }
@@ -13,8 +12,7 @@ export const createKit = async (kitData) => {
 
 export const getKit = async (kitId) => {
   try {
-    const res = await httpService.get(`${kitEndpoint}/${kitId}`);
-    return res;
+    return await httpService.get(`${kitEndpoint}/${kitId}`);
   } catch (error) {
     throw error;
   }
@@ -22,8 +20,7 @@ export const getKit = async (kitId) => {
 
 export const getKits = async (params = {}) => {
   try {
-    const res = await httpService.get(kitEndpoint, params);
-    return res;
+    return await httpService.get(kitEndpoint, params);
   } catch (error) {
     throw error;
   }
@@ -31,8 +28,7 @@ export const getKits = async (params = {}) => {
 
 export const getKitSounds = async (kitId) => {
   try {
-    const res = await httpService.get(`${kitEndpoint}/${kitId}/sounds`);
-    return res;
+    return await httpService.get(`${kitEndpoint}/${kitId}/sounds`);
   } catch (error) {
     throw error;
   }
@@ -40,8 +36,7 @@ export const getKitSounds = async (kitId) => {
 
 export const updateKit = async (kitId, updatedData) => {
   try {
-    const res = await httpService.put(`${kitEndpoint}/${kitId}`, updatedData);
-    return res;
+    return await httpService.put(`${kitEndpoint}/${kitId}`, updatedData);
   } catch (error) {
     throw error;
   }
@@ -49,8 +44,7 @@ export const updateKit = async (kitId, updatedData) => {
 
 export const deleteKit = async (kitId) => {
   try {
-    const res = await httpService.delete(`${kitEndpoint}/${kitId}`);
-    return res;
+    return await httpService.delete(`${kitEndpoint}/${kitId}`);
   } catch (error) {
     throw error;
   }

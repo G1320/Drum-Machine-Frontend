@@ -1,35 +1,29 @@
-import React from 'react';
-import {
-  TextField,
-  Button,
-  Box,
-  FormGroup,
-  Typography,
-  Container,
-  CircularProgress,
-} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Typography } from '@mui/material';
 import { getKitSounds } from '../../services/kit-service';
 
 function SoundsList({ kitId }) {
-  const { data: sounds, isLoading } = getKitSounds(kitId);
+  const [sounds, setSounds] = useState([]);
 
-  if (isLoading) {
-    return (
-      <div className="loader-container">
-        <CircularProgress />
-      </div>
-    );
-  }
+  useEffect(() => {
+    const fetchKit = async () => {
+      try {
+        const sounds = await getKitSounds(kitId);
+        setSounds(sounds);
+      } catch (error) {}
+    };
+    fetchKit();
+  }, [kitId]);
 
   return (
-    <ul>
-      {sounds.data.map((sound) => (
-        <li key={sound._id}>
-          <h2>{sound.title}</h2>
-          <audio src={sound.url} controls />
-        </li>
+    <section>
+      {sounds.map((sound) => (
+        <div key={sound._id}>
+          <Typography variant="body1">{sound.title}</Typography>
+          <img src={sound.img} alt={sound.title} style={{ width: '80px', height: '40px' }} />
+        </div>
       ))}
-    </ul>
+    </section>
   );
 }
 

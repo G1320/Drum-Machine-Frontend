@@ -8,15 +8,13 @@ import Header from './components/header/header';
 import Create from './components/user/create-user';
 import Read from './components/admin/read-users';
 import Update from './components/user/update-user';
-import Show from './components/kits/show-kit';
+import Show from './components/kits/edit-kit';
 import FourOhFour from './components/basic/404';
 import DrumMachine from './components/drum-machine/drum-machine';
 import Synth from './components/synth/synth';
 import Sequencer from './components/sequencer/sequencer';
 
 import Login from './components/auth/login';
-
-// import StartMicrophoneAccess from './components/misc/start-mic-access';
 
 import ErrorAlert from './components/alerts/error-alert';
 import SuccessAlert from './components/alerts/success-alert';
@@ -25,17 +23,11 @@ import { getLocalUser } from './services/user-service';
 import store from './store/index';
 
 function App() {
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const user = getLocalUser();
-  //   console.log('user: ', user);
-  // }, []);
-
   return (
     <Provider store={store}>
       <Router>
         <Header />
-        <div className="main-content">
+        <main className="main-content">
           <Routes>
             <Route path="/" element={<Navigate to="/create" />} />
             <Route path="/create" element={<Create />} />
@@ -44,7 +36,6 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/drum" element={<DrumMachine />} />
             <Route path="/drum/id/:kitId" element={<DrumMachine />} />
-
             <Route path="/synth" element={<Synth />} />
             <Route path="/sequencer" element={<Sequencer />} />
             <Route path="/pages/id/:pageId" element={<Show />} />
@@ -52,9 +43,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="*" element={<FourOhFour />} />
           </Routes>
-        </div>
+        </main>
       </Router>
-      {/* <StartMicrophoneAccess /> */}
       <ErrorAlert />
       <SuccessAlert />
     </Provider>
