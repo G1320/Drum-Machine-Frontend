@@ -3,7 +3,6 @@ import '../../assets/styles/components/drum-machine/drum-machine.css';
 import { getKitSounds } from '../../services/kit-service';
 import { useParams } from 'react-router-dom';
 import drumMachineDefaultConfig from '../../config/drumMachineDefaultConfig';
-import SoundsList from '../sounds/sounds-list';
 import Pad from './drum-pad';
 
 const DrumMachine = () => {
@@ -54,7 +53,6 @@ const DrumMachine = () => {
           />
         ))}
       </div>
-      <SoundsList kitId={kitId} />
     </section>
   );
 };
