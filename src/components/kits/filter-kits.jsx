@@ -4,7 +4,6 @@ import '../../assets/styles/components/kits/kit-filter.css';
 import { getKits } from '../../services/kit-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
-import { getLocalUser } from '../../services/user-service';
 
 function KitFilter() {
   const [kits, setKits] = useState([]);
@@ -57,12 +56,6 @@ function KitFilter() {
       }
     }
   };
-
-  const user = getLocalUser();
-
-  // if (!user) {
-  //   return null;
-  // }
 
   return (
     <div className="kit-filter">

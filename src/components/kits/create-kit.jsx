@@ -9,12 +9,10 @@ import '../../assets/styles/components/kits/create-kit.css';
 
 export default function CreateKit() {
   const dispatch = useDispatch();
+  let navigate = useNavigate();
 
   const [kitName, setKitName] = useState('');
   const [description, setDescription] = useState('');
-  const [sounds, setSounds] = useState([{ name: '', src: '', keyCode: '' }]);
-
-  let navigate = useNavigate();
 
   const handleError = (error) => {
     dispatch(setError(error?.response?.data || 'Something went wrong!'));

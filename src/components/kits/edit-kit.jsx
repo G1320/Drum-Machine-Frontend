@@ -1,10 +1,10 @@
+import '../../assets/styles/components/kits/show-kit.css';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import '../../assets/styles/components/kits/show-kit.css';
 import { getPageData } from '../../services/data-service';
-import { updateKit, deleteKit, getKitSounds } from '../../services/kit-service';
+import { updateKit, deleteKit } from '../../services/kit-service';
 import { setError } from '../../slices/errorSlice';
 import { setSuccess } from '../../slices/successSlice';
 import {
@@ -86,7 +86,7 @@ function Show() {
         dispatch(setError(error?.response?.data || 'Failed to add kit to user'));
       }
     } else {
-      dispatch(setError('Please log in to add kits to your account.'));
+      dispatch(setError('Please log in to add a Kit to your Kits!'));
     }
   };
 
@@ -137,7 +137,7 @@ function Show() {
           />
         </FormGroup>
         <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }}>
-          Submit
+          Update
         </Button>
       </Box>
       <Button variant="contained" onClick={handleLoadToDrumMachine}>
