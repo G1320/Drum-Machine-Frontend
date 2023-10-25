@@ -60,9 +60,9 @@ function KitFilter() {
 
   const user = getLocalUser();
 
-  if (!user) {
-    return null;
-  }
+  // if (!user) {
+  //   return null;
+  // }
 
   return (
     <div className="kit-filter">

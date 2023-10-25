@@ -32,6 +32,7 @@ function Header() {
       <h1 className="hero">Drum Machine App</h1>
 
       <NavMenu />
+
       {user ? (
         <>
           <UserInfo />
@@ -42,11 +43,14 @@ function Header() {
           </button>
         </>
       ) : (
-        <button className="btn-login">
-          <Link className="btn-login-link" to="/login">
-            Login
-          </Link>
-        </button>
+        <>
+          <KitFilter />
+          <button className="btn-login">
+            <Link className="btn-login-link" to="/login">
+              Login
+            </Link>
+          </button>
+        </>
       )}
     </header>
   );

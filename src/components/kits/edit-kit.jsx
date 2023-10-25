@@ -1,84 +1,3 @@
-// import React from 'react';
-// import { useParams } from 'react-router-dom';
-// import {
-//   TextField,
-//   Button,
-//   Box,
-//   FormGroup,
-//   Typography,
-//   Container,
-//   CircularProgress,
-// } from '@mui/material';
-// import { useDispatch } from 'react-redux';
-
-// import { addKitToUser } from '../../services/user-service';
-// import { setError } from '../../slices/errorSlice';
-// import { setSuccess } from '../../slices/successSlice';
-// import { getKit } from '../../services/kit-service';
-// import SoundsList from '../sounds/sounds-list';
-
-// function ShowKit() {
-//   const { id } = useParams();
-//   const dispatch = useDispatch();
-//   const { data, isLoading, error } = getKit(id);
-
-//   const handleUpdate = () => {
-//     console.log('Update');
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     handleUpdate();
-//   };
-
-//   const handleAddToKits = async () => {
-//     const user = getLocalUser();
-
-//     if (user) {
-//       try {
-//         await addKitToUser(user._id, data._id);
-//         dispatch(setSuccess('Kit added to your kits!'));
-//       } catch (error) {
-//         console.error('Failed to add kit to user', error);
-//         dispatch(setError(error?.response?.data || 'Failed to add kit to user'));
-//       }
-//     } else {
-//       dispatch(setError('Please log in to add kits to your account.'));
-//     }
-//   };
-
-//   if (!data || error) {
-//     return (
-//       <div className="loader-container">
-//         <CircularProgress />
-//       </div>
-//     );
-//   }
-
-//   const handleSubscribe = () => {
-//     console.log('Subscribed');
-//   };
-
-//   return (
-//     <Container className="show-kit-container">
-//       <Box component="form" noValidate onSubmit={handleSubmit}>
-//         <h1>{data.title}</h1>
-//         <p>{data.description}</p>
-//         <button type="submit">Update</button>
-//         <button type="button" onClick={handleAddToKits}>
-//           Add to My Kits
-//         </button>
-//         <button type="button" onClick={handleSubscribe}>
-//           Subscribe
-//         </button>
-//       </Box>
-//       <SoundsList kitId={id} />
-//     </Container>
-//   );
-// }
-
-// export default ShowKit;
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -171,6 +90,10 @@ function Show() {
     }
   };
 
+  const handleLoadToDrumMachine = () => {
+    navigate(`/drum/id/${data._id}`);
+  };
+
   if (!data || error) {
     return (
       <div className="loader-container">
@@ -217,6 +140,9 @@ function Show() {
           Submit
         </Button>
       </Box>
+      <Button variant="contained" onClick={handleLoadToDrumMachine}>
+        Load to drum machine
+      </Button>
 
       <Typography variant="h6" gutterBottom>
         Sounds:
