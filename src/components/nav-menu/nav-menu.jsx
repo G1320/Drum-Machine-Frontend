@@ -23,7 +23,7 @@ function NavMenu() {
         <Link to={`/pages/id/${validPageId}`} className="menu-item">
           Edit kit
         </Link>
-        <Link to="/drum" className="menu-item">
+        <Link to={`/drum/id/${validPageId}`} className="menu-item">
           Drum Machine
         </Link>
         <Link to="/synth" className="menu-item">

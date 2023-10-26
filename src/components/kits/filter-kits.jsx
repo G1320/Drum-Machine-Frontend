@@ -52,7 +52,7 @@ function KitFilter() {
     if (selectedKitId) {
       const selectedKit = kits.find((kit) => kit._id === selectedKitId);
       if (selectedKit) {
-        navigate(`/pages/id/${selectedKit._id}`);
+        navigate(`/drum/id/${selectedKit._id}`);
       }
     }
   };

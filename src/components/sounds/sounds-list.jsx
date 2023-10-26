@@ -1,27 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
-import { getKitSounds } from '../../services/kit-service';
+import '../../assets/styles/components/sounds/sounds-list.css';
+import React, { useEffect, useState, useRef, createRef } from 'react';
+import { getSounds } from '../../services/sound-service';
+import SoundDetails from './sound-details';
 
 function SoundsList({ kitId }) {
   const [sounds, setSounds] = useState([]);
+  const audioRefs = useRef([]);
 
   useEffect(() => {
     const fetchKit = async () => {
       try {
-        const sounds = await getKitSounds(kitId);
+        const sounds = await getSounds();
         setSounds(sounds);
-      } catch (error) {}
+
+        audioRefs.current = sounds.map((_, index) => audioRefs.current[index] ?? createRef());
+      } catch (error) {
+        console.error('Failed to load kit', error);
+      }
     };
     fetchKit();
   }, [kitId]);
 
   return (
-    <section>
-      {sounds.map((sound) => (
-        <div key={sound._id}>
-          <Typography variant="body1">{sound.title}</Typography>
-          <img src={sound.img} alt={sound.title} style={{ width: '80px', height: '40px' }} />
-        </div>
+    <section className="sounds-list">
+      {sounds.map((sound, index) => (
+        <SoundDetails
+          key={sound._id}
+          sound={sound}
+          audioRef={audioRefs.current[index]}
+          soundKey={index}
+        />
       ))}
     </section>
   );

@@ -15,17 +15,17 @@ const DrumMachine = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let fetchedSounds;
+        let kitSounds;
         if (kitId) {
-          fetchedSounds = await getKitSounds(kitId);
-          console.log('fetchedSounds: ', fetchedSounds);
-          if (fetchedSounds.length === 0) fetchedSounds = drumMachineDefaultConfig;
+          kitSounds = await getKitSounds(kitId);
+          console.log('kitSounds: ', kitSounds);
+          if (kitSounds.length === 0) kitSounds = drumMachineDefaultConfig;
         } else {
           console.log('drumMachineDefaultConfig: ', drumMachineDefaultConfig);
-          fetchedSounds = drumMachineDefaultConfig;
+          kitSounds = drumMachineDefaultConfig;
         }
-        setSounds(fetchedSounds);
-        audioRefs.current = fetchedSounds.map((_, index) => audioRefs.current[index] ?? createRef());
+        setSounds(kitSounds);
+        audioRefs.current = kitSounds.map((_, index) => audioRefs.current[index] ?? createRef());
       } catch (error) {}
     };
 
@@ -45,7 +45,7 @@ const DrumMachine = () => {
       <div className="drum-table">
         {sounds.map((sound, index) => (
           <Pad
-            key={sound.keyCode}
+            key={sound._id}
             sound={sound}
             isActive={activePad === sound.keyCode}
             toggleActive={toggleActive}

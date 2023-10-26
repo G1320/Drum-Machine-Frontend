@@ -9,14 +9,10 @@ import '../../assets/styles/components/kits/create-kit.css';
 
 export default function CreateKit() {
   const dispatch = useDispatch();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [kitName, setKitName] = useState('');
   const [description, setDescription] = useState('');
-
-  const handleError = (error) => {
-    dispatch(setError(error?.response?.data || 'Something went wrong!'));
-  };
 
   const addKit = async (kitData) => {
     try {
@@ -24,8 +20,8 @@ export default function CreateKit() {
       dispatch(setSuccess('Kit created successfully!'));
       navigate(`/pages/id/${kit._id}`);
     } catch (error) {
-      handleError(error);
       console.error(error);
+      dispatch(setError(error?.response?.data || 'Something went wrong!'));
     }
   };
 
