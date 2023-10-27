@@ -26,7 +26,7 @@ function UserInfo() {
         dispatch({ type: 'userKits/setUserKits', payload: returnedUserKits });
       });
     }
-  }, [user, dispatch]);
+  }, [user, userKits, dispatch]);
 
   const handleRemoveKit = (kitId) => {
     removeKitFromUser(user._id, kitId)

@@ -35,7 +35,7 @@ function KitFilter() {
       }
     };
     fetchKits();
-  }, [filter, sortBy, order, dispatch]);
+  }, [filter, sortBy, order, dispatch, kits]);
 
   const handleFilterChange = () => {
     setFilter(filterRef.current.value);

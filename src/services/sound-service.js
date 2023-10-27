@@ -49,9 +49,9 @@ export const addSoundToKit = async (kitId, soundId) => {
   }
 };
 
-export const removeSoundFromKit = async (userId, soundId) => {
+export const removeSoundFromKit = async (kitId, soundId) => {
   try {
-    return await httpService.delete(`${soundsEndpoint}/${userId}/sounds/${soundId}`);
+    return await httpService.delete(`${soundsEndpoint}/${kitId}/sounds/${soundId}`);
   } catch (error) {
     console.error('Failed to remove sound from kit', error);
     throw error;

@@ -30,7 +30,7 @@ function SoundsList({ kitId }) {
       }
     };
     fetchKit();
-  }, [kitId]);
+  }, [kitId, sounds]);
 
   return (
     <section className="sounds-list">

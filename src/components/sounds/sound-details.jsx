@@ -1,7 +1,7 @@
 // import '../../assets/styles/components/sounds/sound-details.css';
 import React, { useEffect, useRef } from 'react';
 import { playAudio } from '../../services/sound-service';
-import { addSoundToKit } from '../../services/sound-service';
+import { addSoundToKit, removeSoundFromKit } from '../../services/sound-service';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
@@ -37,6 +37,15 @@ function SoundDetails({ sound, audioRef, className }) {
       dispatch(setError(error.response.data || 'Failed to add sound to kit'));
     }
   };
+  const handleRemoveFromKit = async () => {
+    try {
+      await removeSoundFromKit(pageId, sound._id);
+      console.log('Sound added to kit!');
+    } catch (error) {
+      console.error('Failed to add sound to kit', error);
+      dispatch(setError(error.response.data || 'Failed to add sound to kit'));
+    }
+  };
 
   return (
     <div className={className} key={sound.keyCode}>
@@ -45,6 +54,7 @@ function SoundDetails({ sound, audioRef, className }) {
       {/* <img src={sound.img} style={{ maxWidth: '80px' }}></img> */}
       <button onClick={handleClick}>Preview sound</button>
       <button onClick={handleAddToKit}>Add to Kit</button>
+      <button onClick={handleRemoveFromKit}>Remove from Kit</button>
     </div>
   );
 }
