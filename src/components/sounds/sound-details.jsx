@@ -1,5 +1,5 @@
 // import '../../assets/styles/components/sounds/sound-details.css';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { playAudio } from '../../services/sound-service';
 import { addSoundToKit, removeSoundFromKit } from '../../services/sound-service';
 import { useParams } from 'react-router-dom';
@@ -53,8 +53,11 @@ function SoundDetails({ sound, audioRef, className }) {
       <audio src={sound.src} ref={audioRef} />
       {/* <img src={sound.img} style={{ maxWidth: '80px' }}></img> */}
       <button onClick={handleClick}>Preview sound</button>
-      <button onClick={handleAddToKit}>Add to Kit</button>
-      <button onClick={handleRemoveFromKit}>Remove from Kit</button>
+      {sound.alert ? (
+        <button onClick={handleRemoveFromKit}>Remove from Kit</button>
+      ) : (
+        <button onClick={handleAddToKit}>Add to Kit</button>
+      )}
     </div>
   );
 }
