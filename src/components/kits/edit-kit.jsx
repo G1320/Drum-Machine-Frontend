@@ -35,7 +35,7 @@ function Show() {
         setData(pageData);
         setTempData({ name: pageData.name, description: pageData.description });
       } catch (error) {
-        console.error(error);
+        console.error('Failed to Get Page Data', error);
         setErrorState(true);
       }
     };
@@ -69,6 +69,10 @@ function Show() {
     }
   };
 
+  const handleLoadToDrumMachine = () => {
+    navigate(`/drum/id/${data._id}`);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     handleUpdate();
@@ -88,10 +92,6 @@ function Show() {
     } else {
       dispatch(setError('Please log in to add a Kit to your Kits!'));
     }
-  };
-
-  const handleLoadToDrumMachine = () => {
-    navigate(`/drum/id/${data._id}`);
   };
 
   if (!data || error) {
@@ -145,11 +145,6 @@ function Show() {
       </Button>
 
       <Typography variant="h6" gutterBottom>
-        Sounds:
-      </Typography>
-      <SoundsList kitId={pageId} />
-
-      <Typography variant="h6" gutterBottom>
         Subscribers: {data.subscribers}
       </Typography>
       <Button variant="contained" color="secondary" onClick={handleSubscribe} sx={{ mr: 2 }}>
@@ -161,6 +156,10 @@ function Show() {
       <Button variant="contained" onClick={handleAddToKits} sx={{ mr: 2 }}>
         Add to my kits
       </Button>
+      <Typography variant="h6" gutterBottom>
+        Add sounds to your Kit:
+      </Typography>
+      <SoundsList kitId={pageId} />
     </Container>
   );
 }

@@ -1,6 +1,7 @@
 .drum-table {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  padding-block-end: 1rem;
   gap: 10px;
   width: 100%;
   max-width: 300px;

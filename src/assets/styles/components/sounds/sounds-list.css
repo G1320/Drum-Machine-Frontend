@@ -1,4 +1,10 @@
 .sounds-list {
   display: grid;
+  height: 100%;
   grid-template-columns: repeat(3, 1fr);
+}
+
+.alert {
+  border: 1px solid purple;
+  border-radius: 12px;
 }

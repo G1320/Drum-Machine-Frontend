@@ -1,6 +1,7 @@
 import '../../assets/styles/components/sounds/sounds-list.css';
 import React, { useEffect, useState, useRef, createRef } from 'react';
 import { getSounds } from '../../services/sound-service';
+import { getKitSounds } from '../../services/kit-service';
 import SoundDetails from './sound-details';
 
 function SoundsList({ kitId }) {
@@ -11,7 +12,17 @@ function SoundsList({ kitId }) {
     const fetchKit = async () => {
       try {
         const sounds = await getSounds();
-        setSounds(sounds);
+        const kitSounds = await getKitSounds(kitId);
+
+        setSounds(
+          sounds.map((sound) => {
+            if (kitSounds.some((kitSound) => kitSound._id === sound._id)) {
+              sound = { ...sound, alert: true };
+              return sound;
+            }
+            return sound;
+          })
+        );
 
         audioRefs.current = sounds.map((_, index) => audioRefs.current[index] ?? createRef());
       } catch (error) {
@@ -29,6 +40,7 @@ function SoundsList({ kitId }) {
           sound={sound}
           audioRef={audioRefs.current[index]}
           soundKey={index}
+          className={sound.alert ? 'alert' : 'Danger'}
         />
       ))}
     </section>

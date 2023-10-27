@@ -26,23 +26,30 @@ function Login() {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleLogin();
+    }
+  };
   return (
-    <div>
+    <article className="login-links">
       <input
         type="text"
         placeholder="Username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       <button onClick={handleLogin}>Login</button>
       <Link to="/create">Create user</Link>
-    </div>
+    </article>
   );
 }
 

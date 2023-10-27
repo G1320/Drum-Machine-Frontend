@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
 import '../../assets/styles/components/drum-machine/drum-machine.css';
+import { Button } from '@mui/material';
 import { getKitSounds } from '../../services/kit-service';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import drumMachineDefaultConfig from '../../config/drumMachineDefaultConfig';
 import Pad from './drum-pad';
 
 const DrumMachine = () => {
   const { kitId } = useParams();
-  const [activePad, setActivePad] = useState(null);
+  const [activePad, setActivePad] = useState('81');
   const [sounds, setSounds] = useState([]);
 
   const audioRefs = useRef([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,12 +20,11 @@ const DrumMachine = () => {
         let kitSounds;
         if (kitId) {
           kitSounds = await getKitSounds(kitId);
-          console.log('kitSounds: ', kitSounds);
-          if (kitSounds.length === 0) kitSounds = drumMachineDefaultConfig;
+          if (!kitSounds.length) kitSounds = drumMachineDefaultConfig;
         } else {
-          console.log('drumMachineDefaultConfig: ', drumMachineDefaultConfig);
           kitSounds = drumMachineDefaultConfig;
         }
+        console.log('kitSounds: ', kitSounds);
         setSounds(kitSounds);
         audioRefs.current = kitSounds.map((_, index) => audioRefs.current[index] ?? createRef());
       } catch (error) {}
@@ -40,19 +41,27 @@ const DrumMachine = () => {
     }
   };
 
+  const handleNavigateToEdit = () => {
+    navigate(`/pages/id/${kitId}`);
+  };
+
   return (
     <section>
       <div className="drum-table">
         {sounds.map((sound, index) => (
           <Pad
             key={sound._id}
+            keyCode={drumMachineDefaultConfig[index].keyCode.toString()}
             sound={sound}
-            isActive={activePad === sound.keyCode}
+            isActive={activePad === drumMachineDefaultConfig[index].keyCode.toString()}
             toggleActive={toggleActive}
             audioRef={audioRefs.current[index]}
           />
         ))}
       </div>
+      <Button variant="contained" onClick={handleNavigateToEdit}>
+        Edit kit / Add sounds
+      </Button>
     </section>
   );
 };
