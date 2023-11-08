@@ -1,2 +1,9 @@
 .create-kit {
+  width: 100%;
+  align-self: start;
+  justify-self: center;
+}
+
+.create-kit * {
+  margin-block-end: 0.25rem;
 }

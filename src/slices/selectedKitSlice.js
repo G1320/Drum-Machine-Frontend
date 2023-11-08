@@ -5,6 +5,7 @@ const selectedKitSlice = createSlice({
   initialState: null,
   reducers: {
     setSelectedKit(state, action) {
+      // console.log('action.payload;: ', action.payload);
       return action.payload;
     },
   },

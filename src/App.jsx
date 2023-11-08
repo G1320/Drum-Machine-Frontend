@@ -24,30 +24,33 @@ import store from './store/index';
 
 function App() {
   return (
-    <Provider store={store}>
-      <Router>
-        <Header />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Navigate to="/create" />} />
-            <Route path="/create" element={<Create />} />
-            <Route path="/read" element={<Read />} />
-            <Route path="/update" element={<Update />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/drum" element={<DrumMachine />} />
-            <Route path="/drum/id/:kitId" element={<DrumMachine />} />
-            <Route path="/synth" element={<Synth />} />
-            <Route path="/sequencer" element={<Sequencer />} />
-            <Route path="/pages/id/:pageId" element={<Show />} />
-            <Route path="/pages/:pageName" element={<Show />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="*" element={<FourOhFour />} />
-          </Routes>
-        </main>
-      </Router>
-      <ErrorAlert />
-      <SuccessAlert />
-    </Provider>
+    <main>
+      <Provider store={store}>
+        <Router>
+          <Header />
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<Navigate to="/create" />} />
+              <Route path="/create" element={<Create />} />
+              <Route path="/read" element={<Read />} />
+              <Route path="/update" element={<Update />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/drum" element={<DrumMachine />} />
+              <Route path="/drum/id/:kitId" element={<DrumMachine />} />
+              <Route path="/synth" element={<Synth />} />
+              <Route path="/sequencer" element={<Sequencer />} />
+              <Route path="/sequencer/id/:kitId" element={<Sequencer />} />
+              <Route path="/pages/id/:pageId" element={<Show />} />
+              <Route path="/pages/:pageName" element={<Show />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<FourOhFour />} />
+            </Routes>
+          </main>
+        </Router>
+        <ErrorAlert />
+        <SuccessAlert />
+      </Provider>
+    </main>
   );
 }
 

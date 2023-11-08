@@ -1,0 +1,22 @@
+.drum-Pad {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 60px;
+  min-width: 100%;
+  color: black;
+  border: 2.5px solid #834de7;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  transition: background-color 0.2s;
+}
+
+.drum-Pad.active {
+  background-color: #646cff;
+}
+
+.drum-Pad.inactive {
+  /* background-color: #f0f0f0; */
+}

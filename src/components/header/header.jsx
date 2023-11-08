@@ -5,10 +5,7 @@ import { logout as logoutService } from '../../services/auth-service';
 import { logout as logoutAction } from '../../slices/authSlice';
 
 import '../../assets/styles/components/header/header.css';
-
-import UserInfo from '../user/user-info';
 import KitFilter from '../kits/filter-kits';
-import CreateKit from '../kits/create-kit';
 import NavMenu from '../nav-menu/nav-menu';
 import { getLocalUser } from '../../services/user-service';
 
@@ -35,9 +32,7 @@ function Header() {
 
       {user ? (
         <>
-          <UserInfo />
           <KitFilter />
-          <CreateKit />
           <button className="btn-logout" onClick={handleLogout}>
             Logout
           </button>

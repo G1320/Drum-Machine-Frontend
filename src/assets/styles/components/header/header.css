@@ -1,19 +1,17 @@
 header {
-  padding-block-start: 1rem;
-  min-height: 200px;
+  height: 13vh;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 35px 1fr;
-  border-bottom: #ccc 1px solid;
-}
+  padding-block-start: 1rem;
 
-.header-container {
-  height: 292px;
+  grid-template-columns: 1fr 50% 1fr;
+  grid-template-rows: 40px 1fr;
 }
 
 .btn-logout,
 .btn-login {
-  grid-column: 4;
+  height: 100%;
+  width: 100%;
+  grid-column: 3;
   grid-row: 1;
 }
 
@@ -28,7 +26,7 @@ header {
 }
 
 .hero {
-  grid-column: 2/4;
+  grid-column: 2;
   font-size: 2rem;
   color: white;
   font-weight: bold;
@@ -46,5 +44,5 @@ button {
 }
 
 button:hover {
-  background-color: #d32f2f;
+  background-color: #36225c;
 }

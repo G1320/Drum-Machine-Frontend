@@ -4,7 +4,6 @@ import Cookies from 'js-cookie';
 const authEndpoint = 'api/auth';
 
 export const register = async (userData) => {
-  console.log('userData: ', userData);
   try {
     const { authToken, user } = await httpService.post(`${authEndpoint}/register`, userData);
     sessionStorage.setItem('user', JSON.stringify(user));
@@ -38,6 +37,7 @@ export const logout = async () => {
     await httpService.post(`${authEndpoint}/logout`);
     sessionStorage.removeItem('user');
     Cookies.remove('authToken');
+    Cookies.remove('refreshToken');
   } catch (error) {
     console.error('Logout failed', error);
     throw error;

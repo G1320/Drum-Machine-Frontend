@@ -29,7 +29,7 @@ function NavMenu() {
         <Link to="/synth" className="menu-item">
           Synth
         </Link>
-        <Link to="/sequencer" className="menu-item">
+        <Link to={`/sequencer/id/${validPageId}`} className="menu-item">
           Sequencer
         </Link>
       </Menu>

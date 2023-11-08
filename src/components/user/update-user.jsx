@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { updateUser } from '../../services/user-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
+import { setSuccess } from '../../slices/successSlice';
 
 import '../../assets/styles/components/user/update-user.css';
 
@@ -31,10 +32,6 @@ export default function Update() {
     setIsAdmin(localStorage.getItem('isAdmin'));
   }, []);
 
-  const handleError = (error) => {
-    dispatch(setError(error?.response?.data || 'Something went wrong!'));
-  };
-
   const updateData = async () => {
     try {
       const response = await updateUser(id, {
@@ -47,9 +44,10 @@ export default function Update() {
         password,
       });
       console.log('response: ', response);
+      setSuccess('User updated successfully!');
       navigate('/read');
     } catch (error) {
-      handleError(error);
+      dispatch(setError(error?.response?.data || 'Something went wrong!'));
       console.error(error);
     }
   };

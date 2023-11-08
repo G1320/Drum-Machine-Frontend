@@ -1,31 +1,75 @@
-.drum-table {
+.kit-name-external-wrapper {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding-block-end: 1rem;
-  gap: 10px;
+  grid-template-columns: 18rem 1fr 1fr;
+  gap: 1rem;
+}
+
+.kit-name-wrapper {
+  grid-column: 2/4;
+}
+
+.drum-machine-wrapper {
+  display: grid;
+  grid-template-columns: 18rem 1fr 1fr;
+  gap: 1rem;
+}
+
+.drum-machine {
+  display: grid;
+  height: 2vh;
+  grid-template-rows: 0.1fr 1fr 0.1fr 1fr;
+}
+
+.drum-table {
+  grid-column: 2/4;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 1rem;
+  width: 90%;
+  max-width: 800px;
+  margin: 0.5rem auto 1.5rem;
+  padding: 1rem;
+  border: 2.5px solid #f0f0f0;
+  border-radius: 12px;
+}
+
+.drum-machine-bottom-wrapper {
+  display: grid;
+  grid-template-columns: 18rem 1fr 1fr;
+  gap: 1rem;
+}
+
+.drum-machine-btns-internal-wrapper {
+  grid-column: 2/4;
+  display: grid;
+  justify-self: center;
+  max-width: 610px;
+
+  gap: 1rem;
+  grid-template-columns: 0.8fr 1fr 0.8fr;
+}
+
+.drum-machine-btns-wrapper {
   width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 18rem 1fr 1fr;
+  gap: 1rem;
 }
 
-.drum-Pad {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-  width: 100px;
-  color: black;
-  background-color: #f0f0f0;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  transition: background-color 0.2s;
+.drum-machine-btns * {
+  min-width: 93px !important;
+  height: 40px;
 }
 
-.drum-Pad.active {
-  background-color: #3f51b5;
+.add-to-kits-btn {
+  max-width: 230px !important;
 }
 
-.drum-Pad.inactive {
-  background-color: #f0f0f0;
+.edit-btn {
+  justify-self: end;
+}
+
+.delete-btn {
+  margin: 0 !important;
+  justify-self: start;
 }

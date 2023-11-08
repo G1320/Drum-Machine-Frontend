@@ -24,7 +24,6 @@ function Show() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [tempData, setTempData] = useState({ name: '', description: '' });
-  const [error, setErrorState] = useState(false);
 
   const { pageId } = useParams();
 
@@ -36,7 +35,7 @@ function Show() {
         setTempData({ name: pageData.name, description: pageData.description });
       } catch (error) {
         console.error('Failed to Get Page Data', error);
-        setErrorState(true);
+        dispatch(setError(error?.response?.data || 'Failed to load kit'));
       }
     };
     fetchData();
@@ -57,7 +56,7 @@ function Show() {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteKit = async () => {
     try {
       await deleteKit(data._id);
       dispatch(setSuccess('Kit deleted successfully!'));
@@ -94,7 +93,7 @@ function Show() {
     }
   };
 
-  if (!data || error) {
+  if (!data) {
     return (
       <div className="loader-container">
         <CircularProgress />
@@ -114,7 +113,7 @@ function Show() {
         autoComplete="off"
         onSubmit={handleSubmit}
         color={'secondary'}
-        sx={{ my: 2 }}
+        // sx={{ my: 2 }}
       >
         <FormGroup>
           <TextField
@@ -150,16 +149,16 @@ function Show() {
       <Button variant="contained" color="secondary" onClick={handleSubscribe} sx={{ mr: 2 }}>
         Subscribe
       </Button>
-      <Button variant="contained" color="error" onClick={handleDelete} sx={{ mr: 2 }}>
+      <Button variant="contained" color="error" onClick={handleDeleteKit} sx={{ mr: 2 }}>
         Delete
       </Button>
       <Button variant="contained" onClick={handleAddToKits} sx={{ mr: 2 }}>
         Add to my kits
       </Button>
-      <Typography variant="h6" gutterBottom>
+      {/* <Typography variant="h6" gutterBottom>
         Add sounds to your Kit:
       </Typography>
-      <SoundsList kitId={pageId} />
+      <SoundsList kitId={pageId} /> */}
     </Container>
   );
 }

@@ -18,7 +18,9 @@ export default function CreateKit() {
     try {
       const kit = await createKit(kitData);
       dispatch(setSuccess('Kit created successfully!'));
-      navigate(`/pages/id/${kit._id}`);
+      navigate(`/drum/id/${kit._id}`);
+      setDescription('');
+      setKitName('');
     } catch (error) {
       console.error(error);
       dispatch(setError(error?.response?.data || 'Something went wrong!'));
@@ -37,7 +39,7 @@ export default function CreateKit() {
   };
 
   return (
-    <div className="create-kit">
+    <section className="create-kit">
       <Box
         component="form"
         className="create-form"
@@ -64,10 +66,10 @@ export default function CreateKit() {
         </FormGroup>
         <FormGroup>
           <Button variant="contained" color="primary" type="submit">
-            Submit
+            Create
           </Button>
         </FormGroup>
       </Box>
-    </div>
+    </section>
   );
 }

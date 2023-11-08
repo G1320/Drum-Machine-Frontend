@@ -7,6 +7,7 @@ import SoundDetails from './sound-details';
 function SoundsList({ kitId }) {
   const [sounds, setSounds] = useState([]);
   const audioRefs = useRef([]);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   useEffect(() => {
     const fetchKit = async () => {
@@ -17,8 +18,7 @@ function SoundsList({ kitId }) {
         setSounds(
           sounds.map((sound) => {
             if (kitSounds.some((kitSound) => kitSound._id === sound._id)) {
-              sound = { ...sound, alert: true };
-              return sound;
+              return { ...sound, alert: true };
             }
             return sound;
           })
@@ -30,20 +30,33 @@ function SoundsList({ kitId }) {
       }
     };
     fetchKit();
-  }, [kitId, sounds]);
+  }, [sounds, kitId]);
+
+  const handleToggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return (
-    <section className="sounds-list">
-      {sounds.map((sound, index) => (
-        <SoundDetails
-          key={sound._id}
-          sound={sound}
-          audioRef={audioRefs.current[index]}
-          soundKey={index}
-          className={sound.alert ? 'alert' : 'Danger'}
-        />
-      ))}
-    </section>
+    <>
+      <button className="sounds-list-expand-button " onClick={handleToggleExpand}>
+        {isExpanded ? 'Collapse' : 'Expand'}
+      </button>
+
+      <section className={`sounds-list ${isExpanded ? 'expanded' : 'collapsed'}`}>
+        {' '}
+        {/* <div> */}
+        {sounds.map((sound, index) => (
+          <SoundDetails
+            key={sound._id}
+            sound={sound}
+            audioRef={audioRefs.current[index]}
+            soundKey={index}
+            className={`${sound.alert ? 'alert' : 'Danger'} ${isExpanded ? 'expanded' : ''}`}
+          />
+        ))}
+        {/* </div> */}
+      </section>
+    </>
   );
 }
 

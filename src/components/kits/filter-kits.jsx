@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../assets/styles/components/kits/kit-filter.css';
+import '../../assets/styles/components/kits/filter-kits.css';
 import { getKits } from '../../services/kit-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
+import { Select, MenuItem, TextField, InputLabel, FormHelperText, FormGroup } from '@mui/material';
 
 function KitFilter() {
   const [kits, setKits] = useState([]);
@@ -57,49 +58,82 @@ function KitFilter() {
     }
   };
 
+  // <FormGroup>
+  //   <TextField
+  //     label="Kit Name"
+  //     variant="outlined"
+  //     value={kitName}
+  //     onChange={(e) => setKitName(e.target.value)}
+  //   />
+  // </FormGroup>;
+
   return (
-    <div className="kit-filter">
-      <div>
-        <h3>
-          Filter by name:
-          <input type="text" ref={filterRef} onChange={handleFilterChange} />
-        </h3>
-      </div>
-      <div className="sort-by">
-        <label>
-          Sort by:
-          <select ref={sortByRef} onChange={handleSortChange}>
-            <option value="">None</option>
-            <option value="name">Name</option>
-          </select>
-          <br />
-        </label>
-      </div>
-      <div className="order">
-        <label>
-          Order:
-          <select ref={orderRef} onChange={handleSortChange}>
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-          </select>
-        </label>
-      </div>
-      <div>
-        <label>
-          All kits:
-          <select value={selectedKit} onChange={handleChange}>
-            <option value="" disabled>
-              Select a kit
-            </option>
-            {kits.map((kit) => (
-              <option key={kit._id} value={kit._id}>
-                {kit.name}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-    </div>
+    <section className="kit-filter">
+      <FormGroup className="kit-filter-input">
+        <TextField
+          // label="Search "
+          variant="outlined"
+          size="small"
+          inputRef={filterRef}
+          onChange={handleFilterChange}
+        />
+        <FormHelperText>Search</FormHelperText>
+      </FormGroup>
+      <article>
+        <Select
+          className="filter-select"
+          labelId="all-kits-label"
+          value={selectedKit}
+          onChange={handleChange}
+          displayEmpty
+        >
+          <MenuItem value="" disabled>
+            Select a kit
+          </MenuItem>
+          {kits.map((kit) => (
+            <MenuItem key={kit._id} value={kit._id}>
+              {kit.name}
+            </MenuItem>
+          ))}
+        </Select>
+        <FormHelperText>Kit</FormHelperText>
+      </article>
+      <article className="sort-by">
+        <Select
+          className="filter-select"
+          labelId="sort-by-label"
+          value={sortBy}
+          onChange={handleSortChange}
+          displayEmpty
+        >
+          <MenuItem value="" disabled>
+            Sort by
+          </MenuItem>
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value="name">Name</MenuItem>
+        </Select>
+        <FormHelperText>Sort by</FormHelperText>
+      </article>
+      <article className="order">
+        <Select
+          className="filter-select"
+          labelId="order-label"
+          value={order}
+          ref={orderRef}
+          onChange={handleSortChange}
+          displayEmpty
+        >
+          <MenuItem value="" disabled>
+            Order
+          </MenuItem>
+          <MenuItem value="asc">Ascending</MenuItem>
+          <MenuItem value="desc">Descending</MenuItem>
+        </Select>
+        <FormHelperText>Order</FormHelperText>
+      </article>
+    </section>
   );
 }
 

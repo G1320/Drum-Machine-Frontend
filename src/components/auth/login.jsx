@@ -19,7 +19,7 @@ function Login() {
       if (!user) return;
       dispatch(loginAction(user));
       dispatch(setSuccess('Login successful!'));
-      navigate('/pages/id/64e61e8b7aecdc67f8632329');
+      navigate('/drum/id/64e61e8b7aecdc67f863233c');
     } catch (error) {
       console.error('Login failed', error);
       dispatch(setError(error?.response?.data || 'Login failed. Please try again.'));
@@ -32,7 +32,7 @@ function Login() {
     }
   };
   return (
-    <article className="login-links">
+    <section className="login-links">
       <input
         type="text"
         placeholder="Username"
@@ -49,7 +49,7 @@ function Login() {
       />
       <button onClick={handleLogin}>Login</button>
       <Link to="/create">Create user</Link>
-    </article>
+    </section>
   );
 }
 

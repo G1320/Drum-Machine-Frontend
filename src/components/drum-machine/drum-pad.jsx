@@ -1,3 +1,5 @@
+import '../../assets/styles/components/drum-machine/drum-pad.css';
+
 import React, { useEffect } from 'react';
 import { playAudio } from '../../services/sound-service';
 
@@ -23,11 +25,10 @@ const Pad = ({ sound, toggleActive, isActive, audioRef, keyCode }) => {
   }, [handleKeyPress]);
 
   return (
-    <div className={`drum-Pad ${isActive ? 'active' : ''}`} onClick={handleClick}>
-      {/* <p>{keyCode}</p> */}
+    <article className={`drum-Pad ${isActive ? 'active' : ''}`} onClick={handleClick}>
       <p>{sound.title}</p>
       <audio src={sound.src} ref={audioRef} />
-    </div>
+    </article>
   );
 };
 

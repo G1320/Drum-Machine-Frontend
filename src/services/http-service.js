@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import Cookies from 'js-cookie';
 const BASE_URL = '//localhost:3000/';
 
 const axios = Axios.create({
@@ -22,6 +23,21 @@ export const httpService = {
 
 async function ajax(endpoint, method = 'GET', data = null) {
   try {
+    const accessToken = Cookies.get('authToken');
+    if (accessToken) {
+      const decodedToken = jwt.decode(accessToken);
+      if (decodedToken.exp < Date.now() / 1000) {
+        // Access token has expired, refresh it using the refresh token
+        const refreshToken = Cookies.get('refreshToken');
+        const response = await axios.post(`${BASE_URL}/refresh-token`, { refreshToken });
+        const newAccessToken = response.data.authToken;
+        localStorage.setItem('authToken', newAccessToken);
+        axios.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+      } else {
+        // Access token is still valid, use it
+        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+      }
+    }
     const res = await axios({
       url: `${BASE_URL}${endpoint}`,
       method,

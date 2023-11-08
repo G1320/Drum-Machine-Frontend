@@ -4,6 +4,7 @@ import { Button, TextField, FormControlLabel, Checkbox, Box, FormGroup } from '@
 import { register } from '../../services/auth-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
+import { setSuccess } from '../../slices/successSlice';
 import '../../assets/styles/components/user/create-user.css';
 
 export default function Create() {
@@ -18,10 +19,6 @@ export default function Create() {
 
   let navigate = useNavigate();
 
-  const handleError = (error) => {
-    dispatch(setError(error?.response?.data || 'Something went wrong!'));
-  };
-
   const postData = async () => {
     try {
       await register({
@@ -32,9 +29,10 @@ export default function Create() {
         lastName,
         isAdmin,
       });
+      dispatch(setSuccess('User created successfully!'));
       navigate('/read');
     } catch (error) {
-      handleError(error);
+      dispatch(setError(error?.response?.data || 'Something went wrong!'));
       console.error(error);
     }
   };
