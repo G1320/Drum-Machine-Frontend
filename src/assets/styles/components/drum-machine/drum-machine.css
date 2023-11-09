@@ -25,12 +25,25 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
   gap: 1rem;
-  width: 90%;
-  max-width: 800px;
+  width: 75%;
+  max-width: 500px;
+  /* max-height: 330px; */
   margin: 0.5rem auto 1.5rem;
   padding: 1rem;
   border: 2.5px solid #f0f0f0;
-  border-radius: 12px;
+  border-radius: 8px;
+}
+
+@media (max-width: 800px) {
+  .drum-table {
+    width: 95%;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .drum-table {
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  }
 }
 
 .drum-machine-bottom-wrapper {
@@ -51,6 +64,7 @@
 
 .drum-machine-btns-wrapper {
   width: 100%;
+  /* max-height: 40px; */
   display: grid;
   grid-template-columns: 18rem 1fr 1fr;
   gap: 1rem;
@@ -62,6 +76,7 @@
 }
 
 .add-to-kits-btn {
+  max-height: 40px;
   max-width: 230px !important;
 }
 

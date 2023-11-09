@@ -7,6 +7,6 @@
   height: calc(300px + 2rem);
   width: max-content;
   border: 2px solid rgb(189, 177, 189);
-  border-radius: 12px;
+  border-radius: 8px;
   transition: 500ms;
 }

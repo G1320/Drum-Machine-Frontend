@@ -2,9 +2,19 @@ header {
   height: 13vh;
   display: grid;
   padding-block-start: 1rem;
-
+  font-family: 'Agbalumo', sans-serif;
+  letter-spacing: 3px;
   grid-template-columns: 1fr 50% 1fr;
   grid-template-rows: 40px 1fr;
+}
+
+.hero {
+  grid-column: 2;
+  font-size: 2.5rem;
+  color: white;
+  font-weight: bold;
+  align-self: center;
+  margin: 0;
 }
 
 .btn-logout,
@@ -12,33 +22,19 @@ header {
   height: 100%;
   width: 100%;
   grid-column: 3;
-  grid-row: 1;
 }
 
 .btn-login-link {
   display: grid;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  text-align: center;
   text-decoration: none;
   color: inherit;
 }
 
-.hero {
-  grid-column: 2;
-  font-size: 2rem;
-  color: white;
-  font-weight: bold;
-  align-self: center;
-  margin: 0;
-}
-
 button {
-  background-color: #f44336;
-  color: white;
+  background-color: inherit;
+  color: inherit;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   margin-left: 10px;
   cursor: pointer;
 }

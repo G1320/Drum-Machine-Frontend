@@ -1,5 +1,5 @@
 body {
-  background-color: #1a1a1a;
+  background-color: black;
 }
 
 html,
@@ -60,7 +60,7 @@ li {
 }
 
 button {
-  background-color: #1a1a1a;
+  /* background-color: black; */
   cursor: pointer;
   transition: border-color 0.25s;
 }

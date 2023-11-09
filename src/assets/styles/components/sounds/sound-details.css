@@ -8,7 +8,7 @@
 .sound-details:hover {
   transition: 250ms;
   box-shadow: inset 0 0 0 1px #834de7;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .sound-details.expanded {
