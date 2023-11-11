@@ -26,7 +26,7 @@ function Header() {
 
   return (
     <header className="header-container">
-      <h1 className="hero">The Boogy Man</h1>
+      <h1 className="hero">The Boogie Man</h1>
 
       <NavMenu />
 

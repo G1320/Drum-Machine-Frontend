@@ -3,25 +3,26 @@ import * as Tone from 'tone';
 import { Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import SequencerPad from './sequencer-pad';
-import PlayButton from './sequencer-start-btn';
 import { getKitSounds } from '../../services/kit-service';
 import '../../assets/styles/components/sequencer/sequencer.css';
+import SoundsList from '../sounds/sounds-list';
 
 function Sequencer() {
-  const numOfSteps = 8;
+  const numOfSteps = 16;
+  const NOTE = 'C2';
   const { kitId } = useParams();
   const [kitSounds, setKitSounds] = useState([]);
+  const [numOfSounds, setNumOfSounds] = useState(0); // add state variable for number of sounds
+
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const NOTE = 'C2';
+  const trackIds = [...Array(kitSounds.length).keys()];
+  const stepIds = [...Array(numOfSteps).keys()];
 
-  const trackIds = [...Array(8).keys()]; // create an array of track ids based on the length of kitSounds
-  const stepIds = [...Array(numOfSteps).keys()]; // create an array of step ids based on the numOfSteps constant
-
-  const tracksRef = useRef([]); // create a ref for the tracks
-  const stepsRef = useRef([[]]); // create a ref for the steps
-  const lampsRef = useRef([]); // create a ref for the lamps
-  const seqRef = useRef(null); // create a ref for the Tone.Sequence object
+  const tracksRef = useRef([]);
+  const stepsRef = useRef([...Array(kitSounds.length)].map(() => Array(numOfSteps).fill(null)));
+  const lampsRef = useRef([]);
+  const seqRef = useRef(null);
 
   const handleStartClick = async () => {
     if (Tone.Transport.state === 'started') {
@@ -30,8 +31,9 @@ function Sequencer() {
     } else {
       await Tone.start();
       Tone.Transport.start();
+      lampsRef.current[0].checked = true;
+      Tone.Transport.bpm.value = 70;
       setIsPlaying(true);
-      lampsRef.current[0].checked = true; // set the first lamp to checked
     }
   };
 
@@ -40,13 +42,16 @@ function Sequencer() {
       try {
         const sounds = await getKitSounds(kitId); // fetch the kit sounds from the server
         setKitSounds(sounds); // set the kit sounds state
-      } catch (error) {}
+        setNumOfSounds(sounds.length); // set the number of sounds state
+      } catch (error) {
+        console.error('Failed to load kit', error);
+      }
     };
     fetchKitSounds();
   }, [kitId, kitSounds]);
 
   useEffect(() => {
-    stepsRef.current = Array.from(Array(numOfSteps)).map(() => {
+    stepsRef.current = Array.from(Array(kitSounds)).map(() => {
       // create a 2D array of refs for the steps
       return Array.from(Array(tracksRef.current.length)).map(() => {
         return createRef();
@@ -70,11 +75,10 @@ function Sequencer() {
         tracksRef.current.map((trk) => {
           // iterate over each track and trigger the sampler if the step is checked
           if (stepsRef.current[trk.id]?.[step]?.checked) {
-            console.log('stepsRef.current[trk.id]: ', stepsRef.current[trk.id]);
-            trk.sampler.triggerAttack(NOTE, time);
+            // console.log('stepsRef.current[trk.id]: ', stepsRef.current[trk.id]);
+            trk.sampler.triggerAttack(NOTE, Tone.now());
           }
         });
-        console.log(step); // log the current step
         lampsRef.current[step].checked = true; // set the current lamp to checked
       },
       [...stepIds], // pass in the stepIds array as the sequence events
@@ -87,81 +91,82 @@ function Sequencer() {
       seqRef.current?.dispose(); // dispose of the Tone.Sequence object
       tracksRef.current.map((trk) => void trk.sampler.dispose()); // dispose of each sampler
     };
-  }, []);
+  }, [numOfSounds]);
 
   return (
-    <section className="sequencer">
-      <div className="sequencer-lamp-row ">
-        {stepIds.map(
-          (
-            stepId // iterate over each step and display a lamp
-          ) => (
-            <label key={stepId} className="sequencer-lamp">
-              <input
-                type="radio"
-                name="lamp"
-                id={`lamp-${stepId}`}
-                ref={(elm) => {
-                  if (!elm) return;
-                  lampsRef.current[stepId] = elm;
-                  // console.log('elm: ', elm);
-                }}
-                className="sequencer-lamp-input"
-              />
-              <div className="sequencer-lamp-content" />
-            </label>
-          )
-        )}
-      </div>
+    <>
+      <section className="sequencer">
+        <div className="sequencer-lamp-row ">
+          {stepIds.map(
+            (
+              stepId // iterate over each step and display a lamp
+            ) => (
+              <label key={stepId} className="sequencer-lamp">
+                <input
+                  className="sequencer-lamp-input"
+                  type="radio"
+                  name="lamp"
+                  id={`lamp-${stepId}`}
+                  ref={(el) => {
+                    if (!el) return;
+                    lampsRef.current[stepId] = el;
+                  }}
+                />
+                <div className="sequencer-lamp-content" />
+              </label>
+            )
+          )}
+        </div>
 
-      {/* <div className="sequencer-internal-wrapper"> */}
-      <div className="cell-list">
-        {kitSounds.map(
-          (
-            sample // iterate over each kit sound and display its title
-          ) => (
-            <div key={sample._id}>
-              <p>{sample.title}</p>
-            </div>
-          )
-        )}
-      </div>
-      <div className="sequencer-row">
-        {trackIds.map(
-          (
-            trackId // iterate over each track and display its cells
-          ) => (
-            <div key={trackId} className="sequencer-column">
-              {stepIds.map((stepId) => {
-                const id = `${trackId}-${stepId}`;
-                return (
-                  <label key={id} className="sequencer-cell">
-                    <input
-                      key={id}
-                      id={id}
-                      type="checkbox"
-                      ref={(elm) => {
-                        if (!elm) return;
-                        if (!stepsRef.current[trackId]) {
-                          stepsRef.current[trackId] = [];
-                        }
-                        stepsRef.current[trackId][stepId] = elm;
-                      }}
-                      className="sequencer-cell__input"
-                    />
-                    <div className="sequencer-cell-content" />
-                  </label>
-                );
-              })}
-            </div>
-          )
-        )}
-        {/* </div> */}
-      </div>
-      <Button onClick={handleStartClick} className="play-button">
-        {isPlaying ? 'Pause' : 'Start'}
-      </Button>
-    </section>
+        <div className="cell-list">
+          {kitSounds.map(
+            (
+              sound // iterate over each kit sound and display its title
+            ) => (
+              <div key={sound._id}>
+                <p>{sound.title}</p>
+              </div>
+            )
+          )}
+        </div>
+        <div className="sequencer-column">
+          {trackIds.map(
+            (
+              trackId // iterate over each track and display its cells
+            ) => (
+              <div key={trackId} className="sequencer-row">
+                {stepIds.map((stepId) => {
+                  const id = `${trackId}-${stepId}`;
+                  return (
+                    <label key={id} className="sequencer-cell">
+                      <input
+                        className="sequencer-cell-input"
+                        key={id}
+                        id={id}
+                        type="checkbox"
+                        // disabled={isPlaying}
+                        ref={(el) => {
+                          if (!el) return;
+                          if (!stepsRef.current[trackId]) {
+                            stepsRef.current[trackId] = [];
+                          }
+                          stepsRef.current[trackId][stepId] = el;
+                        }}
+                      />
+                      <div />
+                    </label>
+                  );
+                })}
+              </div>
+            )
+          )}
+        </div>
+        <Button onClick={handleStartClick} className="play-button">
+          {isPlaying ? 'Pause' : 'Start'}
+        </Button>
+      </section>
+      <SoundsList kitId={kitId} />
+    </>
   );
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 import '../../assets/styles/components/kits/filter-kits.css';
 import { getKits } from '../../services/kit-service';
 import { useDispatch } from 'react-redux';
@@ -19,6 +20,7 @@ function KitFilter() {
   const orderRef = useRef();
 
   const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -53,19 +55,16 @@ function KitFilter() {
     if (selectedKitId) {
       const selectedKit = kits.find((kit) => kit._id === selectedKitId);
       if (selectedKit) {
-        navigate(`/drum/id/${selectedKit._id}`);
+        const locationParts = location.pathname.split('/');
+        const locationPath = locationParts[1];
+        if (locationPath === 'drum') {
+          navigate(`/drum/id/${selectedKit._id}`);
+        } else if (locationPath === 'sequencer') {
+          navigate(`/sequencer/id/${selectedKit._id}`);
+        }
       }
     }
   };
-
-  // <FormGroup>
-  //   <TextField
-  //     label="Kit Name"
-  //     variant="outlined"
-  //     value={kitName}
-  //     onChange={(e) => setKitName(e.target.value)}
-  //   />
-  // </FormGroup>;
 
   return (
     <section className="kit-filter">
