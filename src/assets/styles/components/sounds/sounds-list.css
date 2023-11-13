@@ -4,7 +4,7 @@
   padding: 1rem 1.5rem;
   overflow: scroll;
   gap: 0.5rem;
-  border: 2px solid rgb(189, 177, 189);
+  /* border: 2px solid rgb(189, 177, 189); */
   border-radius: 8px;
   transition: 500ms;
 }

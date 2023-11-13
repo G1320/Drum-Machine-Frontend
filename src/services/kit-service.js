@@ -34,6 +34,14 @@ export const getKitSounds = async (kitId) => {
   }
 };
 
+export const updateKitSounds = async (kitId, sounds) => {
+  try {
+    return await httpService.put(`${kitEndpoint}/${kitId}/sounds`, { sounds });
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const updateKit = async (kitId, updatedData) => {
   try {
     return await httpService.put(`${kitEndpoint}/${kitId}`, updatedData);

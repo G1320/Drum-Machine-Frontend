@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
 import * as Tone from 'tone';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import SequencerPad from './sequencer-pad';
-import { getKitSounds } from '../../services/kit-service';
+import { getKitSounds, updateKitSounds } from '../../services/kit-service';
 import '../../assets/styles/components/sequencer/sequencer.css';
 import SoundsList from '../sounds/sounds-list';
 
@@ -12,9 +13,12 @@ function Sequencer() {
   const NOTE = 'C2';
   const { kitId } = useParams();
   const [kitSounds, setKitSounds] = useState([]);
+  const [updatedKit, setUpdatedKit] = useState(null); // Define updatedKit variable
+
   const [numOfSounds, setNumOfSounds] = useState(0); // add state variable for number of sounds
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedCells, setSelectedCells] = useState([]);
 
   const trackIds = [...Array(kitSounds.length).keys()];
   const stepIds = [...Array(numOfSteps).keys()];
@@ -32,23 +36,34 @@ function Sequencer() {
       await Tone.start();
       Tone.Transport.start();
       lampsRef.current[0].checked = true;
-      Tone.Transport.bpm.value = 70;
+      Tone.Transport.bpm.value = 120;
       setIsPlaying(true);
     }
   };
 
   useEffect(() => {
-    const fetchKitSounds = async () => {
+    const getSounds = async () => {
       try {
-        const sounds = await getKitSounds(kitId); // fetch the kit sounds from the server
-        setKitSounds(sounds); // set the kit sounds state
-        setNumOfSounds(sounds.length); // set the number of sounds state
+        const sounds = await getKitSounds(kitId);
+        setKitSounds(sounds);
+        setNumOfSounds(sounds.length); // Used to trigger a render of the sequencer when a sound is added or removed
       } catch (error) {
         console.error('Failed to load kit', error);
       }
     };
-    fetchKitSounds();
+    getSounds();
   }, [kitId, kitSounds]);
+
+  // useEffect(() => {
+  //   const pattern = JSON.parse(localStorage.getItem('pattern'));
+  //   if (pattern) {
+  //     setSelectedCells(pattern);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem('pattern', JSON.stringify(selectedCells));
+  // }, [selectedCells]);
 
   useEffect(() => {
     stepsRef.current = Array.from(Array(kitSounds)).map(() => {
@@ -93,6 +108,32 @@ function Sequencer() {
     };
   }, [numOfSounds]);
 
+  const handleCellClick = (id) => {
+    setSelectedCells((prevSelectedCells) => {
+      if (prevSelectedCells.includes(id)) {
+        return prevSelectedCells.filter((cellId) => cellId !== id);
+      } else {
+        return [...prevSelectedCells, id];
+      }
+    });
+  };
+
+  const handleDragEnd = async (result) => {
+    if (!result.destination) return;
+
+    const newKitSounds = Array.from(kitSounds);
+    const [reorderedSound] = newKitSounds.splice(result.source.index, 1);
+    newKitSounds.splice(result.destination.index, 0, reorderedSound);
+
+    try {
+      const updatedKit = await updateKitSounds(kitId, newKitSounds);
+      setUpdatedKit(updatedKit);
+    } catch (error) {
+      console.error(error);
+      setKitSounds(newKitSounds);
+    }
+  };
+
   return (
     <>
       <section className="sequencer">
@@ -118,31 +159,56 @@ function Sequencer() {
           )}
         </div>
 
-        <div className="cell-list">
-          {kitSounds.map(
-            (
-              sound // iterate over each kit sound and display its title
-            ) => (
-              <div key={sound._id}>
-                <p>{sound.title}</p>
-              </div>
-            )
-          )}
-        </div>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="kitSounds">
+            {(provided) => (
+              <ul
+                key={'sounds'}
+                className="cell-list"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {kitSounds.map((sound, index) => (
+                  <Draggable key={sound._id} draggableId={sound._id} index={index}>
+                    {(provided) => (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        key={sound._id}
+                      >
+                        {sound.title}
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
         <div className="sequencer-column">
           {trackIds.map(
             (
               trackId // iterate over each track and display its cells
             ) => (
-              <div key={trackId} className="sequencer-row">
+              <div key={trackId} className="sequencer-row my-sequencer-row ">
                 {stepIds.map((stepId) => {
                   const id = `${trackId}-${stepId}`;
+                  const isSelected = selectedCells.includes(id);
+
                   return (
-                    <label key={id} className="sequencer-cell">
-                      <input
-                        className="sequencer-cell-input"
+                    <div key={id}>
+                      <label
                         key={id}
-                        id={id}
+                        htmlFor={id + 20}
+                        onClick={() => handleCellClick(id)}
+                        className={`sequencer-cell ${isSelected ? 'selected' : ''}`}
+                      />
+                      <input
+                        className="sequencer-cell-input step-checkbox"
+                        key={id + 10}
+                        id={id + 20}
                         type="checkbox"
                         // disabled={isPlaying}
                         ref={(el) => {
@@ -154,7 +220,7 @@ function Sequencer() {
                         }}
                       />
                       <div />
-                    </label>
+                    </div>
                   );
                 })}
               </div>
