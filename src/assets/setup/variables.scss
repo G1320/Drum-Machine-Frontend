@@ -1,0 +1,68 @@
+
+// Grid Layouts and Spacing
+$grid-gap-small: 0.25rem;
+$grid-gap-medium: 0.5rem;
+$grid-gap-large: 1rem;
+$grid-template-columns-default: max-content max-content 1fr 1fr;
+$grid-template-columns-drum-wrapper: 250px 1fr;
+$grid-template-rows-options: 25px;
+$grid-template-rows-drum: 465px 0.1fr 1fr;
+
+// Dimensions and Sizing
+$min-width-input: 120px;
+$max-width-drum-table: 500px;
+$width-drum-table-responsive: 95%;
+$width-hero: calc(100% - 2rem);
+$width-create-kit: 100%;
+$width-kit-name-wrapper: 700px;
+$min-width-user-kits: 220px;
+$width-user-kits-responsive: 70%;
+$height-drum-pad: 60px;
+$height-hero-row: 80px;
+$height-btn-half: 50%;
+
+// Colors
+$color-hover-link: #fcfcfc;
+$color-background-drum-options: #9058f7;
+$color-border-drum-table: #f0f0f0;
+$color-border-drum-pad: #834de7;
+$color-drum-pad-active: #646cff;
+$color-header-font: white;
+$color-button-hover: #36225c;
+$color-menu-background: #373a47;
+$color-menu-font: #ffffff;
+$color-menu-hover: #b8b7ad;
+
+// Fonts and Typography
+$font-size-default: 0.9rem;
+$font-size-drum-pad: 1.2rem;
+$font-size-hero: 2.8rem;
+$font-family-header: 'Agbalumo', sans-serif;
+$letter-spacing-header: 3px;
+
+// Borders and Border Radii
+$border-drum-table: 2.5px solid #f0f0f0;
+$border-drum-pad: 2.5px solid #834de7;
+$border-user-kits: 2px solid rgb(189, 177, 189);
+$border-radius-default: 6px;
+$border-radius-drum-pad: 5px;
+$border-radius-button: 8px;
+$border-radius-drum-pad-active: 12px;
+$border-login-button: 1px solid;
+
+// Media Query Breakpoints
+$breakpoint-medium: 800px;
+$breakpoint-small: 600px;
+$breakpoint-extra-small: 650px;
+$breakpoint-user-kits: 1200px;
+
+// Transitions and Animations
+$transition-color-change: background-color 0.2s;
+$transition-user-kits: 500ms;
+
+// Miscellaneous
+$padding-default: 0 0.5rem;
+$padding-drum-table: 1rem;
+$margin-auto: auto;
+$margin-drum-table: 1rem 0 1.75rem;
+$margin-user-kits: 0.5rem auto 1.5rem;

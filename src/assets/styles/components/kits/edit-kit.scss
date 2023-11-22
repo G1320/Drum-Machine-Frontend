@@ -1,0 +1,24 @@
+.edit-kit-container {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+}
+
+input,
+textarea,
+label {
+  color: #fcfcfc !important;
+  grid-column: 1/4;
+}
+
+.MuiBox-root {
+  grid-column: 1/6;
+}
+
+button {
+  grid-row: 2;
+  width: fit-content;
+  justify-self: center !important;
+  margin: auto !important;
+}

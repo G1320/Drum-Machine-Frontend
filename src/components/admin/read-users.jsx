@@ -1,6 +1,6 @@
-import '../../assets/styles/components/admin/read-users.css';
-
 import React, { useEffect, useState } from 'react';
+import '../../assets/styles/components/admin/read-users.scss';
+
 import { Link } from 'react-router-dom';
 
 import {

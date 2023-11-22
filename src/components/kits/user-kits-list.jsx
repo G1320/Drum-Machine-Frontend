@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../assets/styles/components/kits/user-kits-list.css';
+import '../../assets/styles/components/kits/user-kits-list.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeKitFromUser, getUserKits } from '../../services/user-service';
 import { useNavigate } from 'react-router-dom';
@@ -16,8 +16,8 @@ function UserKitsList() {
     try {
       await removeKitFromUser(user._id, kitId);
       dispatch({ type: 'userKits/removeKit', payload: kitId });
-      const returnedUserKits = await getUserKits(user._id);
-      dispatch({ type: 'userKits/setUserKits', payload: returnedUserKits });
+      const updatedUserKits = await getUserKits(user._id);
+      dispatch({ type: 'userKits/setUserKits', payload: updatedUserKits });
     } catch (error) {
       dispatch(setError('Failed to remove kit. Please try again later.'));
     }

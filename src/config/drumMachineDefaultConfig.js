@@ -79,7 +79,6 @@ const drumPadsConfig = [
     title: 'Brk_Snr',
     src: 'https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3',
   },
-  // New entries start here
   {
     keyCode: 89,
     title: 'Punchy_Kick',

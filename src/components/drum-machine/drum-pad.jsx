@@ -1,9 +1,9 @@
-import '../../assets/styles/components/drum-machine/drum-pad.css';
-
 import React, { useEffect } from 'react';
+import '../../assets/styles/components/drum-machine/drum-pad.scss';
+
 import { playAudio } from '../../services/sound-service';
 
-const Pad = ({ sound, toggleActive, isActive, audioRef, keyCode }) => {
+const DrumPad = ({ sound, toggleActive, isActive, audioRef, keyCode }) => {
   const handleKeyPress = (e) => {
     if (e.keyCode === keyCode) {
       console.log('e.keyCode: ', e.keyCode);
@@ -32,4 +32,4 @@ const Pad = ({ sound, toggleActive, isActive, audioRef, keyCode }) => {
   );
 };
 
-export default Pad;
+export default DrumPad;

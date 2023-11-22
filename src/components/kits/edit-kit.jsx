@@ -1,5 +1,5 @@
-import '../../assets/styles/components/kits/show-kit.css';
 import React, { useEffect, useState } from 'react';
+import '../../assets/styles/components/kits/show-kit.scss';
 import { useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -7,17 +7,8 @@ import { getPageData } from '../../services/data-service';
 import { updateKit, deleteKit } from '../../services/kit-service';
 import { setError } from '../../slices/errorSlice';
 import { setSuccess } from '../../slices/successSlice';
-import {
-  TextField,
-  Button,
-  Box,
-  FormGroup,
-  Typography,
-  Container,
-  CircularProgress,
-} from '@mui/material';
+import { TextField, Button, Box, FormGroup, Container, CircularProgress } from '@mui/material';
 import { addKitToUser, getLocalUser } from '../../services/user-service';
-import SoundsList from '../sounds/sounds-list';
 
 function Show() {
   const dispatch = useDispatch();
@@ -71,6 +62,9 @@ function Show() {
   const handleLoadToDrumMachine = () => {
     navigate(`/drum/id/${data._id}`);
   };
+  const handleLoadToSequencer = () => {
+    navigate(`/sequencer/id/${data._id}`);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -106,15 +100,8 @@ function Show() {
   };
 
   return (
-    <Container className="show-kit-container">
-      <Box
-        component="form"
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit}
-        color={'secondary'}
-        // sx={{ my: 2 }}
-      >
+    <Container className="edit-kit-container">
+      <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} color={'secondary'}>
         <FormGroup>
           <TextField
             label="Kit name"
@@ -140,12 +127,12 @@ function Show() {
         </Button>
       </Box>
       <Button variant="contained" onClick={handleLoadToDrumMachine}>
-        Load to drum machine
+        Load drum machine
+      </Button>
+      <Button variant="contained" onClick={handleLoadToSequencer}>
+        Load Sequencer
       </Button>
 
-      <Typography variant="h6" gutterBottom>
-        Subscribers: {data.subscribers}
-      </Typography>
       <Button variant="contained" color="secondary" onClick={handleSubscribe} sx={{ mr: 2 }}>
         Subscribe
       </Button>
@@ -155,10 +142,6 @@ function Show() {
       <Button variant="contained" onClick={handleAddToKits} sx={{ mr: 2 }}>
         Add to my kits
       </Button>
-      {/* <Typography variant="h6" gutterBottom>
-        Add sounds to your Kit:
-      </Typography>
-      <SoundsList kitId={pageId} /> */}
     </Container>
   );
 }

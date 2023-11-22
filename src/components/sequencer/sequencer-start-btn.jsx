@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import '../../assets/styles/components/sequencer/sequencer-start-btn.scss';
 import * as Tone from 'tone';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Button } from '@mui/material';
 
-function PlayButton() {
+const sequencerStartBtn = () => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const handleStartClick = async () => {
+    if (Tone.Transport.state === 'started') {
+      Tone.Transport.pause();
+      setIsPlaying(false);
+    } else {
+      await Tone.start();
+      Tone.Transport.start();
+      setIsPlaying(true);
+    }
+  };
   return (
-    <div className="play-button">
-      <FontAwesomeIcon icon={faPlus} />
-    </div>
+    <Button onClick={handleStartClick} className="sequencer-start-btn">
+      {isPlaying ? 'Pause' : 'Start'}
+    </Button>
   );
-}
+};
 
-export default PlayButton;
+export default sequencerStartBtn;

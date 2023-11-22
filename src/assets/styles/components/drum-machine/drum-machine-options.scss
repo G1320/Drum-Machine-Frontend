@@ -1,0 +1,16 @@
+.drum-machine-options {
+  display: grid;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  background-color: #9058f7;
+  grid-template-columns: max-content max-content 1fr 1fr;
+  gap: 0.25rem;
+  grid-template-rows: 25px;
+  justify-items: start;
+  padding: 0 0.5rem;
+  border-radius: 6px;
+  p {
+   color: #fcfcfc;
+  }
+}
+

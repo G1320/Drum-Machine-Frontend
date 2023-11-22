@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../../assets/styles/components/auth/login.scss';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -32,7 +33,7 @@ function Login() {
     }
   };
   return (
-    <section className="login-links">
+    <section className="login">
       <input
         type="text"
         placeholder="Username"
@@ -48,7 +49,9 @@ function Login() {
         onKeyDown={handleKeyDown}
       />
       <button onClick={handleLogin}>Login</button>
-      <Link to="/create">Create user</Link>
+      <button>
+        <Link to="/create">Create user</Link>
+      </button>
     </section>
   );
 }

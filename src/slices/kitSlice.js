@@ -9,7 +9,6 @@ const userKitsSlice = createSlice({
   reducers: {
     setUserKits(state, action) {
       state.userKits = action.payload;
-      // console.log('state.userKits: ', state.userKits);
     },
     addUserKit(state, action) {
       state.userKits.push(action.payload);

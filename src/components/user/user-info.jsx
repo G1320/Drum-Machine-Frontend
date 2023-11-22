@@ -1,8 +1,8 @@
-import '../../assets/styles/components/user/user-info.css';
 import React, { useEffect } from 'react';
+import '../../assets/styles/components/user/user-info.scss';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getUserKits, getLocalUser, removeKitFromUser } from '../../services/user-service';
+import { getUserKits, getLocalUser } from '../../services/user-service';
 import { setError } from '../../slices/errorSlice';
 
 import UserKitsList from '../kits/user-kits-list';

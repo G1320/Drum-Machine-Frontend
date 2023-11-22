@@ -1,0 +1,28 @@
+.user-kits {
+  grid-column: 2;
+  display: grid;
+  justify-content: center;
+  // align-content: start;
+  grid-template-rows: repeat(auto-fit, minmax(20px, 1fr));
+  margin: 0.5rem auto 1.5rem;
+  overflow: scroll;
+  gap: 2rem;
+  height: calc(100% - 2rem);
+  width: max-content;
+  min-width: 220px;
+  border: 2px solid rgb(189, 177, 189);
+  border-radius: 8px;
+  transition: 500ms;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 1200px) {
+  .user-kits {
+    width: 70%;
+  }
+}
+
+.user-info {
+  justify-self: end;
+  height: 100%;
+}

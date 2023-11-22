@@ -1,0 +1,42 @@
+.drum-machine-wrapper {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  width: calc(fit-content + 2rem);
+  height: 100%;
+  justify-items: start;
+  margin: auto;
+  gap: 1rem;
+}
+
+.drum-machine {
+  display: grid;
+  grid-template-rows: 465px 0.1fr 1fr;
+}
+
+.drum-table {
+  grid-column: 2/4;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 1rem;
+  max-width: 500px;
+  height: calc(100% - 4rem);
+  overflow: scroll;
+  align-self: center;
+  justify-self: center;
+  margin: 1rem 0 1.75rem;
+  padding: 1rem;
+  border: 2.5px solid #f0f0f0;
+  border-radius: 8px;
+}
+
+@media (max-width: 800px) {
+  .drum-table {
+    width: 95%;
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .drum-table {
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  }
+}

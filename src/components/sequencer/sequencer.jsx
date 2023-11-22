@@ -1,69 +1,55 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
+import '../../assets/styles/components/sequencer/sequencer.scss';
+import { useSelector, useDispatch } from 'react-redux';
+
 import * as Tone from 'tone';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import SequencerPad from './sequencer-pad';
-import { getKitSounds, updateKitSounds } from '../../services/kit-service';
-import '../../assets/styles/components/sequencer/sequencer.css';
+import { getKitSounds } from '../../services/kit-service';
+import SequencerStartBtn from './sequencer-start-btn';
+import SequencerOptions from './sequencer-options';
 import SoundsList from '../sounds/sounds-list';
+import SequencerTrackLabelList from './sequencer-track-label-list';
+
+import { setSounds } from '../../slices/soundsSlice';
 
 function Sequencer() {
-  const numOfSteps = 16;
   const NOTE = 'C2';
   const { kitId } = useParams();
-  const [kitSounds, setKitSounds] = useState([]);
-  const [updatedKit, setUpdatedKit] = useState(null); // Define updatedKit variable
+  const dispatch = useDispatch();
 
+  const kitSounds = useSelector((state) => state.sounds.sounds);
+
+  const [numOfSteps, setNumOfSteps] = useState(16);
   const [numOfSounds, setNumOfSounds] = useState(0); // add state variable for number of sounds
 
-  const [isPlaying, setIsPlaying] = useState(false);
   const [selectedCells, setSelectedCells] = useState([]);
 
   const trackIds = [...Array(kitSounds.length).keys()];
   const stepIds = [...Array(numOfSteps).keys()];
 
   const tracksRef = useRef([]);
-  const stepsRef = useRef([...Array(kitSounds.length)].map(() => Array(numOfSteps).fill(null)));
+  const stepsRef = useRef([...Array(kitSounds.length)].map(() => Array(numOfSteps).fill(null))); // Create an array of arrays, the first array representing tracks, the second representing steps
   const lampsRef = useRef([]);
   const seqRef = useRef(null);
-
-  const handleStartClick = async () => {
-    if (Tone.Transport.state === 'started') {
-      Tone.Transport.pause();
-      setIsPlaying(false);
-    } else {
-      await Tone.start();
-      Tone.Transport.start();
-      lampsRef.current[0].checked = true;
-      Tone.Transport.bpm.value = 120;
-      setIsPlaying(true);
-    }
-  };
 
   useEffect(() => {
     const getSounds = async () => {
       try {
         const sounds = await getKitSounds(kitId);
-        setKitSounds(sounds);
-        setNumOfSounds(sounds.length); // Used to trigger a render of the sequencer when a sound is added or removed
+        dispatch(setSounds(sounds)); // Update the sounds state in the Redux store
       } catch (error) {
         console.error('Failed to load kit', error);
       }
     };
-    getSounds();
+
+    if (kitId) {
+      getSounds();
+    }
   }, [kitId, kitSounds]);
 
-  // useEffect(() => {
-  //   const pattern = JSON.parse(localStorage.getItem('pattern'));
-  //   if (pattern) {
-  //     setSelectedCells(pattern);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem('pattern', JSON.stringify(selectedCells));
-  // }, [selectedCells]);
+  useEffect(() => {
+    setNumOfSounds(kitSounds.length);
+  }, [kitSounds]);
 
   useEffect(() => {
     stepsRef.current = Array.from(Array(kitSounds)).map(() => {
@@ -118,26 +104,17 @@ function Sequencer() {
     });
   };
 
-  const handleDragEnd = async (result) => {
-    if (!result.destination) return;
-
-    const newKitSounds = Array.from(kitSounds);
-    const [reorderedSound] = newKitSounds.splice(result.source.index, 1);
-    newKitSounds.splice(result.destination.index, 0, reorderedSound);
-
-    try {
-      const updatedKit = await updateKitSounds(kitId, newKitSounds);
-      setUpdatedKit(updatedKit);
-    } catch (error) {
-      console.error(error);
-      setKitSounds(newKitSounds);
-    }
+  const handleNumOfStepsChange = (event) => {
+    const newNumOfSteps = parseInt(event.target.value);
+    setNumOfSteps(newNumOfSteps);
+    setNumOfSounds(newNumOfSteps);
   };
 
   return (
     <>
       <section className="sequencer">
-        <div className="sequencer-lamp-row ">
+        <SequencerStartBtn />
+        <article className="sequencer-lamp-row ">
           {stepIds.map(
             (
               stepId // iterate over each step and display a lamp
@@ -153,84 +130,58 @@ function Sequencer() {
                     lampsRef.current[stepId] = el;
                   }}
                 />
-                <div className="sequencer-lamp-content" />
               </label>
             )
           )}
-        </div>
+        </article>
 
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="kitSounds">
-            {(provided) => (
-              <ul
-                key={'sounds'}
-                className="cell-list"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {kitSounds.map((sound, index) => (
-                  <Draggable key={sound._id} draggableId={sound._id} index={index}>
-                    {(provided) => (
-                      <li
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        key={sound._id}
-                      >
-                        {sound.title}
-                      </li>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </ul>
+        <section className="sequencer-scroll-container">
+          <SequencerTrackLabelList kitId={kitId} />
+
+          <article className="sequencer-column">
+            {trackIds.map(
+              (
+                trackId // iterate over each track and display its cells
+              ) => (
+                <article key={trackId} className={`sequencer-row  ${numOfSteps === 32 ? 'xl' : ''}`}>
+                  {stepIds.map(
+                    (
+                      stepId // iterate over each step and display a cell
+                    ) => {
+                      const id = `${trackId}-${stepId}`;
+                      const isSelected = selectedCells.includes(id);
+                      return (
+                        <article key={id}>
+                          <label
+                            key={id}
+                            htmlFor={id + 20}
+                            onClick={() => handleCellClick(id)}
+                            className={`sequencer-cell ${isSelected ? 'selected' : ''}`}
+                          />
+                          <input
+                            className="sequencer-cell-input step-checkbox"
+                            key={id + 10}
+                            id={id + 20}
+                            type="checkbox"
+                            ref={(el) => {
+                              if (!el) return;
+                              if (!stepsRef.current[trackId]) {
+                                stepsRef.current[trackId] = [];
+                              }
+                              stepsRef.current[trackId][stepId] = el;
+                            }}
+                          />
+                        </article>
+                      );
+                    }
+                  )}
+                </article>
+              )
             )}
-          </Droppable>
-        </DragDropContext>
-        <div className="sequencer-column">
-          {trackIds.map(
-            (
-              trackId // iterate over each track and display its cells
-            ) => (
-              <div key={trackId} className="sequencer-row my-sequencer-row ">
-                {stepIds.map((stepId) => {
-                  const id = `${trackId}-${stepId}`;
-                  const isSelected = selectedCells.includes(id);
-
-                  return (
-                    <div key={id}>
-                      <label
-                        key={id}
-                        htmlFor={id + 20}
-                        onClick={() => handleCellClick(id)}
-                        className={`sequencer-cell ${isSelected ? 'selected' : ''}`}
-                      />
-                      <input
-                        className="sequencer-cell-input step-checkbox"
-                        key={id + 10}
-                        id={id + 20}
-                        type="checkbox"
-                        // disabled={isPlaying}
-                        ref={(el) => {
-                          if (!el) return;
-                          if (!stepsRef.current[trackId]) {
-                            stepsRef.current[trackId] = [];
-                          }
-                          stepsRef.current[trackId][stepId] = el;
-                        }}
-                      />
-                      <div />
-                    </div>
-                  );
-                })}
-              </div>
-            )
-          )}
-        </div>
-        <Button onClick={handleStartClick} className="play-button">
-          {isPlaying ? 'Pause' : 'Start'}
-        </Button>
+          </article>
+        </section>
       </section>
+      <SequencerOptions numOfSteps={numOfSteps} handleNumOfStepsChange={handleNumOfStepsChange} />
       <SoundsList kitId={kitId} />
     </>
   );

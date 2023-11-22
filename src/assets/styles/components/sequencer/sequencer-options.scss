@@ -1,0 +1,54 @@
+.sequencer-options {
+  display: grid;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  background-color: #9058f7;
+  min-width: 540px;
+  grid-template-columns: repeat(4, 0.5fr);
+  gap: 0.25rem;
+  grid-template-rows: 25px;
+  justify-items: start;
+  padding: 0 0.5rem;
+  border-radius: 6px;
+  border-radius: 6px;
+
+  * {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.range-controls {
+  grid-column: 6;
+  display: grid row;
+  gap: 0.5rem;
+}
+
+.bpm, .volume {
+  gap: 0.1rem;
+}
+
+input {
+  &[type='range'] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80%;
+    min-width: 50px;
+    height: 15px;
+    border-radius: 5px;
+  }
+
+  &[type='radio'] {
+    cursor: pointer;
+  }
+
+  &[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 10px;
+    background-color: #9058f7;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}

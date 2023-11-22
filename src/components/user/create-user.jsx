@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import '../../assets/styles/components/user/create-user.scss';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, FormControlLabel, Checkbox, Box, FormGroup } from '@mui/material';
 import { register } from '../../services/auth-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
 import { setSuccess } from '../../slices/successSlice';
-import '../../assets/styles/components/user/create-user.css';
 
 export default function Create() {
   const dispatch = useDispatch();

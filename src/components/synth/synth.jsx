@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import '../../assets/styles/components/synth/synth.scss';
+import React from 'react';
 import * as Tone from 'tone';
 import SynthKeys from './synth-keys';
-import '../../assets/styles/components/synth/synth.css';
 
 const Synth = () => {
   const synth = new Tone.Synth({

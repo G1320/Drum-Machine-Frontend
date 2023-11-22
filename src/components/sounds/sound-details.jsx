@@ -1,5 +1,5 @@
-import '../../assets/styles/components/sounds/sound-details.css';
 import React, { useEffect } from 'react';
+import '../../assets/styles/components/sounds/sound-details.scss';
 import { playAudio } from '../../services/sound-service';
 import { addSoundToKit, removeSoundFromKit } from '../../services/sound-service';
 import { useParams } from 'react-router-dom';
@@ -40,6 +40,7 @@ function SoundDetails({ sound, audioRef, className }) {
       dispatch(setError(error.response.data || 'Failed to add sound to kit'));
     }
   };
+
   const handleRemoveFromKit = async () => {
     try {
       await removeSoundFromKit(kitId || pageId, sound._id);

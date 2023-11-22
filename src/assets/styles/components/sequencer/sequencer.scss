@@ -1,0 +1,127 @@
+.sequencer {
+  display: grid;
+  border-radius: 8px;
+  width: fit-content;
+  max-width: 1250px;
+  grid-template-columns: 5rem 1fr;
+  /* border: 2px solid #fcfcfc; */
+  margin: 1rem auto;
+}
+
+.sequencer-scroll-container {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  border: 2px solid #fcfcfc;
+  border-radius: 8px;
+  /* padding:0 0.5rem; */
+  overflow: scroll;
+  max-height: 470px;
+  grid-row: 2;
+  grid-column: 1/3;
+}
+
+.sequencer-row, .sequencer-lamp-row {
+  display: grid;
+  height: fit-content;
+  align-self: center;
+  min-width: 680px;
+  grid-template-columns: repeat(16, 1fr);
+}
+
+.sequencer-column {
+  grid-row: 2;
+  height: 100%;
+}
+
+.sequencer-row {
+  &.xl:not(:last-child) {
+    box-shadow: inset 0 -1px 0 #fcfcfc;
+  }
+
+  > *:nth-child(4n):not(:last-child) {
+    margin-inline-end: 5rem;
+  }
+}
+
+.sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
+  margin-inline-end: 5rem;
+}
+
+input[type='checkbox'] {
+  appearance: none;
+}
+
+.sequencer-cell {
+  display: grid;
+  background-color: #36225c;
+  cursor: pointer;
+  margin-block-start: 1rem;
+  height: 40px;
+  width: 40px;
+  border: 2px solid #fcfcfc;
+  border-radius: 8px;
+
+  &.selected {
+    background-color: #9058f7;
+  }
+}
+
+.sequencer-lamp {
+  cursor: default;
+  justify-items: center;
+  display: grid;
+  height: 40px;
+  width: 40px;
+
+  /* border: 2px solid #fcfcfc;
+  border-radius: 8px; */
+}
+
+input {
+  width: 15px;
+  accent-color: #9058f7;
+}
+
+@media screen and (max-width: 1300px) {
+  .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
+    margin-inline-end: 3rem;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
+    margin-inline-end: 2rem;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  .sequencer-row, .sequencer-lamp-row {
+    gap: 0.25rem;
+    grid-template-columns: repeat(16, 1fr);
+  }
+
+  .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
+    margin-inline-end: 1.25rem;
+  }
+
+  .sequencer-cell, .sequencer-lamp {
+    height: 30px;
+    width: 30px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .sequencer-row, .sequencer-lamp-row {
+    min-width: 516px;
+    gap: 0rem;
+  }
+
+  .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
+    margin-inline-end: 1.25rem;
+  }
+
+  .sequencer-cell, .sequencer-lamp {
+    height: 20px;
+    width: 20px;
+  }
+}

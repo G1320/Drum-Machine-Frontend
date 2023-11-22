@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import '../../assets/styles/components/kits/create-kit.scss';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Box, FormGroup } from '@mui/material';
 import { createKit } from '../../services/kit-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
 import { setSuccess } from '../../slices/successSlice';
-import '../../assets/styles/components/kits/create-kit.css';
 
 export default function CreateKit() {
   const dispatch = useDispatch();

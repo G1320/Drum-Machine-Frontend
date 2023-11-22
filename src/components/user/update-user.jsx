@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import '../../assets/styles/components/user/update-user.scss';
 import { Button, TextField, Box, FormGroup } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { updateUser } from '../../services/user-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
 import { setSuccess } from '../../slices/successSlice';
-
-import '../../assets/styles/components/user/update-user.css';
 
 export default function Update() {
   const dispatch = useDispatch();

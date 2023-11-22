@@ -1,6 +1,5 @@
 .user-info {
   height: 100%;
-  width: fit-content;
   overflow: scroll;
   text-decoration: none;
   color: #ffffff;
@@ -8,10 +7,10 @@
   font-weight: 500;
   font-family: inherit;
   transition: color 0.25s;
-}
 
-.user-info * {
-  color: #ccc !important;
+  * {
+    color: #ccc !important;
+  }
 }
 
 .user-info-greeting {
@@ -25,8 +24,8 @@
   max-width: 140px;
   overflow: hidden !important;
   grid-template-columns: 0.9fr 0.5fr !important;
-}
 
-.user-kit-select-item button {
-  justify-self: end;
+  button {
+    justify-self: end;
+  }
 }

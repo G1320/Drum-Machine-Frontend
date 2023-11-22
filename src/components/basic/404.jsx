@@ -1,7 +1,7 @@
 import React from 'react';
+import '../../assets/styles/basic/404.css'; // Import the CSS file
 import { Container, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import '../../assets/styles/basic/404.css'; // Import the CSS file
 
 function FourOhFour() {
   return (

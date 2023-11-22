@@ -1,6 +1,6 @@
 import React from 'react';
+import '../../assets/styles/components/kits/user-kit-details.scss';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import '../../assets/styles/components/kits/user-kit-details.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function UserKitDetails({ userKit, onRemoveKit, onSelectKit }) {

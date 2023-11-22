@@ -1,0 +1,38 @@
+.sounds-list {
+  height: 28dvh;
+  display: grid;
+  padding: 1rem 2rem;
+  overflow: scroll;
+  gap: 0.5rem;
+  margin-block-start: 1rem;
+
+  /* border: 2px solid rgb(189, 177, 189); */
+  border-radius: 8px;
+  transition: 500ms;
+
+  &.collapsed {
+    width: fit-content;
+    grid-column: 1;
+  }
+
+  &.expanded {
+    grid-template-columns: repeat(auto-fit, minmax(133px, 1fr));
+    gap: 1.3rem;
+    height: 30svh;
+    row-gap: 0;
+    grid-column: 1/4;
+  }
+}
+
+.sound-title {
+  justify-self: center;
+}
+
+.sounds-list-expand-button {
+  justify-self: start;
+}
+
+.alert {
+  box-shadow: inset 0 0 0 2px rgb(189, 177, 189) !important;
+  border-radius: 8px;
+}

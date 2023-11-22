@@ -1,6 +1,6 @@
 import React from 'react';
-import { Container, Typography } from '@mui/material';
 import '../assets/styles/basic/not-available.css';
+import { Container, Typography } from '@mui/material';
 
 function NotAvailable() {
   return (

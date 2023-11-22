@@ -1,0 +1,75 @@
+@import "./assets/setup/variables.scss";
+
+
+body {
+    background-color: black;
+  }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden !important;
+  }
+  
+  main {
+    padding: 0 1rem;
+  }
+  
+  :root {
+    font-family: ' Helvetica Neve', Arial, sans-serif;
+    color: #fcfcfc;
+  }
+  
+  a {
+    color: #fcfcfc;
+    text-decoration: none;
+  
+    &:hover {
+      color: #646cff;
+    }
+  }
+  
+  li {
+    list-style: none;
+  }
+  
+  .main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100svh;
+    flex-direction: column;
+  }
+  
+  .main-content {
+    height: 78svh;
+    margin-block-start: 2rem;
+  }
+  
+  .loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30dvh;
+  }
+  
+  .MuiSelect-select, .MuiInputBase-input {
+    overflow: hidden;
+    box-shadow: inset 3px #fcfcfc !important;
+  }
+  
+  .MuiOutlinedInput-root {
+    border-color: blue !important;
+  }
+  
+  button {
+    cursor: pointer;
+    transition: border-color 0.25s;
+  }
+  
+  Select {
+    min-width: 100px;
+  }
+  

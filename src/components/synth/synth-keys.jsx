@@ -1,6 +1,6 @@
+import '../../assets/styles/components/synth/synth-keys.scss';
 import React, { useState, useEffect } from 'react';
 import * as Tone from 'tone';
-import '../../assets/styles/components/synth/synth-keys.css';
 const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 const synthKeys = () => {

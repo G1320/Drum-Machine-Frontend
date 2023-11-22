@@ -1,7 +1,6 @@
 import React from 'react';
-import { Container, Typography, List, ListItem } from '@mui/material';
-// import '../styles/about.css';
 import '../../assets/styles/basic/about.css';
+import { Container, Typography, List, ListItem } from '@mui/material';
 
 function About() {
   return (

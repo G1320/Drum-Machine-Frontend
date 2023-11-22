@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './assets/styles/basic/app.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -13,12 +13,10 @@ import FourOhFour from './components/basic/404';
 import DrumMachine from './components/drum-machine/drum-machine';
 import Synth from './components/synth/synth';
 import Sequencer from './components/sequencer/sequencer';
-
 import Login from './components/auth/login';
 
 import ErrorAlert from './components/alerts/error-alert';
 import SuccessAlert from './components/alerts/success-alert';
-import { getLocalUser } from './services/user-service';
 
 import store from './store/index';
 

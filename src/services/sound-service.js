@@ -9,6 +9,7 @@ export const playAudio = (audioRef) => {
       audioRef.current.play();
     } catch (error) {
       console.error('Error playing audio:', error);
+      throw error;
     }
   }
 };
