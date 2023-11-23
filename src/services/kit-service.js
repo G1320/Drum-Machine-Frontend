@@ -16,7 +16,6 @@ export const getKitById = async (kitId) => {
     return await httpService.get(`${kitEndpoint}/${kitId}`);
   } catch (error) {
     console.error(error);
-
     throw error;
   }
 };
@@ -26,7 +25,6 @@ export const getKits = async (params = {}) => {
     return await httpService.get(kitEndpoint, params);
   } catch (error) {
     console.error(error);
-
     throw error;
   }
 };
@@ -36,7 +34,6 @@ export const getKitSounds = async (kitId) => {
     return await httpService.get(`${kitEndpoint}/${kitId}/sounds`);
   } catch (error) {
     console.error(error);
-
     throw error;
   }
 };
@@ -46,7 +43,6 @@ export const updateKitSounds = async (kitId, sounds) => {
     return await httpService.put(`${kitEndpoint}/${kitId}/sounds`, { sounds });
   } catch (error) {
     console.error(error);
-
     throw error;
   }
 };
@@ -56,7 +52,6 @@ export const updateKit = async (kitId, updatedData) => {
     return await httpService.put(`${kitEndpoint}/${kitId}`, updatedData);
   } catch (error) {
     console.error(error);
-
     throw error;
   }
 };
@@ -66,7 +61,6 @@ export const deleteKit = async (kitId) => {
     return await httpService.delete(`${kitEndpoint}/${kitId}`);
   } catch (error) {
     console.error(error);
-
     throw error;
   }
 };

@@ -1,11 +1,11 @@
 .user-kit-details {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   padding: 0 1rem;
   width: 170px;
   margin: auto 1rem;
-  z-index: 100 !important;
+  cursor: pointer;
+
   &:hover {
     transition: 250ms;
     box-shadow: inset 0 0 0 1px #834de7;

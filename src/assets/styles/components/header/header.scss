@@ -1,7 +1,8 @@
 header {
   display: grid;
-  width: calc(100% - 2rem);
+  width: calc(100% - 1rem);
   margin: auto;
+  padding:0 0.5rem;
   font-family: 'Agbalumo', sans-serif;
   letter-spacing: 3px;
   grid-template-columns: 1fr 50% 1fr;
@@ -12,16 +13,18 @@ header {
   grid-column: 2;
   grid-row: 1;
   color: white;
+  white-space: inherit;
+  padding-block-end:0.5rem ;
   font-weight: bold;
   font-size: 2.8rem;
-  height: 100%;
-  width: 100%;
   margin: 0;
 }
 
 @media screen and (max-width: 650px) {
   .hero {
-    white-space: inherit;
+    font-size: 2.5rem;
+    padding-block-start: 0.25rem ;
+    padding-block-end: 0rem ;
   }
 }
 

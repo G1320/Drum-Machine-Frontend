@@ -8,10 +8,7 @@
   gap: 0.25rem;
   grid-template-rows: 25px;
   justify-items: start;
-  padding: 0 0.5rem;
   border-radius: 6px;
-  border-radius: 6px;
-
   * {
     width: fit-content;
     display: flex;
@@ -21,7 +18,7 @@
 
 .range-controls {
   grid-column: 6;
-  display: grid row;
+  display: flex row;
   gap: 0.5rem;
 }
 

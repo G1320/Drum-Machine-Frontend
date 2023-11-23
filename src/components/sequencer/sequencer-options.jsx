@@ -5,11 +5,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { setSuccess } from '../../slices/successSlice';
 import { setError } from '../../slices/errorSlice';
-import { getUserKits, addKitToUser } from '../../services/user-service';
-
-import { getLocalUser } from '../../services/user-service';
-
+import { getUserKits, addKitToUser, getLocalUser } from '../../services/user-service';
 import { getKitById } from '../../services/kit-service';
+
 import FilterKits from '../kits/filter-kits';
 
 const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
@@ -97,14 +95,14 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
         <button className="load-drum-machine-btn" variant="contained" onClick={handleLoadDrumMachine}>
           Pads
         </button>
-        <div className="pagination-controls-wrapper">
+        <article className="pagination-controls-wrapper">
           <button className="prev-kit-btn" onClick={handlePrevKit}>
             Prev
           </button>
           <button className="next-kit-btn" onClick={handleNextKit}>
             Next
           </button>
-        </div>
+        </article>
         <FilterKits />
       </section>
       <section className="range-controls">

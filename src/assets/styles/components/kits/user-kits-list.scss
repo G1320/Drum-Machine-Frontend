@@ -1,19 +1,18 @@
 .user-kits {
   grid-column: 2;
-  display: grid;
+  display: grid ;
   justify-content: center;
-  // align-content: start;
-  grid-template-rows: repeat(auto-fit, minmax(20px, 1fr));
-  margin: 0.5rem auto 1.5rem;
+  padding:  0.5rem ;
+  grid-template-rows: repeat(auto-fit, 40px);
   overflow: scroll;
-  gap: 2rem;
-  height: calc(100% - 2rem);
-  width: max-content;
+  gap: 1rem;
+  width: 240px;
+  height: calc(100% - 3rem);
   min-width: 220px;
-  border: 2px solid rgb(189, 177, 189);
+  border: 2.5px solid #f0f0f0;
+  background-color: rgb(14, 14, 14);
   border-radius: 8px;
   transition: 500ms;
-  cursor: pointer;
 }
 
 @media screen and (max-width: 1200px) {
@@ -23,6 +22,8 @@
 }
 
 .user-info {
-  justify-self: end;
-  height: 100%;
+  display: grid;
+  width: max-content;
+  align-items: center;
+  justify-self: center;
 }

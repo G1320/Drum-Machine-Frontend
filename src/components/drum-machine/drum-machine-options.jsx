@@ -50,7 +50,7 @@ const DrumMachineOptions = ({ kitId }) => {
         Add to my kits
       </button>
       <button className="load-sequencer-btn" variant="contained" onClick={handleLoadSequencer}>
-        Load Sequencer
+        Sequencer
       </button>
     </section>
   );

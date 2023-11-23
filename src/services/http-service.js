@@ -27,7 +27,7 @@ async function ajax(endpoint, method = 'GET', data = null) {
     if (accessToken) {
       const decodedToken = jwt.decode(accessToken);
       if (decodedToken.exp < Date.now() / 1000) {
-        // Access token has expired, refresh it using the refresh token
+        //if Access token has expired, refresh it using the refresh token
         const refreshToken = Cookies.get('refreshToken');
         const response = await axios.post(`${BASE_URL}/refresh-token`, { refreshToken });
         const newAccessToken = response.data.authToken;

@@ -13,7 +13,6 @@ import DrumMachineOptions from './drum-machine-options';
 
 const DrumMachine = () => {
   const { kitId } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const sounds = useSelector((state) => state.sounds.sounds);
@@ -22,7 +21,7 @@ const DrumMachine = () => {
   const audioRefs = useRef([]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const getSounds = async () => {
       try {
         if (kitId) {
           const kitSounds = await getKitSounds(kitId);
@@ -34,8 +33,7 @@ const DrumMachine = () => {
         dispatch(setError(error?.response?.data || 'Failed to load kit'));
       }
     };
-
-    fetchData();
+    getSounds();
   }, [kitId, sounds]);
 
   const toggleActive = (keyCode) => {
@@ -43,15 +41,18 @@ const DrumMachine = () => {
       setActivePad(null);
     } else {
       setActivePad(keyCode);
-      setTimeout(() => setActivePad(null), 70);
     }
+  };
+
+  const handleMouseUp = () => {
+    setActivePad(null);
   };
 
   return (
     <section className="drum-machine">
       <section className="drum-machine-wrapper">
         <UserInfo />
-        <article className="drum-table">
+        <section className="drum-table">
           {sounds.map((sound, index) => (
             <DrumPad
               key={sound._id}
@@ -59,10 +60,11 @@ const DrumMachine = () => {
               sound={sound}
               isActive={activePad === drumMachineDefaultConfig[index].keyCode.toString()}
               toggleActive={toggleActive}
+              onMouseUp={handleMouseUp}
               audioRef={audioRefs.current[index]}
             />
           ))}
-        </article>
+        </section>
       </section>
       <DrumMachineOptions kitId={kitId} />
       <section className="drum-machine-bottom-wrapper">

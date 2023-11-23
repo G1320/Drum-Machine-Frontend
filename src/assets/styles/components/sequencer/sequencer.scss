@@ -6,14 +6,15 @@
   grid-template-columns: 5rem 1fr;
   /* border: 2px solid #fcfcfc; */
   margin: 1rem auto;
+  margin-block-start: -1.5rem;
+
 }
 
 .sequencer-scroll-container {
   display: grid;
   grid-template-columns: 5rem 1fr;
-  border: 2px solid #fcfcfc;
+  border: 2.5px solid #fcfcfc;
   border-radius: 8px;
-  /* padding:0 0.5rem; */
   overflow: scroll;
   max-height: 470px;
   grid-row: 2;

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
 import '../../assets/styles/components/sequencer/sequencer.scss';
-import { useSelector, useDispatch } from 'react-redux';
-
 import * as Tone from 'tone';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
 import { getKitSounds } from '../../services/kit-service';
 import SequencerStartBtn from './sequencer-start-btn';
 import SequencerOptions from './sequencer-options';
@@ -20,7 +20,7 @@ function Sequencer() {
   const kitSounds = useSelector((state) => state.sounds.sounds);
 
   const [numOfSteps, setNumOfSteps] = useState(16);
-  const [numOfSounds, setNumOfSounds] = useState(0); // add state variable for number of sounds
+  const [numOfSounds, setNumOfSounds] = useState(0);
 
   const [selectedCells, setSelectedCells] = useState([]);
 
@@ -36,7 +36,7 @@ function Sequencer() {
     const getSounds = async () => {
       try {
         const sounds = await getKitSounds(kitId);
-        dispatch(setSounds(sounds)); // Update the sounds state in the Redux store
+        dispatch(setSounds(sounds));
       } catch (error) {
         console.error('Failed to load kit', error);
       }
@@ -114,71 +114,63 @@ function Sequencer() {
     <>
       <section className="sequencer">
         <SequencerStartBtn />
-        <article className="sequencer-lamp-row ">
-          {stepIds.map(
-            (
-              stepId // iterate over each step and display a lamp
-            ) => (
-              <label key={stepId} className="sequencer-lamp">
-                <input
-                  className="sequencer-lamp-input"
-                  type="radio"
-                  name="lamp"
-                  id={`lamp-${stepId}`}
-                  ref={(el) => {
-                    if (!el) return;
-                    lampsRef.current[stepId] = el;
-                  }}
-                />
-              </label>
-            )
-          )}
-        </article>
+
+        <section className="sequencer-lamp-row ">
+          {stepIds.map((stepId) => (
+            // iterate over each step to display its lamp
+            <label key={stepId} className="sequencer-lamp">
+              <input
+                className="sequencer-lamp-input"
+                type="radio"
+                name="lamp"
+                id={`lamp-${stepId}`}
+                ref={(el) => {
+                  if (!el) return;
+                  lampsRef.current[stepId] = el;
+                }}
+              />
+            </label>
+          ))}
+        </section>
 
         <section className="sequencer-scroll-container">
           <SequencerTrackLabelList kitId={kitId} />
 
-          <article className="sequencer-column">
-            {trackIds.map(
-              (
-                trackId // iterate over each track and display its cells
-              ) => (
-                <article key={trackId} className={`sequencer-row  ${numOfSteps === 32 ? 'xl' : ''}`}>
-                  {stepIds.map(
-                    (
-                      stepId // iterate over each step and display a cell
-                    ) => {
-                      const id = `${trackId}-${stepId}`;
-                      const isSelected = selectedCells.includes(id);
-                      return (
-                        <article key={id}>
-                          <label
-                            key={id}
-                            htmlFor={id + 20}
-                            onClick={() => handleCellClick(id)}
-                            className={`sequencer-cell ${isSelected ? 'selected' : ''}`}
-                          />
-                          <input
-                            className="sequencer-cell-input step-checkbox"
-                            key={id + 10}
-                            id={id + 20}
-                            type="checkbox"
-                            ref={(el) => {
-                              if (!el) return;
-                              if (!stepsRef.current[trackId]) {
-                                stepsRef.current[trackId] = [];
-                              }
-                              stepsRef.current[trackId][stepId] = el;
-                            }}
-                          />
-                        </article>
-                      );
-                    }
-                  )}
-                </article>
-              )
-            )}
-          </article>
+          <section className="sequencer-column">
+            {trackIds.map((trackId) => (
+              // iterate over each track
+              <section key={trackId} className={`sequencer-row  ${numOfSteps === 32 ? 'xl' : ''}`}>
+                {stepIds.map((stepId) => {
+                  // iterate over each step on every track to display its cells
+                  const id = `${trackId}-${stepId}`;
+                  const isSelected = selectedCells.includes(id);
+                  return (
+                    <article key={id}>
+                      <label
+                        key={id}
+                        htmlFor={id + 20}
+                        onClick={() => handleCellClick(id)}
+                        className={`sequencer-cell ${isSelected ? 'selected' : ''}`}
+                      />
+                      <input
+                        className="sequencer-cell-input step-checkbox"
+                        key={id + 10}
+                        id={id + 20}
+                        type="checkbox"
+                        ref={(el) => {
+                          if (!el) return;
+                          if (!stepsRef.current[trackId]) {
+                            stepsRef.current[trackId] = [];
+                          }
+                          stepsRef.current[trackId][stepId] = el;
+                        }}
+                      />
+                    </article>
+                  );
+                })}
+              </section>
+            ))}
+          </section>
         </section>
       </section>
       <SequencerOptions numOfSteps={numOfSteps} handleNumOfStepsChange={handleNumOfStepsChange} />

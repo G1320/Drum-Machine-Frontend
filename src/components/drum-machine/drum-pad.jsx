@@ -4,28 +4,50 @@ import '../../assets/styles/components/drum-machine/drum-pad.scss';
 import { playAudio } from '../../services/sound-service';
 
 const DrumPad = ({ sound, toggleActive, isActive, audioRef, keyCode }) => {
-  const handleKeyPress = (e) => {
-    if (e.keyCode === keyCode) {
-      console.log('e.keyCode: ', e.keyCode);
+  const handleKeyDown = (e) => {
+    if (e.code === keyCode) {
       toggleActive(keyCode);
       playAudio(audioRef);
     }
   };
 
-  const handleClick = () => {
+  const handleKeyUp = (e) => {
+    if (e.code === keyCode) {
+      toggleActive(null);
+    }
+  };
+
+  const handleMouseDown = () => {
     toggleActive(keyCode);
     playAudio(audioRef);
   };
 
+  const handleMouseUp = () => {
+    toggleActive(null);
+  };
+
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [handleKeyPress]);
+  }, [handleKeyDown, handleKeyUp]);
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      handleMouseUp();
+    };
+
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+    return () => {
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [handleMouseUp]);
 
   return (
-    <article className={`drum-Pad ${isActive ? 'active' : ''}`} onClick={handleClick}>
+    <article className={`drum-Pad ${isActive ? 'active' : ''}`} onMouseDown={handleMouseDown}>
       <p>{sound.title}</p>
       <audio src={sound.src} ref={audioRef} />
     </article>
