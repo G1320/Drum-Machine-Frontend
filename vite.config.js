@@ -9,7 +9,4 @@ export default defineConfig({
     outDir: '../backend/public',
     emptyOutDir: true,
   },
-  // define: {
-  //   'process.env.NODE_ENV': JSON.stringify('development'),
-  // },
 });
