@@ -1,6 +1,8 @@
 import Axios from 'axios';
 import Cookies from 'js-cookie';
-const BASE_URL = '//localhost:3000/';
+
+const BASE_URL = process.env.NODE_ENV === 'production' ? '/api' : '//localhost:3000/api';
+// const BASE_URL = '//localhost:3000/api';
 
 const axios = Axios.create({
   withCredentials: true,

@@ -1,6 +1,6 @@
 import { httpService } from './http-service';
 
-const kitEndpoint = 'api/kits';
+const kitEndpoint = '/kits';
 
 export const createKit = async (kitData) => {
   try {

@@ -1,7 +1,7 @@
 import { httpService } from './http-service';
 import Cookies from 'js-cookie';
 
-const authEndpoint = 'api/auth';
+const authEndpoint = '/auth';
 
 export const register = async (userData) => {
   try {

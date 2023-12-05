@@ -1,6 +1,14 @@
 import { httpService } from './http-service';
 
-const userEndpoint = 'api/users';
+const userEndpoint = '/users';
+
+export const getLocalUser = () => {
+  const user = sessionStorage.getItem('user');
+  if (user) {
+    return JSON.parse(user);
+  }
+  return null;
+};
 
 export const createUser = async (userData) => {
   try {
@@ -62,12 +70,4 @@ export const deleteUser = async (id) => {
     console.error(error);
     throw error;
   }
-};
-
-export const getLocalUser = () => {
-  const user = sessionStorage.getItem('user');
-  if (user) {
-    return JSON.parse(user);
-  }
-  return null;
 };

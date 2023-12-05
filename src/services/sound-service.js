@@ -1,6 +1,6 @@
 import { httpService } from './http-service';
 
-const soundsEndpoint = 'api/sounds';
+const soundsEndpoint = '/sounds';
 
 export const playAudio = (audioRef) => {
   if (audioRef && audioRef.current) {

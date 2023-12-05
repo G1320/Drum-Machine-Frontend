@@ -1,6 +1,6 @@
 import { httpService } from './http-service';
 
-const pageDataEndpoint = 'api/pageData';
+const pageDataEndpoint = '/pageData';
 
 export const getPageData = async (identifier) => {
   try {
