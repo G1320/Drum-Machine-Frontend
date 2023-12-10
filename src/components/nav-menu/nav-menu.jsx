@@ -14,7 +14,7 @@ function NavMenu() {
     return /^[a-f\d]{24}$/i.test(id);
   };
 
-  const validPageId = isValidObjectId(pageId) ? pageId : '64e61e8b7aecdc67f863233c';
+  const validPageId = isValidObjectId(pageId) ? pageId : '6571e750ecffe8969f1e89eb';
 
   return (
     <div className="nav-menu">
