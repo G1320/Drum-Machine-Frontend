@@ -3,11 +3,8 @@ import Cookies from 'js-cookie';
 // import { useJwt } from 'react-jwt';
 
 // import  jwt from 'jsonwebtoken';
-const BASE_URL = 'https://drum-machine-backend.onrender.com/api';
-// process.env.NODE_ENV === 'production'
-//   ? 'drum-machine-backend/api'
-//   : 'https://drum-machine-backend/api';
-// const BASE_URL = '//localhost:3000/api';
+const BASE_URL =
+  process.env.NODE_ENV === 'production' ? '/api' : 'https://drum-machine-backend.onrender.com/api';
 
 const axios = Axios.create({
   withCredentials: true,
