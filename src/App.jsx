@@ -28,7 +28,7 @@ function App() {
           <Header />
           <main className="main-content">
             <Routes>
-              <Route path="/" element={<Navigate to="/create" />} />
+              <Route path="/" element={<Navigate to="/sequencer/id/6571e750ecffe8969f1e89eb" />} />
               <Route path="/create" element={<Create />} />
               <Route path="/read" element={<Read />} />
               <Route path="/update" element={<Update />} />

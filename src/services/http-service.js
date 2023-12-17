@@ -1,10 +1,10 @@
 import Axios from 'axios';
 import Cookies from 'js-cookie';
-// import { useJwt } from 'react-jwt';
+import { jwtDecode } from 'jwt-decode';
+import { refreshAccessToken } from './auth-service';
 
-// import  jwt from 'jsonwebtoken';
 const BASE_URL =
-  process.env.NODE_ENV === 'production' ? '/api' : 'https://drum-machine-backend.onrender.com/api';
+  process.env.NODE_ENV === 'production' ? 'https://drum-machine-backend.onrender.com/api' : '/api';
 
 const axios = Axios.create({
   withCredentials: true,
@@ -27,23 +27,24 @@ export const httpService = {
 
 async function ajax(endpoint, method = 'GET', data = null) {
   try {
-    const accessToken = Cookies.get('authToken');
-    // if (accessToken) {
-    //   const { decodedToken, isExpired } = useJwt(accessToken);
+    let accessToken = Cookies.get('accessToken');
 
-    //   // const decodedToken = jwt.decode(accessToken);
-    //   if (decodedToken.exp < Date.now() / 1000) {
-    //     //if Access token has expired, refresh it using the refresh token
-    //     const refreshToken = Cookies.get('refreshToken');
-    //     const response = await axios.post(`${BASE_URL}/refresh-token`, { refreshToken });
-    //     const newAccessToken = response.data.authToken;
-    //     localStorage.setItem('authToken', newAccessToken);
-    //     axios.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
-    //   } else {
-    //     // if Access token is still valid, use it
-    //     axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-    //   }
-    // }
+    if (accessToken) {
+      const decodedToken = jwtDecode(accessToken);
+
+      if (decodedToken.exp < Date.now() / 1000) {
+        const refreshedToken = await refreshAccessToken();
+
+        if (refreshedToken) {
+          accessToken = Cookies.get('accessToken');
+        } else {
+          console.error('Failed to refresh token');
+          throw new Error('Failed to refresh token');
+        }
+      }
+      axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    }
+
     const res = await axios({
       url: `${BASE_URL}${endpoint}`,
       method,
@@ -52,15 +53,15 @@ async function ajax(endpoint, method = 'GET', data = null) {
     });
     return res.data;
   } catch (err) {
-    console.log(`Had Issues ${method}ing to the backend, endpoint: ${endpoint}, with data:`, data);
-    console.dir(err);
     if (err.response && err.response.status === 401) {
-      sessionStorage.clear();
-      window.location.assign('/');
-      // Depends on routing strategy - hash or history
-      // window.location.assign('/#/login')
-      // window.location.assign('/login')
-      // router.push('/login')
+      try {
+        // Retrying the request if 401 Unauthorized
+        const refreshedToken = await refreshAccessToken();
+        if (refreshedToken) return ajax(endpoint, method, data);
+      } catch (refreshError) {
+        sessionStorage.clear();
+        window.location.assign('/login');
+      }
     }
     throw err;
   }

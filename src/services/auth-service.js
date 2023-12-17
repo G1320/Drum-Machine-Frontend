@@ -5,9 +5,9 @@ const authEndpoint = '/auth';
 
 export const register = async (userData) => {
   try {
-    const { authToken, user } = await httpService.post(`${authEndpoint}/register`, userData);
+    const { accessToken, user } = await httpService.post(`${authEndpoint}/register`, userData);
     sessionStorage.setItem('user', JSON.stringify(user));
-    Cookies.set('authToken', authToken, { expires: 7 });
+    Cookies.set('accessToken', accessToken, { expires: 1 / 96 });
     return user;
   } catch (error) {
     console.error('Registration failed', error);
@@ -20,15 +20,26 @@ export const register = async (userData) => {
 
 export const login = async (credentials) => {
   try {
-    const { user, authToken } = await httpService.post(`${authEndpoint}/login`, credentials);
+    const { user, accessToken } = await httpService.post(`${authEndpoint}/login`, credentials);
     if (user) {
       sessionStorage.setItem('user', JSON.stringify(user));
-      Cookies.set('authToken', authToken, { expires: 7 });
+      Cookies.set('accessToken', accessToken, { expires: 1 / 96 });
       return user;
     }
   } catch (error) {
     console.error('Login failed', error);
-    throw error;
+    throw new Error('Login failed');
+  }
+};
+
+export const refreshAccessToken = async () => {
+  try {
+    const { accessToken } = await httpService.post(`${authEndpoint}/refresh-token`);
+    Cookies.set('accessToken', accessToken, { expires: 1 / 96 });
+    return { accessToken };
+  } catch (error) {
+    console.error('Refresh token failed', error);
+    throw new Error('Refresh token failed');
   }
 };
 
@@ -36,10 +47,10 @@ export const logout = async () => {
   try {
     await httpService.post(`${authEndpoint}/logout`);
     sessionStorage.removeItem('user');
-    Cookies.remove('authToken');
+    Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
   } catch (error) {
     console.error('Logout failed', error);
-    throw error;
+    throw new Error('Logout failed');
   }
 };

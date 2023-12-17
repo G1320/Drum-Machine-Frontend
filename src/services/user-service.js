@@ -4,9 +4,9 @@ const userEndpoint = '/users';
 
 export const getLocalUser = () => {
   const user = sessionStorage.getItem('user');
-  if (user) {
-    return JSON.parse(user);
-  }
+
+  if (user) return JSON.parse(user);
+
   return null;
 };
 

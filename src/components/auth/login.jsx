@@ -20,7 +20,7 @@ function Login() {
       if (!user) return;
       dispatch(loginAction(user));
       dispatch(setSuccess('Login successful!'));
-      navigate('/drum/id/64e61e8b7aecdc67f863233c');
+      // navigate('/drum/id/64e61e8b7aecdc67f863233c');
     } catch (error) {
       console.error('Login failed', error);
       dispatch(setError(error?.response?.data || 'Login failed. Please try again.'));

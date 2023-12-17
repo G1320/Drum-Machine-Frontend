@@ -1,5 +1,7 @@
 import React from 'react';
 import '../../assets/styles/components/sequencer/sequencer-options.scss';
+import * as Tone from 'tone';
+
 import { useDispatch } from 'react-redux';
 
 import { useNavigate, useParams } from 'react-router-dom';
@@ -38,6 +40,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
       if (nextKit) navigate(`/sequencer/id/${nextKit._id}`);
     } catch (error) {
       console.error('Failed to load next kit', error);
+      dispatch(setError(error?.response?.data || 'Failed to load next Kit'));
     }
   };
 
@@ -47,6 +50,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
       if (prevKit) navigate(`/sequencer/id/${prevKit._id}`);
     } catch (error) {
       console.error('Failed to load previous kit', error);
+      dispatch(setError(error?.response?.data || 'Failed to load previous Kit'));
     }
   };
   const handleLoadDrumMachine = () => {

@@ -42,7 +42,6 @@ export default function Update() {
         isAdmin,
         password,
       });
-      console.log('response: ', response);
       setSuccess('User updated successfully!');
       navigate('/read');
     } catch (error) {
