@@ -52,6 +52,9 @@ export default function Create() {
           variant="outlined"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          InputProps={{
+            style: { color: 'white' }, // Change the color here
+          }}
         />
       </FormGroup>
       <FormGroup>
@@ -61,6 +64,9 @@ export default function Create() {
           variant="outlined"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          InputProps={{
+            style: { color: 'white' }, // Change the color here
+          }}
         />
       </FormGroup>
       <FormGroup>
@@ -71,6 +77,9 @@ export default function Create() {
           variant="outlined"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          InputProps={{
+            style: { color: 'white' }, // Change the color here
+          }}
         />
       </FormGroup>
       <FormGroup>
@@ -80,6 +89,9 @@ export default function Create() {
           variant="outlined"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          InputProps={{
+            style: { color: 'white' }, // Change the color here
+          }}
         />
       </FormGroup>
       <FormGroup>
@@ -89,6 +101,9 @@ export default function Create() {
           variant="outlined"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+          InputProps={{
+            style: { color: 'white' }, // Change the color here
+          }}
         />
       </FormGroup>
       <FormGroup>
@@ -97,6 +112,9 @@ export default function Create() {
           label="Admin access"
           id="isAdmin"
           name="isAdmin"
+          InputProps={{
+            style: { color: 'white' }, // Change the color here
+          }}
         />
       </FormGroup>
       <Button variant="contained" color="primary" type="submit">

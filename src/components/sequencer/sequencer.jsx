@@ -3,67 +3,65 @@ import '../../assets/styles/components/sequencer/sequencer.scss';
 import * as Tone from 'tone';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-
 import { getKitSounds } from '../../services/kit-service';
 import SequencerStartBtn from './sequencer-start-btn';
 import SequencerOptions from './sequencer-options';
 import SoundsList from '../sounds/sounds-list';
 import SequencerTrackLabelList from './sequencer-track-label-list';
 
-import { setSounds } from '../../slices/soundsSlice';
+import { setSelectedKitSounds } from '../../slices/soundsSlice';
+import { setSelectedKitId } from '../../slices/kitsSlice';
 
 function Sequencer() {
-  const NOTE = 'C2';
-  const { kitId } = useParams();
   const dispatch = useDispatch();
+  const { kitId } = useParams();
+  const NOTE = 'C2';
 
-  const kitSounds = useSelector((state) => state.sounds.sounds);
+  const selectedKitSounds = useSelector((state) => state.sounds.selectedKitSounds);
 
   const [numOfSteps, setNumOfSteps] = useState(16);
   const [numOfSounds, setNumOfSounds] = useState(0);
-
   const [selectedCells, setSelectedCells] = useState([]);
 
-  const trackIds = [...Array(kitSounds.length).keys()];
+  const trackIds = [...Array(selectedKitSounds.length).keys()];
   const stepIds = [...Array(numOfSteps).keys()];
 
   const tracksRef = useRef([]);
-  const stepsRef = useRef([...Array(kitSounds.length)].map(() => Array(numOfSteps).fill(null))); // Create an array of arrays, the first array representing tracks, the second representing steps
   const lampsRef = useRef([]);
+  const stepsRef = useRef([...Array(selectedKitSounds.length)].map(() => Array(numOfSteps).fill(null))); // Create an array of arrays, the first array representing tracks, the second representing steps
   const seqRef = useRef(null);
 
   useEffect(() => {
     const getSounds = async () => {
-      try {
-        const sounds = await getKitSounds(kitId);
-        dispatch(setSounds(sounds));
-      } catch (error) {
-        console.error('Failed to load kit', error);
+      if (kitId) {
+        try {
+          const sounds = await getKitSounds(kitId);
+          if (JSON.stringify(sounds) === JSON.stringify(selectedKitSounds)) return;
+          dispatch(setSelectedKitSounds(sounds));
+        } catch (error) {
+          console.error('Failed to load kit', error);
+        }
       }
     };
 
-    if (kitId) {
-      getSounds();
-    }
-  }, [kitId, kitSounds]);
+    getSounds();
+  }, [kitId, selectedKitSounds]);
+
+  useEffect(() => setNumOfSounds(selectedKitSounds.length), [selectedKitSounds]);
 
   useEffect(() => {
-    setNumOfSounds(kitSounds.length);
-  }, [kitSounds]);
-
-  useEffect(() => {
-    stepsRef.current = Array.from(Array(kitSounds)).map(() => {
-      // create a 2D array of refs for the steps
+    // create a 2D array of refs for the steps
+    stepsRef.current = Array.from(Array(selectedKitSounds)).map(() => {
       return Array.from(Array(tracksRef.current.length)).map(() => {
         return createRef();
       });
     });
+    // create an array of refs for the lamps
     lampsRef.current = Array.from(Array(numOfSteps + 1)).map(() => {
-      // create an array of refs for the lamps
       return { ref: createRef(), checked: false };
     });
-    tracksRef.current = kitSounds.map((sound, i) => ({
-      // create an array of objects representing each track
+    // create an array of objects representing each track
+    tracksRef.current = selectedKitSounds.map((sound, i) => ({
       id: i,
       sampler: new Tone.Sampler({
         urls: {
@@ -73,8 +71,8 @@ function Sequencer() {
     }));
     seqRef.current = new Tone.Sequence( // create a new Tone.Sequence object with a callback function
       (time, step) => {
+        // iterate over each track and trigger the sampler if the step is checked
         tracksRef.current.map((trk) => {
-          // iterate over each track and trigger the sampler if the step is checked
           if (stepsRef.current[trk.id]?.[step]?.checked) {
             // console.log('stepsRef.current[trk.id]: ', stepsRef.current[trk.id]);
             trk.sampler.triggerAttack(NOTE, Tone.now());
@@ -141,7 +139,7 @@ function Sequencer() {
               // iterate over each track
               <section key={trackId} className={`sequencer-row  ${numOfSteps === 32 ? 'xl' : ''}`}>
                 {stepIds.map((stepId) => {
-                  // iterate over each step on every track to display its cells
+                  // iterate over each step on every track and display a cells
                   const id = `${trackId}-${stepId}`;
                   const isSelected = selectedCells.includes(id);
                   return (

@@ -46,7 +46,7 @@ function KitFilter() {
   useEffect(() => {
     const getSelectedKit = async () => {
       try {
-        if (kitId) setSelectedKit(kitId);
+        // if (kitId) setSelectedKit(kitId);
       } catch (error) {
         console.error('Failed to load selected kit', error);
       }

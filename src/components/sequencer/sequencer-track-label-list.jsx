@@ -2,11 +2,12 @@ import React from 'react';
 import '../../assets/styles/components/sequencer/sequencer-track-label-list.scss';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSounds } from '../../slices/soundsSlice';
+import { setSelectedKitSounds } from '../../slices/soundsSlice';
+
 import { updateKitSounds } from '../../services/kit-service';
 
 function SequencerTrackLabelList({ kitId }) {
-  const kitSounds = useSelector((state) => state.sounds.sounds);
+  const kitSounds = useSelector((state) => state.sounds.selectedKitSounds);
   const dispatch = useDispatch();
 
   const handleDragEnd = async (result) => {
@@ -19,7 +20,7 @@ function SequencerTrackLabelList({ kitId }) {
     try {
       const updatedSounds = await updateKitSounds(kitId, newKitSounds);
       console.log('updatedSounds: ', updatedSounds);
-      dispatch(setSounds(updatedSounds));
+      dispatch(setSelectedKitSounds(updatedSounds));
     } catch (error) {
       console.error(error);
     }

@@ -29,13 +29,11 @@ function UserInfo() {
     }
   }, [user, dispatch]);
 
-  if (user) {
-    return (
-      <section className="user-info">
-        <UserKitsList />
-      </section>
-    );
-  }
+  return (
+    <section className="user-info">
+      <UserKitsList />
+    </section>
+  );
 }
 
 export default UserInfo;

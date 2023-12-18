@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
 import '../../assets/styles/components/drum-machine/drum-machine.scss';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getKitSounds } from '../../services/kit-service';
 import { setError } from '../../slices/errorSlice';
@@ -8,14 +8,14 @@ import drumMachineDefaultConfig from '../../config/drumMachineDefaultConfig';
 import DrumPad from './drum-pad';
 import SoundsList from '../sounds/sounds-list';
 import UserInfo from '../user/user-info';
-import { setSounds } from '../../slices/soundsSlice';
 import DrumMachineOptions from './drum-machine-options';
+import { setSelectedKitSounds } from '../../slices/soundsSlice';
 
 const DrumMachine = () => {
   const { kitId } = useParams();
   const dispatch = useDispatch();
 
-  const sounds = useSelector((state) => state.sounds.sounds);
+  const selectedKitSounds = useSelector((state) => state.sounds.selectedKitSounds);
   const [activePad, setActivePad] = useState(null);
 
   const audioRefs = useRef([]);
@@ -24,9 +24,12 @@ const DrumMachine = () => {
     const getSounds = async () => {
       try {
         if (kitId) {
-          const kitSounds = await getKitSounds(kitId);
-          dispatch(setSounds(kitSounds));
-          audioRefs.current = sounds.map((_, index) => audioRefs.current[index] ?? createRef());
+          const sounds = await getKitSounds(kitId);
+          if (JSON.stringify(sounds) === JSON.stringify(selectedKitSounds)) return;
+          dispatch(setSelectedKitSounds(sounds));
+          audioRefs.current = selectedKitSounds.map(
+            (_, index) => audioRefs.current[index] ?? createRef()
+          );
         }
       } catch (error) {
         console.error('Failed to load kit', error);
@@ -34,14 +37,10 @@ const DrumMachine = () => {
       }
     };
     getSounds();
-  }, [kitId, sounds]);
+  }, [kitId]);
 
   const toggleActive = (keyCode) => {
-    if (activePad === keyCode) {
-      setActivePad(null);
-    } else {
-      setActivePad(keyCode);
-    }
+    activePad === keyCode ? setActivePad(null) : setActivePad(keyCode);
   };
 
   const handleMouseUp = () => {
@@ -53,7 +52,7 @@ const DrumMachine = () => {
       <section className="drum-machine-wrapper">
         <UserInfo />
         <section className="drum-table">
-          {sounds.map((sound, index) => (
+          {selectedKitSounds.map((sound, index) => (
             <DrumPad
               key={sound._id}
               keyCode={drumMachineDefaultConfig[index].keyCode.toString()}

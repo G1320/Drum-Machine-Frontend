@@ -1,38 +1,30 @@
 import React, { useEffect, useState, useRef, createRef } from 'react';
 import '../../assets/styles/components/sounds/sounds-list.scss';
-import { getSounds } from '../../services/sound-service';
-import { getKitSounds } from '../../services/kit-service';
 import SoundDetails from './sound-details';
 import { getLocalUser } from '../../services/user-service';
+import { useSelector } from 'react-redux';
 
 function SoundsList({ kitId }) {
+  const [isExpanded, setIsExpanded] = useState(true);
   const [sounds, setSounds] = useState([]);
   const audioRefs = useRef([]);
-  const [isExpanded, setIsExpanded] = useState(true);
   const user = getLocalUser();
 
+  const kitSounds = useSelector((state) => state.sounds.selectedKitSounds);
+  const allSounds = useSelector((state) => state.sounds.allSounds);
+
   useEffect(() => {
-    const fetchKit = async () => {
-      try {
-        const sounds = await getSounds(); //All sounds
-        const kitSounds = await getKitSounds(kitId); //Currently selected kit sounds
+    setSounds(
+      allSounds.map((sound) => {
+        if (kitSounds.some((kitSound) => kitSound._id === sound._id)) {
+          return { ...sound, alert: true };
+        }
+        return sound;
+      })
+    );
 
-        setSounds(
-          sounds.map((sound) => {
-            if (kitSounds.some((kitSound) => kitSound._id === sound._id)) {
-              return { ...sound, alert: true }; // if the sound is in the kit, add an alert property to the sound object
-            }
-            return sound;
-          })
-        );
-
-        audioRefs.current = sounds.map((_, index) => audioRefs.current[index] ?? createRef());
-      } catch (error) {
-        console.error('Failed to load kit', error);
-      }
-    };
-    fetchKit();
-  }, [sounds, kitId]);
+    audioRefs.current = sounds.map((_, index) => audioRefs.current[index] ?? createRef());
+  }, [kitSounds, allSounds]);
 
   const handleToggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -63,4 +55,5 @@ function SoundsList({ kitId }) {
     </>
   );
 }
+
 export default SoundsList;
