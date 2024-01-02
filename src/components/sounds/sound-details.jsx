@@ -1,33 +1,28 @@
 import React, { useEffect } from 'react';
 import '../../assets/styles/components/sounds/sound-details.scss';
 import { playAudio } from '../../services/sound-service';
-import {
-  addSoundToKit as addSoundToKitService,
-  removeSoundFromKit as removeSoundFromKitService,
-} from '../../services/sound-service';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import {
-  addSoundToKit as addSoundToKitSlice,
-  removeSoundFromKit as removeSoundFromKitSlice,
-} from '../../slices/soundsSlice';
 
 import { faVolumeHigh, faXmark, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { setError } from '../../slices/errorSlice';
+import {
+  addSoundToKit as addSoundToKitService,
+  removeSoundFromKit as removeSoundFromKitService,
+} from '../../services/sound-service';
+import {
+  addSoundToKit as addSoundToKitSlice,
+  removeSoundFromKit as removeSoundFromKitSlice,
+} from '../../slices/soundsSlice';
 
 function SoundDetails({ sound, audioRef, className }) {
-  let { kitId, pageId } = useParams();
+  let { kitId } = useParams();
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    try {
-      playAudio(audioRef);
-    } catch (error) {
-      console.error('Failed to play sound', error);
-      dispatch(setError(error.response.data || 'Failed to play sound'));
-    }
+    playAudio(audioRef);
   };
 
   const handleKeyPress = (e) => {
@@ -46,7 +41,7 @@ function SoundDetails({ sound, audioRef, className }) {
   const handleAddToKit = async () => {
     if (sound.alert) return handleRemoveFromKit();
     try {
-      await addSoundToKitService(kitId || pageId, sound._id);
+      await addSoundToKitService(kitId, sound._id);
       dispatch(addSoundToKitSlice(sound));
     } catch (error) {
       console.error('Failed to add sound to kit', error);
@@ -56,7 +51,7 @@ function SoundDetails({ sound, audioRef, className }) {
 
   const handleRemoveFromKit = async () => {
     try {
-      await removeSoundFromKitService(kitId || pageId, sound._id);
+      await removeSoundFromKitService(kitId, sound._id);
       dispatch(removeSoundFromKitSlice(sound));
     } catch (error) {
       console.error('Failed to remove sound from kit', error);

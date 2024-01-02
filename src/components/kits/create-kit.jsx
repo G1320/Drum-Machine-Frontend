@@ -3,22 +3,27 @@ import '../../assets/styles/components/kits/create-kit.scss';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Box, FormGroup } from '@mui/material';
 import { createKit } from '../../services/kit-service';
+import { getLocalUser } from '../../services/user-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
 import { setSuccess } from '../../slices/successSlice';
+import { setSelectedKit } from '../../slices/kitsSlice';
 
 export default function CreateKit() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = getLocalUser();
 
   const [kitName, setKitName] = useState('');
   const [description, setDescription] = useState('');
 
   const addKit = async (kitData) => {
     try {
-      const kit = await createKit(kitData);
+      const kit = await createKit(user._id, kitData);
       dispatch(setSuccess('Kit created successfully!'));
-      navigate(`/drum/id/${kit._id}`);
+      dispatch(setSelectedKit(kit));
+
+      navigate(`/sequencer/id/${kit._id}`);
       setDescription('');
       setKitName('');
     } catch (error) {
@@ -34,6 +39,7 @@ export default function CreateKit() {
       description,
       sounds: [],
       subscribers: 0,
+      isCustom: true,
     };
     addKit(kitData);
   };
@@ -54,6 +60,9 @@ export default function CreateKit() {
             variant="outlined"
             value={kitName}
             onChange={(e) => setKitName(e.target.value)}
+            InputProps={{
+              style: { color: 'white' }, // Change the color here
+            }}
           />
         </FormGroup>
         <FormGroup>
@@ -62,11 +71,14 @@ export default function CreateKit() {
             variant="outlined"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            InputProps={{
+              style: { color: 'white' }, // Change the color here
+            }}
           />
         </FormGroup>
         <FormGroup>
           <Button variant="contained" color="primary" type="submit">
-            Create
+            Create a new Kit
           </Button>
         </FormGroup>
       </Box>

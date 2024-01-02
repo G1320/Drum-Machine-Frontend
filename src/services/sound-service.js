@@ -7,6 +7,7 @@ export const playAudio = (audioRef) => {
     try {
       audioRef.current.currentTime = 0;
       audioRef.current.play();
+      console.log('Playing audio');
     } catch (error) {
       console.error('Error playing audio:', error);
       throw error;

@@ -7,13 +7,13 @@ import { setSelectedKitSounds } from '../../slices/soundsSlice';
 import { updateKitSounds } from '../../services/kit-service';
 
 function SequencerTrackLabelList({ kitId }) {
-  const kitSounds = useSelector((state) => state.sounds.selectedKitSounds);
+  const selectedKitSounds = useSelector((state) => state.sounds.selectedKitSounds);
   const dispatch = useDispatch();
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
 
-    const newKitSounds = Array.from(kitSounds);
+    const newKitSounds = Array.from(selectedKitSounds);
     const [reorderedSound] = newKitSounds.splice(result.source.index, 1);
     newKitSounds.splice(result.destination.index, 0, reorderedSound);
 
@@ -28,7 +28,7 @@ function SequencerTrackLabelList({ kitId }) {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <Droppable droppableId="kitSounds">
+      <Droppable droppableId="selectedKitSounds">
         {(provided) => (
           <ul
             key={'sounds'}
@@ -36,7 +36,7 @@ function SequencerTrackLabelList({ kitId }) {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {kitSounds.map((sound, index) => (
+            {selectedKitSounds.map((sound, index) => (
               <Draggable key={sound._id} draggableId={sound._id} index={index}>
                 {(provided) => (
                   <li

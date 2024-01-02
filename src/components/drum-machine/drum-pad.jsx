@@ -17,9 +17,11 @@ const DrumPad = ({ sound, toggleActive, isActive, audioRef, keyCode }) => {
     }
   };
 
-  const handleMouseDown = () => {
-    toggleActive(keyCode);
+  const handleMouseDown = (audioRef) => {
     playAudio(audioRef);
+    console.log('play audio in pad');
+    console.log('audioRef: ', audioRef);
+    toggleActive(keyCode);
   };
 
   const handleMouseUp = () => {
@@ -49,6 +51,7 @@ const DrumPad = ({ sound, toggleActive, isActive, audioRef, keyCode }) => {
   return (
     <article className={`drum-Pad ${isActive ? 'active' : ''}`} onMouseDown={handleMouseDown}>
       <p>{sound.title}</p>
+
       <audio src={sound.src} ref={audioRef} />
     </article>
   );

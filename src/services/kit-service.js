@@ -2,9 +2,9 @@ import { httpService } from './http-service';
 
 const kitEndpoint = '/kits';
 
-export const createKit = async (kitData) => {
+export const createKit = async (userId, kitData) => {
   try {
-    return await httpService.post(kitEndpoint, kitData);
+    return await httpService.post(`${kitEndpoint}/${userId}/create-kit`, kitData);
   } catch (error) {
     console.error(error);
     throw error;

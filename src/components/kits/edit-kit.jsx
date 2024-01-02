@@ -16,12 +16,12 @@ function Show() {
   const [data, setData] = useState(null);
   const [tempData, setTempData] = useState({ name: '', description: '' });
 
-  const { pageId } = useParams();
+  const { kitId } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const pageData = await getPageData(pageId);
+        const pageData = await getPageData(kitId);
         setData(pageData);
         setTempData({ name: pageData.name, description: pageData.description });
       } catch (error) {
@@ -30,7 +30,7 @@ function Show() {
       }
     };
     fetchData();
-  }, [pageId]);
+  }, [kitId]);
 
   const handleUpdate = async () => {
     if (tempData.name === data.name && tempData.description === data.description) {
@@ -110,6 +110,9 @@ function Show() {
             margin="normal"
             value={tempData.name}
             onChange={(e) => setTempData((prevData) => ({ ...prevData, name: e.target.value }))}
+            InputProps={{
+              style: { color: 'white' }, // Change the color here
+            }}
           />
           <TextField
             label="Description"
@@ -120,9 +123,12 @@ function Show() {
             rows={3}
             value={tempData.description}
             onChange={(e) => setTempData((prevData) => ({ ...prevData, description: e.target.value }))}
+            InputProps={{
+              style: { color: 'white' }, // Change the color here
+            }}
           />
         </FormGroup>
-        <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }}>
+        <Button variant="contained" color="primary" type="submit">
           Update
         </Button>
       </Box>
@@ -133,13 +139,13 @@ function Show() {
         Load Sequencer
       </Button>
 
-      <Button variant="contained" color="secondary" onClick={handleSubscribe} sx={{ mr: 2 }}>
+      <Button variant="contained" color="secondary" onClick={handleSubscribe}>
         Subscribe
       </Button>
-      <Button variant="contained" color="error" onClick={handleDeleteKit} sx={{ mr: 2 }}>
+      <Button variant="contained" color="error" onClick={handleDeleteKit}>
         Delete
       </Button>
-      <Button variant="contained" onClick={handleAddToKits} sx={{ mr: 2 }}>
+      <Button variant="contained" onClick={handleAddToKits}>
         Add to my kits
       </Button>
     </Container>

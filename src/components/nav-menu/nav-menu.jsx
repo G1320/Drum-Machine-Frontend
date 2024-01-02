@@ -8,39 +8,41 @@ function NavMenu() {
   const user = getLocalUser();
   const location = useLocation();
   const pathname = location.pathname;
-  const pageId = pathname.split('/').pop();
+  const kitId = pathname.split('/').pop();
 
   const isValidObjectId = (id) => {
     return /^[a-f\d]{24}$/i.test(id);
   };
 
-  const validPageId = isValidObjectId(pageId) ? pageId : '6571e750ecffe8969f1e89eb';
+  const validKitId = isValidObjectId(kitId) ? kitId : '6571e750ecffe8969f1e89f1';
 
   return (
     <div className="nav-menu">
       <Menu left>
+        <Link to="/create-kit">Create Kit</Link>
+
         {user && user.isAdmin && (
-          <Link to="/read" className="menu-item">
-            Users
-          </Link>
-        )}
-        {user && user.isAdmin && (
-          <Link to={`/pages/id/${validPageId}`} className="menu-item">
+          <Link to={`/pages/id/${validKitId}`} className="menu-item">
             Edit kit
           </Link>
         )}
-        <Link to={`/drum/id/${validPageId}`} className="menu-item">
+        <Link to={`/drum/id/${validKitId}`} className="menu-item">
           Drum Machine
+        </Link>
+
+        <Link to={`/sequencer/id/${validKitId}`} className="menu-item">
+          Sequencer
         </Link>
         {user && user.isAdmin && (
           <Link to="/synth" className="menu-item">
             Synth
           </Link>
         )}
-
-        <Link to={`/sequencer/id/${validPageId}`} className="menu-item">
-          Sequencer
-        </Link>
+        {user && user.isAdmin && (
+          <Link to="/read" className="menu-item">
+            Browse Users
+          </Link>
+        )}
       </Menu>
     </div>
   );

@@ -8,6 +8,7 @@
   gap: 0.25rem;
   grid-template-rows: 25px;
   justify-items: start;
+
   border-radius: 6px;
   * {
     width: fit-content;
@@ -16,14 +17,29 @@
   }
 }
 
+.select-kit {
+  display: none;
+}
+
 .range-controls {
   grid-column: 6;
   display: flex row;
   gap: 0.5rem;
+  margin-inline-end: 0.5rem;
 }
 
 .bpm, .volume {
   gap: 0.1rem;
+}
+
+.step-length-wrapper {
+  display: flex;
+  justify-items: center;
+  gap: 0.25rem;
+}
+
+.pagination-controls-wrapper{
+  margin-inline-start: 0.5rem;
 }
 
 input {
@@ -35,9 +51,12 @@ input {
     height: 15px;
     border-radius: 5px;
   }
-
-  &[type='radio'] {
+  
+  &[type='radio']:not(.sequencer-lamp-input) {
     cursor: pointer;
+    height:100%;
+    width: 100%;
+    margin: 0.1rem!important;
   }
 
   &[type='range']::-webkit-slider-thumb {

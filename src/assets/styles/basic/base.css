@@ -13,10 +13,6 @@ body {
   overflow-x: hidden !important;
 }
 
-main {
-  padding: 0 1rem;
-}
-
 :root {
   font-family: ' Helvetica Neve', Arial, sans-serif;
   color: #fcfcfc;

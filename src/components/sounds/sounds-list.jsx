@@ -1,17 +1,20 @@
 import React, { useEffect, useState, useRef, createRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import '../../assets/styles/components/sounds/sounds-list.scss';
+
 import SoundDetails from './sound-details';
 import { getLocalUser } from '../../services/user-service';
-import { useSelector } from 'react-redux';
+import { setSelectedKit } from '../../slices/kitsSlice';
 
 function SoundsList({ kitId }) {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const dispatch = useDispatch();
   const [sounds, setSounds] = useState([]);
   const audioRefs = useRef([]);
   const user = getLocalUser();
-
+  const selectedKit = useSelector((state) => state.kits.selectedKit);
   const kitSounds = useSelector((state) => state.sounds.selectedKitSounds);
   const allSounds = useSelector((state) => state.sounds.allSounds);
+  const combinedKits = useSelector((state) => state.kits.combinedKits);
 
   useEffect(() => {
     setSounds(
@@ -26,19 +29,23 @@ function SoundsList({ kitId }) {
     audioRefs.current = sounds.map((_, index) => audioRefs.current[index] ?? createRef());
   }, [kitSounds, allSounds]);
 
-  const handleToggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
+  useEffect(() => {
+    const getSelectedKit = () => {
+      if (kitId && user?._id) {
+        const selectedKit = combinedKits.find((kit) => kit._id === kitId);
+        if (selectedKit) {
+          dispatch(setSelectedKit(selectedKit));
+        }
+      }
+    };
+    getSelectedKit();
+  }, [kitId, user?._id, dispatch, kitSounds]);
 
   return (
     <>
-      {user && user.isAdmin && (
+      {user && (user.isAdmin || selectedKit?.isCustom) ? (
         <>
-          {/* <button className="sounds-list-expand-button " onClick={handleToggleExpand}>
-              {isExpanded ? 'Collapse' : 'Expand'}
-            </button> */}
-
-          <section className={`sounds-list ${isExpanded ? 'expanded' : 'collapsed'}`}>
+          <section className={'sounds-list expanded'}>
             {' '}
             {sounds.map((sound, index) => (
               <SoundDetails
@@ -46,12 +53,12 @@ function SoundsList({ kitId }) {
                 sound={sound}
                 audioRef={audioRefs.current[index]}
                 soundKey={index}
-                className={`${sound.alert ? 'alert' : 'Danger'} ${isExpanded ? 'expanded' : ''}`}
+                className={`${sound.alert ? 'alert' : ''} expanded`}
               />
             ))}
           </section>
         </>
-      )}
+      ) : null}
     </>
   );
 }

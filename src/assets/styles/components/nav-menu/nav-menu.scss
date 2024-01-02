@@ -16,6 +16,9 @@
 
 .bm-overlay {
   background: rgba(0, 0, 0, 0.6) !important;
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100svh;
   margin-block-start: -1rem;
 }

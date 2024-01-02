@@ -33,8 +33,8 @@ async function ajax(endpoint, method = 'GET', data = null) {
       const decodedToken = jwtDecode(accessToken);
 
       if (decodedToken.exp < Date.now() / 1000) {
+        //refreshing access token if close to expiry, backend will sign (and return) a new accessToken
         const refreshedToken = await refreshAccessToken();
-
         if (refreshedToken) {
           accessToken = Cookies.get('accessToken');
         } else {
@@ -53,9 +53,9 @@ async function ajax(endpoint, method = 'GET', data = null) {
     });
     return res.data;
   } catch (err) {
+    // Retrying the request if 401 Unauthorized
     if (err.response && err.response.status === 401) {
       try {
-        // Retrying the request if 401 Unauthorized
         const refreshedToken = await refreshAccessToken();
         if (refreshedToken) return ajax(endpoint, method, data);
       } catch (refreshError) {

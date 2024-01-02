@@ -12,7 +12,7 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -20,7 +20,7 @@ function Login() {
       if (!user) return;
       dispatch(loginAction(user));
       dispatch(setSuccess('Login successful!'));
-      // navigate('/drum/id/64e61e8b7aecdc67f863233c');
+      navigate('/sequencer/id/6571e750ecffe8969f1e89f1');
     } catch (error) {
       console.error('Login failed', error);
       dispatch(setError(error?.response?.data || 'Login failed. Please try again.'));

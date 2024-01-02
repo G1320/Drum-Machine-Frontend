@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
-import { getSounds } from '../services/sound-service';
 
 const initialState = {
   allSounds: [],

@@ -1,60 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../assets/styles/components/sequencer/sequencer-options.scss';
 import * as Tone from 'tone';
-
-import { useDispatch } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { setSuccess } from '../../slices/successSlice';
-import { setError } from '../../slices/errorSlice';
-import { getUserKits, addKitToUser, getLocalUser } from '../../services/user-service';
-import { getKitById } from '../../services/kit-service';
 
 import FilterKits from '../kits/filter-kits';
+import { setSelectedKit } from '../../slices/kitsSlice';
+import { setIsPlaying } from '../../slices/transportSlice';
+import { clearSelectedCells } from '../../slices/selectedCellsSlice';
+import { localSaveSelectedCells } from '../../services/sequencer-service';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { kitId } = useParams();
+  const combinedKits = useSelector((state) => state.kits.combinedKits);
+  const selectedKit = useSelector((state) => state.kits.selectedKit);
+  const selectedCells = useSelector((state) => state.selectedCells.selectedCells);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [reverbWet, setReverbWet] = useState(0.5);
 
-  const handleAddToKits = async () => {
-    const user = getLocalUser();
-    if (user) {
-      try {
-        await addKitToUser(user._id, kitId);
-        const userKits = await getUserKits(user._id);
-        dispatch({ type: 'userKits/setUserKits', payload: userKits });
-        dispatch(setSuccess('Kit added to your kits!'));
-      } catch (error) {
-        console.error('Failed to add kit to user', error);
-        dispatch(setError(error?.response?.data || 'Failed to add kit to user'));
-      }
-    } else {
-      dispatch(setError('Please log in to add a Kit to your Kits!'));
-    }
-  };
+  useEffect(() => {
+    // Update the currentIndex when the selectedKit changes
+    const index = combinedKits.findIndex((kit) => kit._id === selectedKit._id);
+    setCurrentIndex(index);
+  }, [combinedKits, selectedKit]);
 
-  const handleNextKit = async () => {
-    try {
-      const { nextKit } = await getKitById(kitId);
-      if (nextKit) navigate(`/sequencer/id/${nextKit._id}`);
-    } catch (error) {
-      console.error('Failed to load next kit', error);
-      dispatch(setError(error?.response?.data || 'Failed to load next Kit'));
-    }
+  const handleNextKit = () => {
+    const nextIndex = currentIndex === combinedKits.length - 1 ? 0 : currentIndex + 1;
+    const nextKit = combinedKits[nextIndex];
+    Tone.Transport.stop();
+    dispatch(setIsPlaying(false));
+
+    localSaveSelectedCells(selectedCells);
+    dispatch(clearSelectedCells());
+    dispatch(setSelectedKit(nextKit));
+    setCurrentIndex(nextIndex);
+    navigate(`/sequencer/id/${nextKit._id}`);
   };
 
   const handlePrevKit = async () => {
-    try {
-      const { prevKit } = await getKitById(kitId);
-      if (prevKit) navigate(`/sequencer/id/${prevKit._id}`);
-    } catch (error) {
-      console.error('Failed to load previous kit', error);
-      dispatch(setError(error?.response?.data || 'Failed to load previous Kit'));
-    }
-  };
-  const handleLoadDrumMachine = () => {
-    navigate(`/drum/id/${kitId}`);
+    const prevIndex = currentIndex === 0 ? combinedKits.length - 1 : currentIndex - 1;
+    const prevKit = combinedKits[prevIndex];
+    Tone.Transport.stop();
+    dispatch(setIsPlaying(false));
+
+    localSaveSelectedCells(selectedCells);
+    dispatch(clearSelectedCells());
+    dispatch(setSelectedKit(prevKit));
+    setCurrentIndex(prevIndex);
+    navigate(`/sequencer/id/${prevKit._id}`);
   };
 
   const handleBpmChange = (e) => {
@@ -63,6 +61,11 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
 
   const handleVolumeChange = (e) => {
     Tone.Destination.volume.value = Tone.gainToDb(Number(e.target.value));
+  };
+
+  const handleClearPattern = () => {
+    localSaveSelectedCells(null);
+    dispatch(clearSelectedCells());
   };
 
   return (
@@ -88,26 +91,17 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             32
           </label>
         </article>
-        <button
-          className="add-to-kits-btn"
-          variant="contained"
-          color="secondary"
-          onClick={handleAddToKits}
-        >
-          Add to my kits
-        </button>
-        <button className="load-drum-machine-btn" variant="contained" onClick={handleLoadDrumMachine}>
-          Pads
-        </button>
+
         <article className="pagination-controls-wrapper">
-          <button className="prev-kit-btn" onClick={handlePrevKit}>
-            Prev
+          <button className="prev-button" onClick={handlePrevKit}>
+            <FontAwesomeIcon icon={faChevronLeft} />
           </button>
-          <button className="next-kit-btn" onClick={handleNextKit}>
-            Next
+          <button className="next-button" onClick={handleNextKit}>
+            <FontAwesomeIcon icon={faChevronRight} />
           </button>
         </article>
         <FilterKits />
+        <button onClick={handleClearPattern}>CLR</button>
       </section>
       <section className="range-controls">
         <article className="bpm">
@@ -134,6 +128,18 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             defaultValue={0.5}
           />
         </article>
+        {/* <article className="reverb-wet">
+          <span>Reverb Wetness</span>
+          <label className="reverb-wet-label"></label>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.01}
+            value={reverbWet}
+            onChange={handleReverbWetChange}
+          />
+        </article> */}
       </section>
     </section>
   );

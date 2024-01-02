@@ -4,12 +4,24 @@
   white-space: nowrap;
   font-size: 0.9rem;
   background-color: #9058f7;
-  grid-template-columns: max-content max-content 1fr 1fr;
+  grid-template-columns: max-content max-content max-content max-content max-content max-content;
   gap: 0.25rem;
   justify-items: start;
+
   border-radius: 6px;
   p {
    color: #fcfcfc;
   }
 }
+
+.select-kit {
+  display: none;
+}
+
+
+.drum-machine-options *{
+  display: flex;
+  align-items: center;
+}
+
 
