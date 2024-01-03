@@ -58,7 +58,11 @@ function SoundsList({ kitId }) {
             ))}
           </section>
         </>
-      ) : null}
+      ) : (
+        <section className="sounds-list-placeholder">
+          <p className=" placeholder">Select a custom kit to add or remove sounds.</p>
+        </section>
+      )}
     </>
   );
 }

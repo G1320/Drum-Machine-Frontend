@@ -8,6 +8,7 @@ import SequencerStartBtn from './sequencer-start-btn';
 import SequencerOptions from './sequencer-options';
 import SoundsList from '../sounds/sounds-list';
 import SequencerTrackLabelList from './sequencer-track-label-list';
+import OrientationLock from './sequencer-orientation-lock';
 
 import { setSelectedKitSounds } from '../../slices/soundsSlice';
 import { setSelectedCells, toggleSelectedCell } from '../../slices/selectedCellsSlice';
@@ -36,7 +37,7 @@ function Sequencer() {
   const seqRef = useRef(null);
 
   useEffect(() => {
-    const getSounds = async () => {
+    const initData = async () => {
       if (!kitId) return;
       try {
         const sounds = await getKitSounds(kitId);
@@ -44,14 +45,13 @@ function Sequencer() {
         if (selectedCells) dispatch(setSelectedCells(selectedCells));
         if (JSON.stringify(sounds) === JSON.stringify(selectedKitSounds)) return;
         dispatch(setSelectedKitSounds(sounds));
-
         setSequencerKey((prevKey) => prevKey + 1); // Increment sequencerKey to force a re-render
       } catch (error) {
         console.error('Failed to load kit', error);
       }
     };
 
-    getSounds();
+    initData();
   }, [kitId, selectedKitSounds, dispatch, numOfSounds]);
 
   useEffect(() => {
@@ -123,7 +123,6 @@ function Sequencer() {
       seqRef.current?.stop();
       seqRef.current?.dispose();
       tracksRef.current.forEach((trk) => trk.sampler.dispose());
-      // tracksRef.current.map((trk) => void trk.sampler.dispose()); // disposing of each sampler (track)
     };
   }, [selectedKitSounds, numOfSounds, numOfSteps, kitId]);
 
@@ -132,6 +131,7 @@ function Sequencer() {
     const updatedSelectedCells = selectedCells.includes(id)
       ? selectedCells.filter((cellId) => cellId !== id)
       : [...selectedCells, id];
+    console.log('updatedSelectedCells: ', updatedSelectedCells);
     dispatch(setSelectedCells(updatedSelectedCells));
     localSaveSelectedCells(updatedSelectedCells);
   };
@@ -146,6 +146,7 @@ function Sequencer() {
 
   return (
     <>
+      <OrientationLock />
       <section key={sequencerKey} className="sequencer-external-container">
         <section className="sequencer">
           <SequencerStartBtn key={sequencerKey} />

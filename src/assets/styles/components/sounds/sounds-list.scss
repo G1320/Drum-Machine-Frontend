@@ -5,8 +5,6 @@
   overflow: scroll;
   gap: 0.5rem;
   margin-block-start: 1rem;
-
-  /* border: 2px solid rgb(189, 177, 189); */
   border-radius: 8px;
   transition: 500ms;
 
@@ -22,6 +20,14 @@
     row-gap: 0;
     grid-column: 2/4;
   }
+}
+
+ .sounds-list-placeholder{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column: 2/4;
+  height: 100%;
 }
 
 .sound-title {

@@ -10,6 +10,9 @@ header {
  
   border-bottom: 2.5px solid #fcfcfc;
   border-top: none;
+  *{
+    z-index: 3000;
+  }
 }
 
 .hero {
@@ -27,7 +30,7 @@ header {
 @media screen and (max-width: 650px) {
   .hero {
     font-size: 2.5rem;
-    
+    line-height: 2rem;
   }
 }
 

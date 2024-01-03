@@ -14,10 +14,17 @@ export const selectedCellsSlice = createSlice({
     },
     toggleSelectedCell: (state, action) => {
       const cellId = action.payload;
+      console.log('state.selectedCells: ', state.selectedCells);
       if (state.selectedCells.includes(cellId)) {
-        state.selectedCells = state.selectedCells.filter((id) => id !== cellId);
+        return {
+          ...state,
+          selectedCells: state.selectedCells.filter((id) => id !== cellId),
+        };
       } else {
-        state.selectedCells.push(cellId);
+        return {
+          ...state,
+          selectedCells: [...state.selectedCells, cellId],
+        };
       }
     },
     clearSelectedCells: (state) => {
