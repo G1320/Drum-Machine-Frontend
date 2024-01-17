@@ -63,6 +63,7 @@ export const updateUser = async (id, data) => {
     throw error;
   }
 };
+
 export const deleteUser = async (id) => {
   try {
     return await httpService.delete(`${userEndpoint}/${id}`);

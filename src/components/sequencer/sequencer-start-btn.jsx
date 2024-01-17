@@ -20,7 +20,7 @@ const sequencerStartBtn = () => {
   };
   return (
     <Button onClick={handleStartClick} className="sequencer-start-btn">
-      {isPlaying ? 'Pause' : 'Start'}
+      {isPlaying ? 'Pause' : 'Play'}
     </Button>
   );
 };

@@ -27,12 +27,14 @@ const userKitsSlice = createSlice({
     },
     removeCombinedKit(state, action) {
       state.combinedKits = state.combinedKits.filter((kit) => kit._id !== action.payload);
+      console.log('state.combinedKits: ', state.combinedKits);
     },
     addUserKit(state, action) {
       state.userKits.push(action.payload);
     },
     removeUserKit(state, action) {
       state.userKits = state.userKits.filter((kit) => kit._id !== action.payload);
+      console.log('state.userKits: ', state.userKits);
     },
   },
 });

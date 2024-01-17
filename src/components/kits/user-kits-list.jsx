@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import '../../assets/styles/components/kits/user-kits-list.scss';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeKitFromUser, getUserKits } from '../../services/user-service';
+import Loader from '../misc/loader';
+
+import { removeKitFromUser, getUserKits, getLocalUser } from '../../services/user-service';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { setError } from '../../slices/errorSlice';
 import { removeUserKit, setSelectedKit, setUserKits, removeCombinedKit } from '../../slices/kitsSlice';
@@ -13,7 +15,7 @@ function UserKitsList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const user = useSelector((state) => state.auth.user);
+  const user = getLocalUser();
   const userKits = useSelector((state) => state.kits.combinedKits);
   const selectedKit = useSelector((state) => state.kits.selectedKit);
   const selectedKitRef = useRef(null);
@@ -23,14 +25,16 @@ function UserKitsList() {
       selectedKitRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [selectedKit]);
+
   const handleRemoveKit = async (kitId) => {
     try {
       const kit = await removeKitFromUser(user._id, kitId);
-      dispatch(removeUserKit(kit));
-      dispatch(removeCombinedKit(kit));
+      dispatch(removeUserKit(kit._id));
+      dispatch(removeCombinedKit(kit._id));
       const updatedUserKits = await getUserKits(user._id);
       dispatch(setUserKits(updatedUserKits));
     } catch (error) {
+      console.error('Error removing Kit from User:', error);
       dispatch(setError(error?.response?.data || 'Failed to remove kit from user'));
     }
   };
@@ -53,16 +57,20 @@ function UserKitsList() {
 
   return (
     <section className="user-kits">
-      {userKits.map((userKit) => (
-        <UserKitDetails
-          ref={userKit._id === selectedKit._id ? selectedKitRef : null}
-          selectedKit={selectedKit}
-          key={userKit._id}
-          userKit={userKit}
-          onRemoveKit={() => handleRemoveKit(userKit._id)}
-          onSelectKit={() => handleSelectKit(userKit._id)}
-        />
-      ))}
+      {userKits.length === 0 ? (
+        <Loader />
+      ) : (
+        userKits.map((userKit) => (
+          <UserKitDetails
+            ref={userKit._id === selectedKit._id ? selectedKitRef : null}
+            selectedKit={selectedKit}
+            key={userKit._id}
+            userKit={userKit}
+            onRemoveKit={() => handleRemoveKit(userKit._id)}
+            onSelectKit={() => handleSelectKit(userKit._id)}
+          />
+        ))
+      )}
     </section>
   );
 }

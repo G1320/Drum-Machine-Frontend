@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import FilterKits from '../kits/filter-kits';
+import UserSongsList from '../songs/user-songs-list';
 import { setSelectedKit } from '../../slices/kitsSlice';
 import { setIsPlaying } from '../../slices/transportSlice';
 import { clearSelectedCells } from '../../slices/selectedCellsSlice';
@@ -32,8 +33,8 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   const handleNextKit = () => {
     const nextIndex = currentIndex === combinedKits.length - 1 ? 0 : currentIndex + 1;
     const nextKit = combinedKits[nextIndex];
-    Tone.Transport.stop();
-    dispatch(setIsPlaying(false));
+    // Tone.Transport.stop();
+    // dispatch(setIsPlaying(false));
 
     localSaveSelectedCells(selectedCells);
     dispatch(clearSelectedCells());
@@ -45,8 +46,8 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   const handlePrevKit = async () => {
     const prevIndex = currentIndex === 0 ? combinedKits.length - 1 : currentIndex - 1;
     const prevKit = combinedKits[prevIndex];
-    Tone.Transport.stop();
-    dispatch(setIsPlaying(false));
+    // Tone.Transport.stop();
+    // dispatch(setIsPlaying(false));
 
     localSaveSelectedCells(selectedCells);
     dispatch(clearSelectedCells());
@@ -60,11 +61,12 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   };
 
   const handleVolumeChange = (e) => {
+    if (!e.target.value) return;
     Tone.Destination.volume.value = Tone.gainToDb(Number(e.target.value));
   };
 
   const handleClearPattern = () => {
-    localSaveSelectedCells(null);
+    localSaveSelectedCells([]);
     dispatch(clearSelectedCells());
   };
 
@@ -101,8 +103,11 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
           </button>
         </article>
         <FilterKits />
-        <button onClick={handleClearPattern}>CLR</button>
+        <button className="clear-song-btn" onClick={handleClearPattern}>
+          CLR
+        </button>
       </section>
+      <UserSongsList />
       <section className="range-controls">
         <article className="bpm">
           <span>BPM</span>

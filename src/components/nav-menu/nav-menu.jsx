@@ -14,14 +14,14 @@ function NavMenu() {
     return /^[a-f\d]{24}$/i.test(id);
   };
 
-  const validKitId = isValidObjectId(kitId) ? kitId : '6571e750ecffe8969f1e89f1';
+  const validKitId = isValidObjectId(kitId) ? kitId : '6571e750ecffe8969f1e89ee';
 
   return (
     <div className="nav-menu">
       <Menu left>
         <Link to="/create-kit">Create Kit</Link>
 
-        {user && user.isAdmin && (
+        {user && (
           <Link to={`/pages/id/${validKitId}`} className="menu-item">
             Edit kit
           </Link>

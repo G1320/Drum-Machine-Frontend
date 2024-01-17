@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import '../../assets/styles/components/sounds/sounds-list.scss';
 
 import SoundDetails from './sound-details';
+
+import AudioVisualizer from '../visualizer/audio-visualizer';
 import { getLocalUser } from '../../services/user-service';
 import { setSelectedKit } from '../../slices/kitsSlice';
 
@@ -15,6 +17,7 @@ function SoundsList({ kitId }) {
   const kitSounds = useSelector((state) => state.sounds.selectedKitSounds);
   const allSounds = useSelector((state) => state.sounds.allSounds);
   const combinedKits = useSelector((state) => state.kits.combinedKits);
+  const message = user ? 'To edit, select a custom kit' : 'To edit, log in and select a custom kit';
 
   useEffect(() => {
     setSounds(
@@ -59,9 +62,10 @@ function SoundsList({ kitId }) {
           </section>
         </>
       ) : (
-        <section className="sounds-list-placeholder">
-          <p className=" placeholder">Select a custom kit to add or remove sounds.</p>
-        </section>
+        <AudioVisualizer />
+        // <section className="sounds-list-placeholder">
+        //   <p>{message}</p>
+        // </section>
       )}
     </>
   );

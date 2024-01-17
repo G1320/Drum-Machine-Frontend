@@ -1,8 +1,8 @@
-// slices/selectedCellsSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import { getLocalSelectedCells } from '../services/sequencer-service';
 
 const initialState = {
-  selectedCells: [],
+    selectedCells: getLocalSelectedCells() || [],
 };
 
 export const selectedCellsSlice = createSlice({
@@ -12,24 +12,9 @@ export const selectedCellsSlice = createSlice({
     setSelectedCells: (state, action) => {
       state.selectedCells = action.payload;
     },
-    toggleSelectedCell: (state, action) => {
-      const cellId = action.payload;
-      console.log('state.selectedCells: ', state.selectedCells);
-      if (state.selectedCells.includes(cellId)) {
-        return {
-          ...state,
-          selectedCells: state.selectedCells.filter((id) => id !== cellId),
-        };
-      } else {
-        return {
-          ...state,
-          selectedCells: [...state.selectedCells, cellId],
-        };
-      }
-    },
     clearSelectedCells: (state) => {
-      state.selectedCells = [];
-    },
+    state.selectedCells = [];
+   },
   },
 });
 

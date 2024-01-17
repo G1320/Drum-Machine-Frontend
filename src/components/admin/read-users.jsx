@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 
 import { getUsers, deleteUser } from '../../services/user-service';
+import Loader from '../misc/loader';
 
 export default function Read() {
   const [APIData, setAPIData] = useState([]);
@@ -60,9 +61,7 @@ export default function Read() {
   return (
     <div>
       {loading ? (
-        <div className="loader-container">
-          <CircularProgress />
-        </div>
+        <Loader />
       ) : (
         <TableContainer component={Paper}>
           <Table>

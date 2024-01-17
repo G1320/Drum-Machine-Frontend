@@ -1,6 +1,11 @@
 .sequencer-start-btn {
   grid-row: 1;
-  align-self: center !important;
-  height: 60px;
+  justify-self: center;
+  align-self: center ;
+  font-size: medium;
+  height: calc(100% - 1rem);
+  width: calc(100% - 1rem);
+  margin-block: 0.5rem;
   border-radius: 12px !important;
+  color:#fcfcfc  !important;
 }

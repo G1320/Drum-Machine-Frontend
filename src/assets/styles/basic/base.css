@@ -44,11 +44,17 @@ li {
   margin-block-start: 2rem;
 }
 
-.loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 30dvh;
+.main-content-bottom-wrapper {
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 230px repeat(2, 1fr);
+  grid-template-rows: 1fr;
+}
+
+@media screen and (max-width: 700px) {
+  .main-content-bottom-wrapper {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .MuiSelect-select,
@@ -59,6 +65,23 @@ li {
 
 .MuiOutlinedInput-root {
   border-color: blue !important;
+}
+
+.error-alert-container,
+.success-alert-container {
+  position: absolute;
+  display: grid;
+  justify-items: center;
+}
+
+.error-alert-title,
+.success-alert-title {
+  grid-column: 2;
+}
+
+.error-alert-content,
+.success-alert-content {
+  grid-column: 2;
 }
 
 button {

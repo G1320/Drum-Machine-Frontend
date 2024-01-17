@@ -7,7 +7,7 @@ import { setError } from '../../slices/errorSlice';
 import drumMachineDefaultConfig from '../../config/drumMachineDefaultConfig';
 import DrumPad from './drum-pad';
 import SoundsList from '../sounds/sounds-list';
-import UserInfo from '../user/user-info';
+import UserKitsList from '../kits/user-kits-list';
 import DrumMachineOptions from './drum-machine-options';
 import { setSelectedKitSounds } from '../../slices/soundsSlice';
 
@@ -50,7 +50,6 @@ const DrumMachine = () => {
   return (
     <section className="drum-machine">
       <section className="drum-machine-wrapper">
-        <UserInfo />
         <section className="drum-table">
           {selectedKitSounds.map((sound, index) => (
             <DrumPad
@@ -66,7 +65,8 @@ const DrumMachine = () => {
         </section>
       </section>
       <DrumMachineOptions kitId={kitId} />
-      <section className="drum-machine-bottom-wrapper">
+      <section className="main-content-bottom-wrapper">
+        <UserKitsList />
         <SoundsList kitId={kitId} />
       </section>
     </section>

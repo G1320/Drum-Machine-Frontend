@@ -7,6 +7,14 @@
   position: relative;
   width: 38px;
   height: 32px;
+  border: none !important;
+  border-radius: 8px !important;
+  border: none;
+}
+
+#react-burger-menu-btn{
+  z-index: 10000 !important;
+
 }
 
 .bm-menu-wrap {
@@ -19,13 +27,20 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 100svh;
+  height: 100dvh;
+  
   margin-block-start: -1rem;
 }
 
 .bm-burger-bars {
   background: #ffffff;
+  border-radius: 8px;
+
+  &:hover {
+    background: #b8b7ad;
+  }
 }
+
 
 .bm-menu {
   border-radius: 8px !important;

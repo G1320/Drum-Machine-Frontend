@@ -6,9 +6,9 @@
   grid-template-rows: repeat(auto-fit, 40px);
   overflow: scroll;
   gap: 1rem;
-  width: 240px;
-  height: calc(100% - 3rem);
-  min-width: 220px;
+  max-width: 240px;
+  // height: 70%;
+  min-width: 170px;
   border: 2.5px solid #f0f0f0;
   background-color: rgb(14, 14, 14);
   border-radius: 8px;
@@ -17,7 +17,7 @@
 
 @media screen and (max-width: 1200px) {
   .user-kits {
-    width: 70%;
+    width: 85%;
   }
 }
 

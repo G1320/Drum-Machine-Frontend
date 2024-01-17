@@ -41,7 +41,7 @@ function App() {
       <main>
         <section className="main-content">
           <Routes>
-            <Route path="/" element={<Navigate to="/sequencer/id/6571e750ecffe8969f1e89f1" />} />
+            <Route path="/" element={<Navigate to="/sequencer/id/6571e750ecffe8969f1e89ee" />} />
             <Route path="/create" element={<Create />} />
             <Route path="/read" element={<Read />} />
             <Route path="/update" element={<Update />} />

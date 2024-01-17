@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../../assets/styles/components/kits/create-kit.scss';
 import { useNavigate } from 'react-router-dom';
-import { Button, TextField, Box, FormGroup } from '@mui/material';
+import { Button, TextField, Box, FormGroup, CircularProgress } from '@mui/material';
 import { createKit } from '../../services/kit-service';
 import { getLocalUser } from '../../services/user-service';
 import { useDispatch } from 'react-redux';
@@ -16,19 +16,23 @@ export default function CreateKit() {
 
   const [kitName, setKitName] = useState('');
   const [description, setDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const addKit = async (kitData) => {
     try {
-      const kit = await createKit(user._id, kitData);
-      dispatch(setSuccess('Kit created successfully!'));
-      dispatch(setSelectedKit(kit));
+      setIsLoading(true);
 
-      navigate(`/sequencer/id/${kit._id}`);
+      const kit = await createKit(user._id, kitData);
+      // dispatch(setSuccess('Kit created successfully!'));
+      dispatch(setSelectedKit(kit));
       setDescription('');
       setKitName('');
+      navigate(`/sequencer/id/${kit._id}`);
     } catch (error) {
       console.error(error);
       dispatch(setError(error?.response?.data || 'Something went wrong!'));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,8 +81,11 @@ export default function CreateKit() {
           />
         </FormGroup>
         <FormGroup>
-          <Button variant="contained" color="primary" type="submit">
+          {/* <Button variant="contained" color="primary" type="submit">
             Create a new Kit
+          </Button> */}
+          <Button type="submit" variant="contained" disabled={isLoading}>
+            {isLoading ? <CircularProgress size={24} /> : 'Create Kit'}
           </Button>
         </FormGroup>
       </Box>

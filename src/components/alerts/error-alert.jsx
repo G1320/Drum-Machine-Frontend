@@ -11,8 +11,13 @@ const ErrorAlert = () => {
     if (error) {
       Swal.fire({
         icon: 'error',
-        title: 'Oops...',
+        title: 'Oops!',
         text: error,
+        customClass: {
+          container: 'error-alert-container',
+          title: 'error-alert-title',
+          content: 'error-alert-content',
+        },
       });
       dispatch(clearError());
     }

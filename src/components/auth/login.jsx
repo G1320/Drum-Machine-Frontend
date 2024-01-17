@@ -19,7 +19,7 @@ function Login() {
       const user = await loginService({ username, password });
       if (!user) return;
       dispatch(loginAction(user));
-      dispatch(setSuccess('Login successful!'));
+      // dispatch(setSuccess('Login successful!'));
       navigate('/sequencer/id/6571e750ecffe8969f1e89ee');
     } catch (error) {
       console.error('Login failed', error);

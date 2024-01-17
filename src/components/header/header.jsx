@@ -25,8 +25,8 @@ function Header() {
 
   return (
     <header className="header-container">
-      <h1 className="hero">Dyna Drum</h1>
       <NavMenu />
+      <h1 className="hero">Dyna Drum</h1>
 
       {user ? (
         <>

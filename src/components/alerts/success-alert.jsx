@@ -13,6 +13,11 @@ const SuccessAlert = () => {
         icon: 'success',
         title: 'Success!',
         text: success,
+        customClass: {
+          container: 'success-alert-container',
+          title: 'success-alert-title',
+          content: 'success-alert-content',
+        },
       });
       dispatch(clearSuccess());
     }

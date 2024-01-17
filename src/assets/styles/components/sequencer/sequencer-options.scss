@@ -3,9 +3,9 @@
   white-space: nowrap;
   font-size: 0.9rem;
   background-color: #9058f7;
-  min-width: 540px;
+  min-width: 300px;
   grid-template-columns: repeat(4, 0.5fr);
-  gap: 0.25rem;
+  // gap: 0.25rem;
   grid-template-rows: 25px;
   justify-items: start;
 
@@ -14,6 +14,23 @@
     width: fit-content;
     display: flex;
     align-items: center;
+    
+  }
+
+  button {
+    transition: 250ms;
+    background-color: inherit;
+    color: inherit;
+    border: none;
+    display: grid;
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 2px #834de7 ;
+    padding: 0.25rem;
+    cursor: pointer;
+  
+    &:hover {
+      box-shadow: inset 0 0 0 1px #fcfcfc ;
+    }
   }
 }
 
@@ -28,6 +45,41 @@
   margin-inline-end: 0.5rem;
 }
 
+.song-options-menu{
+  .user-song-list{
+    display: grid;
+    gap: 0.5rem;
+  grid-template-columns: repeat(4,1fr);
+}
+  .user-song{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    padding-inline: 0.25rem;
+    padding-block: 1.5px;
+    border-radius: 8px;
+    
+    &:hover {
+      transition: 250ms;
+    }
+  }
+  *{
+    margin: auto;
+  }
+  
+  .save-song-btn, .clear-song-btn{
+    width: 60px;
+    margin-inline: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .song-options-menu{
+    display: none;
+  }
+  
+}
+  
+
 .bpm, .volume {
   gap: 0.1rem;
 }
@@ -37,9 +89,15 @@
   justify-items: center;
   gap: 0.25rem;
 }
+@media screen and (max-width: 700px) {
+  .step-length-wrapper {
+display: none;
+  
+}}
 
 .pagination-controls-wrapper{
   margin-inline-start: 0.5rem;
+  max-width: 42px;
 }
 
 input {

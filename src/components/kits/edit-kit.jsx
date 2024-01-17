@@ -9,11 +9,15 @@ import { setError } from '../../slices/errorSlice';
 import { setSuccess } from '../../slices/successSlice';
 import { TextField, Button, Box, FormGroup, Container, CircularProgress } from '@mui/material';
 import { addKitToUser, getLocalUser } from '../../services/user-service';
+import Loader from '../misc/loader';
+import SoundsList from '../sounds/sounds-list';
+import UserKitsList from '../kits/user-kits-list';
 
 function Show() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
+  const selectedKit = useSelector((state) => state.kits.selectedKit);
   const [tempData, setTempData] = useState({ name: '', description: '' });
 
   const { kitId } = useParams();
@@ -88,11 +92,7 @@ function Show() {
   };
 
   if (!data) {
-    return (
-      <div className="loader-container">
-        <CircularProgress />
-      </div>
-    );
+    return <Loader />;
   }
 
   const handleSubscribe = () => {
@@ -100,55 +100,61 @@ function Show() {
   };
 
   return (
-    <Container className="edit-kit-container">
-      <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} color={'secondary'}>
-        <FormGroup>
-          <TextField
-            label="Kit name"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            value={tempData.name}
-            onChange={(e) => setTempData((prevData) => ({ ...prevData, name: e.target.value }))}
-            InputProps={{
-              style: { color: 'white' }, // Change the color here
-            }}
-          />
-          <TextField
-            label="Description"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            multiline
-            rows={3}
-            value={tempData.description}
-            onChange={(e) => setTempData((prevData) => ({ ...prevData, description: e.target.value }))}
-            InputProps={{
-              style: { color: 'white' }, // Change the color here
-            }}
-          />
-        </FormGroup>
-        <Button variant="contained" color="primary" type="submit">
-          Update
+    <>
+      <Container className="edit-kit-container">
+        <Box component="form" noValidate autoComplete="off" onSubmit={handleSubmit} color={'secondary'}>
+          <FormGroup>
+            <TextField
+              label="Kit name"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={tempData.name}
+              onChange={(e) => setTempData((prevData) => ({ ...prevData, name: e.target.value }))}
+              InputProps={{
+                style: { color: 'white' }, // Change the color here
+              }}
+            />
+            <TextField
+              label="Description"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              multiline
+              rows={3}
+              value={tempData.description}
+              onChange={(e) => setTempData((prevData) => ({ ...prevData, description: e.target.value }))}
+              InputProps={{
+                style: { color: 'white' }, // Change the color here
+              }}
+            />
+          </FormGroup>
+          <Button variant="contained" color="primary" type="submit">
+            Update
+          </Button>
+        </Box>
+        <Button variant="contained" onClick={handleLoadToDrumMachine}>
+          Load drum machine
         </Button>
-      </Box>
-      <Button variant="contained" onClick={handleLoadToDrumMachine}>
-        Load drum machine
-      </Button>
-      <Button variant="contained" onClick={handleLoadToSequencer}>
-        Load Sequencer
-      </Button>
+        <Button variant="contained" onClick={handleLoadToSequencer}>
+          Load Sequencer
+        </Button>
 
-      <Button variant="contained" color="secondary" onClick={handleSubscribe}>
-        Subscribe
-      </Button>
-      <Button variant="contained" color="error" onClick={handleDeleteKit}>
-        Delete
-      </Button>
-      <Button variant="contained" onClick={handleAddToKits}>
-        Add to my kits
-      </Button>
-    </Container>
+        <Button variant="contained" color="secondary" onClick={handleSubscribe}>
+          Subscribe
+        </Button>
+        <Button variant="contained" color="error" onClick={handleDeleteKit}>
+          Delete
+        </Button>
+        <Button variant="contained" onClick={handleAddToKits}>
+          Add to my kits
+        </Button>
+      </Container>
+      <section className="main-content-bottom-wrapper">
+        <UserKitsList />
+        <SoundsList kitId={kitId} />
+      </section>
+    </>
   );
 }
 
