@@ -53,7 +53,7 @@ export default function Create() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           InputProps={{
-            style: { color: 'white' }, // Change the color here
+            style: { color: 'white' },
           }}
         />
       </FormGroup>
@@ -65,7 +65,7 @@ export default function Create() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           InputProps={{
-            style: { color: 'white' }, // Change the color here
+            style: { color: 'white' },
           }}
         />
       </FormGroup>
@@ -78,7 +78,7 @@ export default function Create() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           InputProps={{
-            style: { color: 'white' }, // Change the color here
+            style: { color: 'white' },
           }}
         />
       </FormGroup>
@@ -90,7 +90,7 @@ export default function Create() {
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           InputProps={{
-            style: { color: 'white' }, // Change the color here
+            style: { color: 'white' },
           }}
         />
       </FormGroup>
@@ -102,7 +102,7 @@ export default function Create() {
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           InputProps={{
-            style: { color: 'white' }, // Change the color here
+            style: { color: 'white' },
           }}
         />
       </FormGroup>
@@ -113,7 +113,7 @@ export default function Create() {
           id="isAdmin"
           name="isAdmin"
           InputProps={{
-            style: { color: 'white' }, // Change the color here
+            style: { color: 'white' },
           }}
         />
       </FormGroup>

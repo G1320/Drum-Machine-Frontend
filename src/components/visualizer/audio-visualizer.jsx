@@ -6,16 +6,17 @@ import p5 from 'p5';
 const AudioVisualizer = () => {
   const canvasRef = useRef(null);
 
-  const resizeCanvas = () => {
+  const resizeCanvas = (p) => {
     const canvasParent = canvasRef.current;
     const canvasWidth = canvasParent.offsetWidth;
     const canvasHeight = canvasParent.offsetHeight;
     p.resizeCanvas(canvasWidth, canvasHeight);
   };
   useEffect(() => {
-    window.addEventListener('resize', resizeCanvas);
     // Create a new p5 instance
     const sketch = new p5((p) => {
+      window.addEventListener('resize', () => resizeCanvas(sketch));
+      window.addEventListener('orientationchange', () => resizeCanvas(sketch));
       let analyzer;
 
       p.setup = () => {
@@ -58,6 +59,7 @@ const AudioVisualizer = () => {
     return () => {
       sketch.remove();
       window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('orientationchange', resizeCanvas);
     };
   }, []);
 

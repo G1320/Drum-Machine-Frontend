@@ -5,8 +5,10 @@ import { CircularProgress } from '@mui/material';
 import { getUserSongs, createSong, deleteSong } from '../../services/song-service';
 import { setError } from '../../slices/errorSlice';
 import { setSelectedCells, clearSelectedCells } from '../../slices/selectedCellsSlice';
+import { setSelectedKitSounds } from '../../slices/soundsSlice';
 import { getLocalUser } from '../../services/user-service';
 import { getLocalSelectedCells, localSaveSelectedCells } from '../../services/sequencer-service';
+import { getKitSounds } from '../../services/kit-service';
 
 const UserSongsList = () => {
   const [userSongs, setUserSongs] = useState([]);
@@ -33,6 +35,8 @@ const UserSongsList = () => {
 
   const handleSongClick = (song) => {
     setIsLoading(true);
+
+    dispatch(setSelectedKitSounds([]));
     dispatch(clearSelectedCells());
     localSaveSelectedCells([]);
 

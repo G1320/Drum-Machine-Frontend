@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const UserKitDetails = forwardRef(({ userKit, onRemoveKit, onSelectKit, selectedKit }, ref) => {
   const isSelected = selectedKit && selectedKit._id === userKit._id;
 
-  const handleRemoveClick = (e) => {
+  const handleRemoveKit = (e) => {
     e.stopPropagation();
     onRemoveKit(userKit._id);
   };
@@ -20,7 +20,7 @@ const UserKitDetails = forwardRef(({ userKit, onRemoveKit, onSelectKit, selected
       <span className="user-kit-title">{userKit.name}</span>
 
       {userKit.isCustom && (
-        <button className="remove-kit-button" onClick={handleRemoveClick}>
+        <button className="remove-kit-button" onClick={handleRemoveKit}>
           <FontAwesomeIcon className="remove-icon" icon={faXmark} size="2xs" />
         </button>
       )}

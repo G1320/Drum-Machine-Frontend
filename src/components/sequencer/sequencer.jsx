@@ -53,12 +53,9 @@ function Sequencer() {
       window.addEventListener('orientationchange', handleOrientationChange);
       try {
         const sounds = await getKitSounds(kitId);
-        const numOfStepsFromStorage = getLocalNumOfSteps();
         const selectedCellsFromStorage = getLocalSelectedCells();
 
-        if (numOfStepsFromStorage) setNumOfSteps(numOfStepsFromStorage);
         if (selectedCellsFromStorage) dispatch(setSelectedCells(selectedCellsFromStorage));
-
         if (JSON.stringify(sounds) === JSON.stringify(selectedKitSounds)) return;
         dispatch(setSelectedKitSounds(sounds));
 
@@ -79,7 +76,6 @@ function Sequencer() {
 
   useEffect(() => {
     handleSequenceInitialization();
-
     return () => {
       seqRef.current?.stop();
       seqRef.current?.dispose();
@@ -238,7 +234,7 @@ function Sequencer() {
         <section className="sequencer">
           <SequencerStartBtn />
 
-          <section className="sequencer-lamp-row ">
+          <section className={`sequencer-lamp-row  ${numOfSteps === 32 ? 'xl' : ''}`}>
             {stepIds.map((stepId) => (
               // iterate over each step to display a lamp
               <label key={stepId} className="sequencer-lamp">

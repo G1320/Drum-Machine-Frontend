@@ -51,22 +51,22 @@
   height: fit-content;
   align-self: center;
   min-width: 680px;
-  padding-inline-end: 0.5rem;
+  padding-inline-end: 0rem;
   grid-template-columns: repeat(16, 1fr);
 }
 
-
+.sequencer-row:not(.xl), .sequencer-lamp-row:not(.xl){
+  padding-inline-end: 0.5rem;
+} 
 
 .sequencer-column {
   grid-row: 2;
   height: 100%;
 }
 
-
 .sequencer-row > *:nth-child(4n):not(:last-child) {
     margin-inline-end: 5rem;
-  }
-
+}
 
 .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
   margin-inline-end: 5rem;
@@ -137,13 +137,13 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   position: absolute;
   cursor: pointer;
   left: calc(-2.75rem - 30px);
-  top: 3.1rem;
+  top: 2.75rem;
 
   &.xl {
-    top: 5.6rem;
+    top: 5rem;
 
     &.muted {
-      top: 5.35rem;
+      top: 4.75rem;
     }
   }
 

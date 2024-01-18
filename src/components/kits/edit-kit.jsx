@@ -112,7 +112,7 @@ function Show() {
               value={tempData.name}
               onChange={(e) => setTempData((prevData) => ({ ...prevData, name: e.target.value }))}
               InputProps={{
-                style: { color: 'white' }, // Change the color here
+                style: { color: 'white' },
               }}
             />
             <TextField
@@ -125,7 +125,7 @@ function Show() {
               value={tempData.description}
               onChange={(e) => setTempData((prevData) => ({ ...prevData, description: e.target.value }))}
               InputProps={{
-                style: { color: 'white' }, // Change the color here
+                style: { color: 'white' },
               }}
             />
           </FormGroup>

@@ -65,7 +65,7 @@ export default function CreateKit() {
             value={kitName}
             onChange={(e) => setKitName(e.target.value)}
             InputProps={{
-              style: { color: 'white' }, // Change the color here
+              style: { color: 'white' },
             }}
           />
         </FormGroup>
@@ -76,7 +76,7 @@ export default function CreateKit() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             InputProps={{
-              style: { color: 'white' }, // Change the color here
+              style: { color: 'white' },
             }}
           />
         </FormGroup>
