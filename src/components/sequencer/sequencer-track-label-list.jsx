@@ -1,14 +1,12 @@
 import React from 'react';
 import '../../assets/styles/components/sequencer/sequencer-track-label-list.scss';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useDispatch, useSelector } from 'react-redux';
-import { setSelectedKitSounds } from '../../slices/soundsSlice';
+import { useSounds } from '../../hooks/useSounds';
 
 import { updateKitSounds } from '../../services/kit-service';
 
 function SequencerTrackLabelList({ kitId }) {
-  const selectedKitSounds = useSelector((state) => state.sounds.selectedKitSounds);
-  const dispatch = useDispatch();
+  const { data: selectedKitSounds } = useSounds(kitId);
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
@@ -19,8 +17,6 @@ function SequencerTrackLabelList({ kitId }) {
 
     try {
       const updatedSounds = await updateKitSounds(kitId, newKitSounds);
-      console.log('updatedSounds: ', updatedSounds);
-      dispatch(setSelectedKitSounds(updatedSounds));
     } catch (error) {
       console.error(error);
     }
@@ -39,14 +35,16 @@ function SequencerTrackLabelList({ kitId }) {
             {selectedKitSounds.map((sound, index) => (
               <Draggable key={sound._id} draggableId={sound._id} index={index}>
                 {(provided) => (
-                  <li
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    key={sound._id}
-                  >
-                    {sound.title}
-                  </li>
+                  <article className="cell-title-container">
+                    <li
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      key={sound._id}
+                    >
+                      {sound.title}
+                    </li>
+                  </article>
                 )}
               </Draggable>
             ))}

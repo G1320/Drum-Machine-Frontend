@@ -15,6 +15,9 @@ const soundsSlice = createSlice({
     setSelectedKitSounds: (state, action) => {
       state.selectedKitSounds = action.payload;
     },
+    clearSelectedKitSounds: (state) => {
+      state.selectedKitSounds = [];
+    },
     addSoundToKit: (state, action) => {
       state.selectedKitSounds.push(action.payload);
     },
@@ -26,7 +29,12 @@ const soundsSlice = createSlice({
   },
 });
 
-export const { setAllSounds, setSelectedKitSounds, addSoundToKit, removeSoundFromKit } =
-  soundsSlice.actions;
+export const {
+  setAllSounds,
+  setSelectedKitSounds,
+  clearSelectedKitSounds,
+  addSoundToKit,
+  removeSoundFromKit,
+} = soundsSlice.actions;
 
 export default soundsSlice.reducer;

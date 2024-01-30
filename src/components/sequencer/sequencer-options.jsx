@@ -2,78 +2,108 @@ import React, { useState, useEffect } from 'react';
 import '../../assets/styles/components/sequencer/sequencer-options.scss';
 import * as Tone from 'tone';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import FilterKits from '../kits/filter-kits';
 import UserSongsList from '../songs/user-songs-list';
 import { setSelectedKit } from '../../slices/kitsSlice';
-import { setIsPlaying } from '../../slices/transportSlice';
-import { clearSelectedCells } from '../../slices/selectedCellsSlice';
-import { localSaveSelectedCells } from '../../services/sequencer-service';
-
+import { setTempo, setVolume, clearSequencerState, setSelectedCells } from '../../slices/sequencerSlice';
+import {
+  clearSequencerStorage,
+  localSaveSelectedCells,
+  localSaveTempo,
+  localSaveVolume,
+  getLocalMutedTracks,
+  localSaveMutedTracks,
+} from '../../services/sequencer-service';
+import { getLoopedIndex } from '../../utils/getLoopedIndex';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { kitId } = useParams();
   const combinedKits = useSelector((state) => state.kits.combinedKits);
   const selectedKit = useSelector((state) => state.kits.selectedKit);
-  const selectedCells = useSelector((state) => state.selectedCells.selectedCells);
+  const selectedCells = useSelector((state) => state.sequencer.selectedCells);
+  const masterTempo = useSelector((state) => state.sequencer.tempo);
+  const masterVolume = useSelector((state) => state.sequencer.volume);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [reverbWet, setReverbWet] = useState(0.5);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Update the currentIndex when the selectedKit changes
+    // Updating the currentIndex when the selectedKit changes
     const index = combinedKits.findIndex((kit) => kit._id === selectedKit._id);
     setCurrentIndex(index);
   }, [combinedKits, selectedKit]);
 
   const handleNextKit = () => {
-    const nextIndex = currentIndex === combinedKits.length - 1 ? 0 : currentIndex + 1;
+    if (isLoading) return;
+    setIsLoading(true);
+    const nextIndex = getLoopedIndex(currentIndex, combinedKits.length, 'next');
     const nextKit = combinedKits[nextIndex];
-    // Tone.Transport.stop();
-    // dispatch(setIsPlaying(false));
 
-    localSaveSelectedCells(selectedCells);
-    dispatch(clearSelectedCells());
-    dispatch(setSelectedKit(nextKit));
-    setCurrentIndex(nextIndex);
-    navigate(`/sequencer/id/${nextKit._id}`);
+    updateKit(nextKit, nextIndex);
   };
 
-  const handlePrevKit = async () => {
-    const prevIndex = currentIndex === 0 ? combinedKits.length - 1 : currentIndex - 1;
+  const handlePrevKit = () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    const prevIndex = getLoopedIndex(currentIndex, combinedKits.length, 'prev');
     const prevKit = combinedKits[prevIndex];
-    // Tone.Transport.stop();
-    // dispatch(setIsPlaying(false));
 
+    updateKit(prevKit, prevIndex);
+  };
+
+  const updateKit = (kit, index) => {
     localSaveSelectedCells(selectedCells);
-    dispatch(clearSelectedCells());
-    dispatch(setSelectedKit(prevKit));
-    setCurrentIndex(prevIndex);
-    navigate(`/sequencer/id/${prevKit._id}`);
+    localSaveMutedTracks([]);
+    dispatch(setSelectedKit(kit));
+    setCurrentIndex(index);
+    navigate(`/sequencer/id/${kit._id}`);
+    setIsLoading(false);
   };
 
   const handleBpmChange = (e) => {
-    Tone.Transport.bpm.value = Number(e.target.value);
+    if (!e.target.value) return;
+    const newBpm = Number(e.target.value);
+    updateBpm(newBpm);
   };
 
   const handleVolumeChange = (e) => {
     if (!e.target.value) return;
-    Tone.Destination.volume.value = Tone.gainToDb(Number(e.target.value));
+    const newVolume = Number(e.target.value);
+    updateVolume(newVolume);
+  };
+
+  const updateVolume = (volume) => {
+    Tone.Destination.volume.value = Tone.gainToDb(volume);
+    localSaveVolume(Number(volume));
+    dispatch(setVolume(volume));
+  };
+
+  const updateBpm = (bpm) => {
+    Tone.Transport.bpm.value = bpm;
+    localSaveTempo(bpm);
+    dispatch(setTempo(bpm));
   };
 
   const handleClearPattern = () => {
-    localSaveSelectedCells([]);
-    dispatch(clearSelectedCells());
+    if (isLoading) return;
+    const mutedTracks = getLocalMutedTracks();
+    if (selectedCells.length === 0 && mutedTracks.length === 0) return;
+    setIsLoading(true);
+
+    clearSequencerStorage();
+    dispatch(clearSequencerState());
+    dispatch(setSelectedCells([]));
+    setIsLoading(false);
   };
 
   return (
     <section className="sequencer-options">
       <section className="options-wrapper">
-        <article className="step-length-wrapper">
+        <section className="step-length-wrapper">
           <label>
             <input
               type="radio"
@@ -92,22 +122,23 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             />
             32
           </label>
-        </article>
+        </section>
 
-        <article className="pagination-controls-wrapper">
+        <section className="pagination-controls-wrapper">
           <button className="prev-button" onClick={handlePrevKit}>
             <FontAwesomeIcon icon={faChevronLeft} />
           </button>
           <button className="next-button" onClick={handleNextKit}>
             <FontAwesomeIcon icon={faChevronRight} />
           </button>
-        </article>
+        </section>
         <FilterKits />
         <button className="clear-song-btn" onClick={handleClearPattern}>
           CLR
         </button>
       </section>
       <UserSongsList />
+
       <section className="range-controls">
         <article className="bpm">
           <span>BPM</span>
@@ -118,7 +149,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             max={220}
             step={1}
             onChange={handleBpmChange}
-            defaultValue={120}
+            value={masterTempo}
           />
         </article>
         <article className="volume">
@@ -130,21 +161,9 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             max={1}
             step={0.01}
             onChange={handleVolumeChange}
-            defaultValue={0.5}
+            value={masterVolume}
           />
         </article>
-        {/* <article className="reverb-wet">
-          <span>Reverb Wetness</span>
-          <label className="reverb-wet-label"></label>
-          <input
-            type="range"
-            min={0}
-            max={1}
-            step={0.01}
-            value={reverbWet}
-            onChange={handleReverbWetChange}
-          />
-        </article> */}
       </section>
     </section>
   );

@@ -5,7 +5,7 @@ import authReducer from '../slices/authSlice';
 import kitsReducer from '../slices/kitsSlice';
 import soundsReducer from '../slices/soundsSlice';
 import transportReducer from '../slices/transportSlice';
-import selectedCellsReducer from '../slices/selectedCellsSlice';
+import sequencerReducer from '../slices/sequencerSlice';
 
 const store = configureStore({
   reducer: {
@@ -15,7 +15,7 @@ const store = configureStore({
     kits: kitsReducer,
     sounds: soundsReducer,
     transport: transportReducer,
-    selectedCells: selectedCellsReducer,
+    sequencer: sequencerReducer,
   },
 });
 

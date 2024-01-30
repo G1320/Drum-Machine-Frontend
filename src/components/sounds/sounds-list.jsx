@@ -8,21 +8,24 @@ import AudioVisualizer from '../visualizer/audio-visualizer';
 import { getLocalUser } from '../../services/user-service';
 import { setSelectedKit } from '../../slices/kitsSlice';
 
+import { useSounds } from '../../hooks/useSounds.js';
+
 function SoundsList({ kitId }) {
   const dispatch = useDispatch();
   const [sounds, setSounds] = useState([]);
   const audioRefs = useRef([]);
   const user = getLocalUser();
+
   const selectedKit = useSelector((state) => state.kits.selectedKit);
-  const kitSounds = useSelector((state) => state.sounds.selectedKitSounds);
-  const allSounds = useSelector((state) => state.sounds.allSounds);
   const combinedKits = useSelector((state) => state.kits.combinedKits);
-  const message = user ? 'To edit, select a custom kit' : 'To edit, log in and select a custom kit';
+  const allSounds = useSelector((state) => state.sounds.allSounds);
+  const { data: selectedKitSounds } = useSounds(kitId);
 
   useEffect(() => {
-    setSounds(
-      allSounds.map((sound) => {
-        if (kitSounds.some((kitSound) => kitSound._id === sound._id)) {
+    // prettier-ignore
+    //Adding alert property to sounds that are also present in the current selected kit
+    setSounds(allSounds.map((sound) => {
+        if (selectedKitSounds?.some((kitSound) => kitSound._id === sound._id)) {
           return { ...sound, alert: true };
         }
         return sound;
@@ -30,19 +33,17 @@ function SoundsList({ kitId }) {
     );
 
     audioRefs.current = sounds.map((_, index) => audioRefs.current[index] ?? createRef());
-  }, [kitSounds, allSounds]);
+  }, [selectedKitSounds.length]);
 
   useEffect(() => {
     const getSelectedKit = () => {
       if (kitId && user?._id) {
         const selectedKit = combinedKits.find((kit) => kit._id === kitId);
-        if (selectedKit) {
-          dispatch(setSelectedKit(selectedKit));
-        }
+        if (selectedKit) dispatch(setSelectedKit(selectedKit));
       }
     };
     getSelectedKit();
-  }, [kitId, user?._id, dispatch, kitSounds]);
+  }, [kitId, user?._id, dispatch, selectedKitSounds]);
 
   return (
     <>
@@ -63,9 +64,6 @@ function SoundsList({ kitId }) {
         </>
       ) : (
         <AudioVisualizer />
-        // <section className="sounds-list-placeholder">
-        //   <p>{message}</p>
-        // </section>
       )}
     </>
   );

@@ -6,7 +6,6 @@ import { createKit } from '../../services/kit-service';
 import { getLocalUser } from '../../services/user-service';
 import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
-import { setSuccess } from '../../slices/successSlice';
 import { setSelectedKit } from '../../slices/kitsSlice';
 
 export default function CreateKit() {
@@ -19,6 +18,11 @@ export default function CreateKit() {
   const [isLoading, setIsLoading] = useState(false);
 
   const addKit = async (kitData) => {
+    if (isLoading) return;
+    if (!user) {
+      dispatch(setError('Please log in to create a new kit'));
+      return;
+    }
     try {
       setIsLoading(true);
 

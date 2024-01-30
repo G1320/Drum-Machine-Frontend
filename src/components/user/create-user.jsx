@@ -106,7 +106,7 @@ export default function Create() {
           }}
         />
       </FormGroup>
-      <FormGroup>
+      {/* <FormGroup>
         <FormControlLabel
           control={<Checkbox checked={isAdmin} onChange={(e) => setIsAdmin(e.target.checked)} />}
           label="Admin access"
@@ -116,7 +116,7 @@ export default function Create() {
             style: { color: 'white' },
           }}
         />
-      </FormGroup>
+      </FormGroup> */}
       <Button variant="contained" color="primary" type="submit">
         Submit
       </Button>

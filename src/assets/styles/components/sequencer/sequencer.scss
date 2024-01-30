@@ -4,26 +4,52 @@
 }
 
 .sequencer {
+  position: relative;
   display: grid;
   border-radius: 8px;
   width: fit-content;
   max-width: 1250px;
   grid-template-columns: 5rem 1fr;
   grid-template-rows: 60px 1fr;
-  margin: 1rem auto;
-  margin-block-start: -2rem;
-
+  margin: -2rem auto 1rem;
 }
 
-.sequencer-scroll-container {
+.sequencer-loader{
+  position: absolute;
+  top: 120px;
+}
+
+.sequencer-cell {
+  cursor: pointer;
+  height: 30px;
+  width: 30px;
+  label{
+    appearance: none ;
+    height: 0px;
+    width: 0px;
+  }
+  input[type='checkbox']{
+    cursor: pointer;
+  }
+}
+
+.sequencer-lamp {
+  height: 15px;
+  width: 30px;
+}
+
+.sequencer-external-scroll-container {
   grid-row: 2;
   grid-column: 1/3;
-  display: grid;
-  grid-template-columns: 5rem 1fr;
+  height: 470px;
   border: 2.5px solid #fcfcfc;
   border-radius: 8px;
   overflow: scroll;
-  max-height: 470px;
+}
+
+.sequencer-internal-scroll-container {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
 }
 
 .main-content-bottom-wrapper{
@@ -31,22 +57,17 @@
   gap: 0.5rem;
   grid-template-columns: 230px repeat(2 , 1fr);
   grid-template-rows: 1fr ;
-  
+
   .user-kits{
     margin-block-start: 1rem;
     height: 190px;
-    
   }
 }
-
-@media  screen and (max-width: 700px) {
-  .main-content-bottom-wrapper{
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
 
 .sequencer-row, .sequencer-lamp-row {
+  article{
+    cursor: pointer;
+  }
   display: grid;
   height: fit-content;
   align-self: center;
@@ -81,38 +102,48 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   display: grid;
   background-color: #36225c;
   cursor: pointer;
-  margin-block-start: 1rem;
-  height: 40px;
+  align-self: center;
   width: 40px;
+  height: 40px;
   border: 2px solid #fcfcfc;
   border-radius: 8px;
+  margin-block: 0.25rem;
+
+  &.xl {
+    margin-block: 0.5rem;
+  }
 
   &.selected {
     background-color: #9058f7;
+  }
+  input[type='checkbox']{
+    height: 100%;
+    width: 100%;
   }
 }
 
 .track-container {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  
   transition: 200ms;
-
-  &.xl:not(.muted):not(:last-child)::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 50px;
-    width: 80%;
-    height: 2px;
-    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.863), rgba(255, 255, 255, 0));
-  }
+  margin-block: 0.5rem;
+  gap: 1rem;
+  // Underline effect for tracks when in XL mode (32 step)
+  // &.xl:not(.muted):not(:last-child)::after {
+  //   content: "";
+  //   position: absolute;
+  //   bottom: -0.37rem;
+  //   left: 50px;
+  //   width: 80%;
+  //   height: 2px;
+  //   background-image: linear-gradient(to right,
+  //    rgba(255, 255, 255,0), 
+  //    rgba(255, 255, 255, 0.863),
+  //     rgba(255,255, 255, 0));
+  // }
 
   &.muted {
-    &.xl {
-      margin-block-start: 0.25rem;
-    }
     background-color: #463f53;
     padding-inline-start: 0.5rem;
     border-radius: 8px;
@@ -130,20 +161,19 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
     }
   }
 }
-
-
+ 
 .sequencer-mute-button,
 .sequencer-fx-button {
   position: absolute;
   cursor: pointer;
   left: calc(-2.75rem - 30px);
-  top: 2.75rem;
+  top: 1.95rem;
 
   &.xl {
-    top: 5rem;
+    top: 4rem;
 
     &.muted {
-      top: 4.75rem;
+      top: 3.75rem;
     }
   }
 
@@ -172,7 +202,6 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   width: 40px;
   border: 2px solid #fcfcfc;
   border-radius: 8px;
-  
 }
 
 .sequencer-lamp input[type='radio']:checked  {
@@ -187,8 +216,6 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   background-color: #9058f7;
   border-radius: 6px;
 }
-
-
 
 input {
   width: 15px;
@@ -213,18 +240,14 @@ input {
     grid-template-columns: repeat(16, 1fr);
   }
 
-  .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
-    margin-inline-end: 1.25rem;
-  }
-
   .sequencer-cell {
-    height: 30px;
-    width: 30px;
+    height: 25px;
+    width: 25px;
   }
-
+  
   .sequencer-lamp {
-    height: 15px;
-    width: 30px;
+    height: 12.5px;
+    width: 25px;
   }
 }
 
@@ -234,41 +257,17 @@ input {
     gap: 0rem;
   }
   
-  .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
-    margin-inline-end: 1.25rem;
-  }
-  
-  .sequencer-cell {
-    height: 25px;
-    width: 25px;
-  }
-  
-  .sequencer-lamp {
-    height: 15px;
-    width: 25px;
-  }
 }
 
 @media screen and (max-width: 700px) {
+  .main-content-bottom-wrapper{
+    grid-template-columns: 1fr 1fr;
+  }
  
   .sequencer-row, .sequencer-lamp-row {
     min-width: 216px;
     grid-template-columns: repeat(8, 1fr);
     gap: 0rem;
-  }
-
-  .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
-    margin-inline-end: 1.25rem;
-  }
-
-  .sequencer-cell {
-    height: 25px;
-    width: 25px;
-  }
-  
-  .sequencer-lamp {
-    height: 10px;
-    width: 25px;
   }
 }
 
@@ -277,27 +276,33 @@ input {
     margin-inline-end: 3.5rem;
   }
 }
+
 @media screen and (max-width: 630px) {
   .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
     margin-inline-end: 2.5rem;
   }
 }
-@media screen and (max-width: 465px) {
+
+@media screen and (max-width: 530px) {
+  .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
+    margin-inline-end: 2.5rem;
+  }
+}
+
+@media screen and (max-width: 430px) {
   .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
     margin-inline-end: 1.5rem;
   }
-  
 }
 
-@media screen and (max-width: 400px) {
-
+@media screen and (max-width: 391px) {
   .sequencer-cell {
-    height: 20px;
-    width: 20px;
+    height: 22.5px;
+    width: 22.5px;
   }
   
   .sequencer-lamp {
-    height: 10px;
-    width: 20px;
+    height: 12.5px;
+    width: 22.5px;
   }
 }

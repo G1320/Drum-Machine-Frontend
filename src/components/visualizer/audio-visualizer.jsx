@@ -8,9 +8,11 @@ const AudioVisualizer = () => {
 
   const resizeCanvas = (p) => {
     const canvasParent = canvasRef.current;
-    const canvasWidth = canvasParent.offsetWidth;
-    const canvasHeight = canvasParent.offsetHeight;
-    p.resizeCanvas(canvasWidth, canvasHeight);
+    if (canvasParent) {
+      const canvasWidth = canvasParent.offsetWidth;
+      const canvasHeight = canvasParent.offsetHeight;
+      p.resizeCanvas(canvasWidth, canvasHeight);
+    }
   };
   useEffect(() => {
     // Create a new p5 instance

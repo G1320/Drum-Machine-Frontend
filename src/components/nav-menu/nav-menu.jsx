@@ -43,6 +43,9 @@ function NavMenu() {
             Browse Users
           </Link>
         )}
+        <Link to={`/about`} className="menu-item">
+          About
+        </Link>
       </Menu>
     </div>
   );

@@ -33,6 +33,15 @@ export const getSounds = async (params = {}) => {
   }
 };
 
+export const getSilence = async () => {
+  try {
+    return await httpService.get(`${soundsEndpoint}/silence`);
+  } catch (error) {
+    console.error('Error getting silence:', error);
+    throw error;
+  }
+};
+
 export const getSoundById = async (id) => {
   try {
     return await httpService.get(`${soundsEndpoint}/${id}`);

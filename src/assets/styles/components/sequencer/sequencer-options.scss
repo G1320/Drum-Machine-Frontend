@@ -4,17 +4,20 @@
   font-size: 0.9rem;
   background-color: #9058f7;
   min-width: 300px;
-  grid-template-columns: repeat(4, 0.5fr);
-  // gap: 0.25rem;
+  grid-template-columns: auto auto auto  0.5fr 0.5fr;
   grid-template-rows: 25px;
   justify-items: start;
-
   border-radius: 6px;
+  gap: 0.5rem;
+  padding-inline: 0.25rem;
   * {
-    width: fit-content;
+    min-width: min-content;
     display: flex;
     align-items: center;
-    
+  }
+
+  .options-wrapper {
+   gap: 0.5rem;
   }
 
   button {
@@ -24,105 +27,122 @@
     border: none;
     display: grid;
     border-radius: 8px;
-    box-shadow: inset 0 0 0 2px #834de7 ;
+    box-shadow: inset 0 0 0 2px #834de7;
     padding: 0.25rem;
     cursor: pointer;
-  
+
     &:hover {
-      box-shadow: inset 0 0 0 1px #fcfcfc ;
+      box-shadow: inset 0 0 0 1px #fcfcfc;
     }
   }
-}
 
-.select-kit {
-  display: none;
-}
-
-.range-controls {
-  grid-column: 6;
-  display: flex row;
-  gap: 0.5rem;
-  margin-inline-end: 0.5rem;
-}
-
-.song-options-menu{
-  .user-song-list{
-    display: grid;
-    gap: 0.5rem;
-  grid-template-columns: repeat(4,1fr);
-}
-  .user-song{
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    padding-inline: 0.25rem;
-    padding-block: 1.5px;
-    border-radius: 8px;
-    
-    &:hover {
-      transition: 250ms;
-    }
-  }
-  *{
-    margin: auto;
-  }
-  
-  .save-song-btn, .clear-song-btn{
-    width: 60px;
-    margin-inline: 0.5rem;
-  }
-}
-
-@media screen and (max-width: 700px) {
-  .song-options-menu{
+  .select-kit {
     display: none;
   }
-  
-}
-  
 
-.bpm, .volume {
-  gap: 0.1rem;
-}
+  .range-controls {
+    grid-column: 6;
+    display: flex;
+    gap: 0.5rem;
+   
+  }
 
-.step-length-wrapper {
-  display: flex;
-  justify-items: center;
-  gap: 0.25rem;
-}
-@media screen and (max-width: 700px) {
+  .song-options-menu {
+    width: 150px;
+    gap: 0.25rem;
+    .user-song-list {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .user-song {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      padding-inline: 0.25rem;
+      padding-block: 1.5px;
+      border-radius: 8px;
+      gap: 0.1rem;
+
+      &:hover {
+        transition: 250ms;
+      }
+    }
+
+
+    .save-song-btn,
+    .clear-song-btn {
+      max-width: 60px;
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    grid-template-columns: 0.2fr 0.2fr 0.1fr 0.1fr;
+    .song-options-menu {
+      display: none;
+    }
+
+    .range-controls {
+      width: 75%;
+      justify-self: end;
+    }
+  }
+
+  .bpm,
+  .volume {
+    gap: 0.1rem;
+  }
+
   .step-length-wrapper {
-display: none;
-  
-}}
-
-.pagination-controls-wrapper{
-  margin-inline-start: 0.5rem;
-  max-width: 42px;
-}
-
-input {
-  &[type='range'] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 80%;
-    min-width: 50px;
-    height: 15px;
-    border-radius: 5px;
-  }
-  
-  &[type='radio']:not(.sequencer-lamp-input) {
-    cursor: pointer;
-    height:100%;
+    display: flex;
+    justify-items: center;
+    max-width: 70px;
+    min-width: 70px;
+   *{
     width: 100%;
-    margin: 0.1rem!important;
+   }
   }
 
-  &[type='range']::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 10px;
-    height: 10px;
-    background-color: #9058f7;
-    border-radius: 50%;
-    cursor: pointer;
+  @media screen and (max-width: 700px) {
+    .step-length-wrapper {
+      display: none;
+    }
+  }
+
+  .pagination-controls-wrapper {
+    max-width: 42px;
+    min-width: min-content;
+    * {
+      display: grid;
+      justify-self: center;
+      align-self: center;
+      min-width: 11px;
+    }
+  }
+
+  input {
+    &[type='range'] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 80%;
+      min-width: 50px;
+      height: 15px;
+      border-radius: 5px;
+    }
+
+    &[type='radio']:not(.sequencer-lamp-input) {
+      cursor: pointer;
+      height: 100%;
+      width: 100%;
+      margin: 0.1rem !important;
+    }
+
+    &[type='range']::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      background-color: #9058f7;
+      border-radius: 50%;
+      cursor: pointer;
+    }
   }
 }

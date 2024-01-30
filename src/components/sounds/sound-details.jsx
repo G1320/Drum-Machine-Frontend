@@ -17,32 +17,23 @@ import {
   removeSoundFromKit as removeSoundFromKitSlice,
 } from '../../slices/soundsSlice';
 
+import { useSounds } from '../../hooks/useSounds';
 function SoundDetails({ sound, audioRef, className }) {
-  let { kitId } = useParams();
+  const { kitId } = useParams();
   const dispatch = useDispatch();
+
+  const { refetch: refetchSounds } = useSounds(kitId);
 
   const handleClick = () => {
     playAudio(audioRef);
   };
-
-  const handleKeyPress = (e) => {
-    if (e.keyCode === sound.keyCode) {
-      playAudio(audioRef.current);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, [sound.keyCode]);
 
   const handleAddToKit = async () => {
     if (sound.alert) return handleRemoveFromKit();
     try {
       await addSoundToKitService(kitId, sound._id);
       dispatch(addSoundToKitSlice(sound));
+      refetchSounds();
     } catch (error) {
       console.error('Failed to add sound to kit', error);
       dispatch(setError(error.response.data || 'Failed to add sound to kit'));
@@ -53,6 +44,7 @@ function SoundDetails({ sound, audioRef, className }) {
     try {
       await removeSoundFromKitService(kitId, sound._id);
       dispatch(removeSoundFromKitSlice(sound));
+      refetchSounds();
     } catch (error) {
       console.error('Failed to remove sound from kit', error);
       dispatch(setError(error.response.data || 'Failed to add sound to kit'));

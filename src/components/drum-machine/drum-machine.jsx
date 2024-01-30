@@ -1,42 +1,33 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
 import '../../assets/styles/components/drum-machine/drum-machine.scss';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getKitSounds } from '../../services/kit-service';
+import { useDispatch } from 'react-redux';
 import { setError } from '../../slices/errorSlice';
 import drumMachineDefaultConfig from '../../config/drumMachineDefaultConfig';
 import DrumPad from './drum-pad';
 import SoundsList from '../sounds/sounds-list';
 import UserKitsList from '../kits/user-kits-list';
 import DrumMachineOptions from './drum-machine-options';
-import { setSelectedKitSounds } from '../../slices/soundsSlice';
+import { useSounds } from '../../hooks/useSounds';
 
 const DrumMachine = () => {
   const { kitId } = useParams();
   const dispatch = useDispatch();
 
-  const selectedKitSounds = useSelector((state) => state.sounds.selectedKitSounds);
+  const { data: selectedKitSounds } = useSounds(kitId);
   const [activePad, setActivePad] = useState(null);
 
   const audioRefs = useRef([]);
 
   useEffect(() => {
-    const getSounds = async () => {
-      try {
-        if (kitId) {
-          const sounds = await getKitSounds(kitId);
-          if (JSON.stringify(sounds) === JSON.stringify(selectedKitSounds)) return;
-          dispatch(setSelectedKitSounds(sounds));
-          audioRefs.current = selectedKitSounds.map(
-            (_, index) => audioRefs.current[index] ?? createRef()
-          );
-        }
-      } catch (error) {
-        console.error('Failed to load kit', error);
-        dispatch(setError(error?.response?.data || 'Failed to load kit'));
+    try {
+      if (kitId) {
+        audioRefs.current = selectedKitSounds.map((_, index) => audioRefs.current[index] ?? createRef());
       }
-    };
-    getSounds();
+    } catch (error) {
+      console.error('Failed to load kit', error);
+      dispatch(setError(error?.response?.data || 'Failed to load kit'));
+    }
   }, [kitId]);
 
   const toggleActive = (keyCode) => {

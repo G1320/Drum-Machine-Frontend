@@ -4,11 +4,28 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { getUserSongs, createSong, deleteSong } from '../../services/song-service';
 import { setError } from '../../slices/errorSlice';
-import { setSelectedCells, clearSelectedCells } from '../../slices/selectedCellsSlice';
-import { setSelectedKitSounds } from '../../slices/soundsSlice';
+import {
+  setSelectedCells,
+  setTempo,
+  setVolume,
+  setMutedTracks,
+  setNumOfSteps,
+  clearSequencerState,
+} from '../../slices/sequencerSlice';
 import { getLocalUser } from '../../services/user-service';
-import { getLocalSelectedCells, localSaveSelectedCells } from '../../services/sequencer-service';
-import { getKitSounds } from '../../services/kit-service';
+import {
+  getLocalSelectedCells,
+  localSaveSelectedCells,
+  getLocalTempo,
+  getLocalVolume,
+  getLocalMutedTracks,
+  localSaveTempo,
+  localSaveVolume,
+  localSaveMutedTracks,
+  getLocalNumOfSteps,
+  localSaveNumOfSteps,
+  clearSequencerStorage,
+} from '../../services/sequencer-service';
 
 const UserSongsList = () => {
   const [userSongs, setUserSongs] = useState([]);
@@ -34,36 +51,63 @@ const UserSongsList = () => {
   }, [user?._id]);
 
   const handleSongClick = (song) => {
+    if (isLoading) return;
     setIsLoading(true);
 
-    dispatch(setSelectedKitSounds([]));
-    dispatch(clearSelectedCells());
-    localSaveSelectedCells([]);
+    const { tempo, volume, mutedTracks, pattern, numOfSteps, kit } = song;
 
-    setTimeout(() => {
-      dispatch(setSelectedCells(song.pattern));
-      localSaveSelectedCells(song.pattern);
-      navigate(`/sequencer/id/${song.kit}`);
-      setIsLoading(false);
-    }, 500);
+    if (tempo) {
+      dispatch(setTempo(tempo));
+      localSaveTempo(tempo);
+    }
+    if (volume) {
+      dispatch(setVolume(volume));
+      localSaveVolume(volume);
+    }
+    if (mutedTracks) {
+      dispatch(setMutedTracks(mutedTracks));
+      localSaveMutedTracks(mutedTracks);
+    }
+    if (pattern) {
+      dispatch(setSelectedCells(pattern));
+      localSaveSelectedCells(pattern);
+    }
+    if (numOfSteps) {
+      localSaveNumOfSteps(numOfSteps);
+      dispatch(setNumOfSteps(numOfSteps));
+    }
+
+    navigate(`/sequencer/id/${kit}`);
+    setIsLoading(false);
   };
 
   const handleSaveSong = async () => {
-    const selectedCells = getLocalSelectedCells();
+    if (isLoading) return;
     setIsLoading(true);
+
+    const selectedCells = getLocalSelectedCells();
+    const mutedTracks = getLocalMutedTracks();
+    const tempo = getLocalTempo();
+    const volume = getLocalVolume();
+    const numOfSteps = getLocalNumOfSteps();
+
     try {
       const newSong = {
         name: `${userSongs.length + 1}`,
         pattern: selectedCells,
         kitId,
+        tempo,
+        volume,
+        numOfSteps,
+        mutedTracks,
         userId: user._id,
       };
+      const savedNewSong = await createSong(newSong);
 
-      const savedSong = await createSong(newSong);
+      clearSequencerStorage();
+      dispatch(clearSequencerState());
 
-      dispatch(clearSelectedCells());
-      localSaveSelectedCells([]);
-      setUserSongs([...userSongs, savedSong]);
+      setUserSongs([...userSongs, savedNewSong]);
     } catch (error) {
       dispatch(setError(error?.response?.data || 'Failed to save song'));
       console.error('Error saving song:', error);
@@ -73,8 +117,10 @@ const UserSongsList = () => {
   };
 
   const handleDeleteSong = async (songId) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
     try {
-      setIsLoading(true);
       await deleteSong(user._id, songId);
       loadSongs();
     } catch (error) {
@@ -95,7 +141,7 @@ const UserSongsList = () => {
             {userSongs.length > 0
               ? userSongs.map((song, index) => (
                   <div className="user-song" key={index}>
-                    <button onClick={() => handleSongClick(song)}>S{song.name}</button>
+                    <button onClick={() => handleSongClick(song)}>S{index + 1}</button>
                     <button onClick={() => handleDeleteSong(song._id)}>X</button>
                   </div>
                 ))

@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { login as loginService } from '../../services/auth-service';
 import { login as loginAction } from '../../slices/authSlice';
 import { setError } from '../../slices/errorSlice';
-import { setSuccess } from '../../slices/successSlice';
+// import { setSuccess } from '../../slices/successSlice';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -28,10 +28,9 @@ function Login() {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      handleLogin();
-    }
+    if (event.key === 'Enter') handleLogin();
   };
+
   return (
     <section className="login">
       <input

@@ -6,10 +6,16 @@ import Loader from '../misc/loader';
 import { removeKitFromUser, getUserKits, getLocalUser } from '../../services/user-service';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { setError } from '../../slices/errorSlice';
-import { removeUserKit, setSelectedKit, setUserKits, removeCombinedKit } from '../../slices/kitsSlice';
-import { clearSelectedCells } from '../../slices/selectedCellsSlice';
+import {
+  removeUserKit,
+  setSelectedKit,
+  setUserKits,
+  removeFromCombinedKits,
+} from '../../slices/kitsSlice';
+import { clearMutedTracks, clearSelectedCells } from '../../slices/sequencerSlice';
 
 import UserKitDetails from './user-kit-details';
+import { localSaveMutedTracks } from '../../services/sequencer-service';
 
 function UserKitsList() {
   const dispatch = useDispatch();
@@ -26,23 +32,13 @@ function UserKitsList() {
     }
   }, [selectedKit]);
 
-  const handleRemoveKit = async (kitId) => {
-    try {
-      const kit = await removeKitFromUser(user._id, kitId);
-      dispatch(removeUserKit(kit._id));
-      dispatch(removeCombinedKit(kit._id));
-      const updatedUserKits = await getUserKits(user._id);
-      dispatch(setUserKits(updatedUserKits));
-    } catch (error) {
-      console.error('Error removing Kit from User:', error);
-      dispatch(setError(error?.response?.data || 'Failed to remove kit from user'));
-    }
-  };
-
   const handleSelectKit = (kitId) => {
     const kit = userKits.find((userKit) => userKit._id === kitId);
+
     dispatch(setSelectedKit(kit));
     dispatch(clearSelectedCells());
+    dispatch(clearMutedTracks());
+    localSaveMutedTracks([]);
     handleNavigateToSelectedKit(kitId);
   };
 
@@ -52,6 +48,19 @@ function UserKitsList() {
       navigate(`/drum/id/${kitId}`);
     } else if (locationPath === 'sequencer') {
       navigate(`/sequencer/id/${kitId}`);
+    }
+  };
+
+  const handleRemoveKit = async (kitId) => {
+    try {
+      const kit = await removeKitFromUser(user._id, kitId);
+      dispatch(removeUserKit(kit._id));
+      dispatch(removeFromCombinedKits(kit._id));
+      const updatedUserKits = await getUserKits(user._id);
+      dispatch(setUserKits(updatedUserKits));
+    } catch (error) {
+      console.error('Error removing Kit from User:', error);
+      dispatch(setError(error?.response?.data || 'Failed to remove kit from user'));
     }
   };
 

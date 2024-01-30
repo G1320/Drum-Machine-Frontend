@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
 import '../../assets/styles/components/sequencer/sequencer.scss';
 import * as Tone from 'tone';
+import { PropagateLoader } from 'react-spinners';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useSounds } from '../../hooks/useSounds.js';
 
-import { getKitSounds } from '../../services/kit-service';
 import {
   getLocalNumOfSteps,
   getLocalSelectedCells,
@@ -12,6 +13,8 @@ import {
   localSaveSelectedCells,
   getLocalMutedTracks,
   localSaveMutedTracks,
+  getLocalTempo,
+  getLocalVolume,
 } from '../../services/sequencer-service';
 
 import SequencerStartBtn from './sequencer-start-btn';
@@ -21,21 +24,24 @@ import SequencerTrackLabelList from './sequencer-track-label-list';
 import UserKitsList from '../kits/user-kits-list';
 import OrientationLock from './sequencer-orientation-lock';
 
-import { setSelectedKitSounds } from '../../slices/soundsSlice';
-import { setSelectedCells } from '../../slices/selectedCellsSlice';
+import { setSelectedCells, setTempo, setVolume, setMutedTracks } from '../../slices/sequencerSlice';
+import { toggleArrayItem } from '../../utils/toggleArrayItem';
 
 function Sequencer() {
   const dispatch = useDispatch();
   const { kitId } = useParams();
   const NOTE = 'C2';
 
-  const selectedKitSounds = useSelector((state) => state.sounds.selectedKitSounds);
-  const [mutedTracks, setMutedTracks] = useState(getLocalMutedTracks() || []);
+  const masterTempo = useSelector((state) => state.sequencer.tempo);
+  const masterVolume = useSelector((state) => state.sequencer.volume);
+  const mutedTracks = useSelector((state) => state.sequencer.mutedTracks);
+  const selectedCells = useSelector((state) => state.sequencer.selectedCells);
 
-  const [numOfSteps, setNumOfSteps] = useState(getLocalNumOfSteps() || 16);
+  const [numOfSteps, setNumOfSteps] = useState(16);
   const [numOfSounds, setNumOfSounds] = useState(0);
   const [numOfSelectedCells, setNumOfSelectedCells] = useState(0);
-  const selectedCells = useSelector((state) => state.selectedCells.selectedCells);
+
+  const { data: selectedKitSounds } = useSounds(kitId);
 
   const trackIds = [...Array(selectedKitSounds.length).keys()];
   const stepIds = [...Array(numOfSteps).keys()];
@@ -46,33 +52,43 @@ function Sequencer() {
   const seqRef = useRef(null);
 
   useEffect(() => {
-    const initData = async () => {
-      if (!kitId) return;
-      handleOrientationChange();
+    if (!kitId) return;
+    window.addEventListener('orientationchange', handleSetNumOfSteps);
+    window.addEventListener('resize', handleSetNumOfSteps);
+    handleSetNumOfSteps();
 
-      window.addEventListener('orientationchange', handleOrientationChange);
-      try {
-        const sounds = await getKitSounds(kitId);
-        const selectedCellsFromStorage = getLocalSelectedCells();
+    try {
+      const selectedCellsFromStorage = getLocalSelectedCells();
+      const mutedTracksFromStorage = getLocalMutedTracks();
+      const tempoFromStorage = getLocalTempo();
+      const volumeFromStorage = getLocalVolume();
+      const numOfStepsFromStorage = getLocalNumOfSteps();
+      if (selectedCellsFromStorage) dispatch(setSelectedCells(selectedCellsFromStorage));
+      if (mutedTracksFromStorage) dispatch(setMutedTracks(mutedTracksFromStorage));
+      if (tempoFromStorage) dispatch(setTempo(tempoFromStorage));
+      if (volumeFromStorage) dispatch(setVolume(volumeFromStorage));
+      if (numOfStepsFromStorage) setNumOfSteps(numOfStepsFromStorage);
 
-        if (selectedCellsFromStorage) dispatch(setSelectedCells(selectedCellsFromStorage));
-        if (JSON.stringify(sounds) === JSON.stringify(selectedKitSounds)) return;
-        dispatch(setSelectedKitSounds(sounds));
-
-        return () => {
-          window.removeEventListener('orientationchange', handleOrientationChange);
-        };
-      } catch (error) {
-        console.error('Failed to init data in sequencer', error);
-      }
-    };
-
-    initData();
-  }, [kitId, selectedKitSounds, dispatch, numOfSounds, numOfSelectedCells]);
+      return () => {
+        window.removeEventListener('orientationchange', handleSetNumOfSteps);
+        window.removeEventListener('resize', handleSetNumOfSteps);
+      };
+    } catch (error) {
+      console.error('Failed to init data in sequencer', error);
+    }
+  }, [kitId, dispatch, numOfSounds]);
 
   useEffect(() => {
     handleCheckedStepsUpdate();
-  }, [selectedCells, selectedKitSounds, numOfSteps]);
+  }, [
+    kitId,
+    selectedCells,
+    selectedCells.length,
+    selectedKitSounds,
+    selectedKitSounds.length,
+    numOfSteps,
+    numOfSelectedCells,
+  ]);
 
   useEffect(() => {
     handleSequenceInitialization();
@@ -84,7 +100,7 @@ function Sequencer() {
   }, [selectedKitSounds, numOfSounds, numOfSteps, kitId]);
 
   const handleCheckedStepsUpdate = () => {
-    selectedCells.forEach((cellId) => updateStepCheckedState(cellId));
+    selectedCells?.forEach((cellId) => updateStepCheckedState(cellId));
   };
 
   const updateStepCheckedState = (cellId) => {
@@ -95,7 +111,7 @@ function Sequencer() {
 
   const handleSequenceInitialization = () => {
     disposeOldSequence();
-    initializeNewSequence();
+    initNewSequence();
   };
 
   const disposeOldSequence = () => {
@@ -103,7 +119,7 @@ function Sequencer() {
     tracksRef.current?.forEach((trk) => trk.sampler?.dispose());
   };
 
-  const initializeNewSequence = () => {
+  const initNewSequence = () => {
     const effects = setupEffects();
 
     setupRefsForTracksAndLamps();
@@ -124,9 +140,11 @@ function Sequencer() {
   };
 
   const setupRefsForTracksAndLamps = () => {
+    // 2d array of refs representing each step on each track
     stepsRef.current = Array.from(Array(selectedKitSounds.length)).map(() =>
       Array(numOfSteps).fill(null)
     );
+    // array of refs for each lamp
     lampsRef.current = Array.from(Array(numOfSteps + 1)).map(() => ({
       ref: createRef(),
       checked: false,
@@ -136,29 +154,31 @@ function Sequencer() {
   const createTrackSamplers = (effects) => {
     const reverb = effects.reverb;
     const delay = effects.delay;
-
-    tracksRef.current = selectedKitSounds.map((sound, i) => ({
-      id: i,
-      sampler: new Tone.Sampler({
-        muted: false,
+    // array of track objects containing a sampler with a muted property
+    tracksRef.current = selectedKitSounds.map((sound, i) => {
+      const muted = mutedTracks.includes(i); // Check if the channel is muted
+      const sampler = new Tone.Sampler({
+        muted: muted,
         urls: { [NOTE]: sound.src },
         onload: () => {
-          tracksRef.current[i].sampler.connect(reverb);
-          tracksRef.current[i].sampler.connect(delay);
+          sampler.connect(reverb);
+          sampler.connect(delay);
         },
-      }),
-    }));
+      });
+      return { id: i, sampler, muted };
+    });
   };
 
   const createSequence = () => {
     //prettier-ignore
     seqRef.current = new Tone.Sequence(
     // Callback function that will be called on each step of the sequence
-  (time, step) => {
-    //Handle the sound triggering logic for each step
-    triggerTrackSamplers(time, step); 
+    (time, step) => {
+    //Handles the sound triggering logic for each step
+    triggerTrackSamplers(time, step);
     // Set the checked property of the current step's lamp to true
     lampsRef.current[step].checked = true;
+    // setting Tone.Sequence instance to start at step 0 + setting it to 16th notes
       },stepIds,'16n').start(0);
   };
 
@@ -170,21 +190,18 @@ function Sequencer() {
     });
   };
 
-  const handleCellClick = (id) => {
-    const updatedSelectedCells = selectedCells.includes(id)
-      ? selectedCells.filter((cellId) => cellId !== id)
-      : [...selectedCells, id];
+  const handleCellClick = (cellId) => {
+    const updatedSelectedCells = toggleArrayItem(selectedCells, cellId);
+
     localSaveSelectedCells(updatedSelectedCells);
     dispatch(setSelectedCells(updatedSelectedCells));
   };
 
   const handleMuteButtonClick = (trackId) => {
-    const updatedMutedTracks = [...mutedTracks];
-    const index = updatedMutedTracks.indexOf(trackId);
-    index === -1 ? updatedMutedTracks.push(trackId) : updatedMutedTracks.splice(index, 1);
+    const updatedMutedTracks = toggleArrayItem(mutedTracks, trackId);
 
-    setMutedTracks(updatedMutedTracks);
     tracksRef.current[trackId].muted = !tracksRef.current[trackId].muted;
+    dispatch(setMutedTracks(updatedMutedTracks));
     localSaveMutedTracks(updatedMutedTracks);
   };
 
@@ -199,33 +216,26 @@ function Sequencer() {
   useEffect(() => setNumOfSelectedCells(selectedCells.length), [selectedCells]);
 
   useEffect(() => {
-    //setting initial volume
-    Tone.Destination.volume.value = Tone.gainToDb(Number(0.5));
-  }, []);
+    //setting volume and tempo
+    Tone.Transport.bpm.value = masterTempo;
+    Tone.Destination.volume.value = Tone.gainToDb(Number(masterVolume));
+  }, [masterTempo, masterVolume]);
 
-  const handleOrientationChange = () => {
-    if (window.screen.orientation.type.includes('portrait')) {
+  const handleSetNumOfSteps = () => {
+    const orientation = window.screen.orientation.type;
+    if (orientation.includes('portrait')) {
       setNumOfSteps(8);
       localSaveNumOfSteps(8);
-    } else if (numOfSteps === 16) {
+      return;
+    } else if (numOfSteps > 8 && numOfSteps < 32) {
       setNumOfSteps(16);
       localSaveNumOfSteps(16);
-    } else {
+      return;
+    } else if (numOfSteps > 16) {
       setNumOfSteps(32);
       localSaveNumOfSteps(32);
     }
   };
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.code === 'Space') Tone.Transport.toggle();
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
 
   return (
     <>
@@ -251,68 +261,78 @@ function Sequencer() {
               </label>
             ))}
           </section>
+          <section className="sequencer-external-scroll-container">
+            {selectedKitSounds.length === 0 ? (
+              <PropagateLoader
+                className="sequencer-loader"
+                speedMultiplier={1.25}
+                color="#fcfcfc"
+                size={24}
+              />
+            ) : (
+              <section className="sequencer-internal-scroll-container">
+                <SequencerTrackLabelList kitId={kitId} />
 
-          <section className="sequencer-scroll-container">
-            <SequencerTrackLabelList kitId={kitId} />
+                <section className="sequencer-column">
+                  {trackIds.map((trackId) => {
+                    // iterate over each track
+                    const isMuted = mutedTracks.includes(trackId); // Check if the channel is muted
+                    return (
+                      <div
+                        key={trackId}
+                        className={`track-container  ${numOfSteps === 32 ? 'xl' : ''} ${
+                          isMuted ? 'muted' : ''
+                        }`}
+                      >
+                        <input
+                          className={`sequencer-mute-button  ${isMuted ? 'muted' : ''}  ${
+                            numOfSteps === 32 ? 'xl' : ''
+                          }`}
+                          type="checkbox"
+                          checked={isMuted}
+                          onChange={() => handleMuteButtonClick(trackId)}
+                        />
+                        <section
+                          key={trackId + 10}
+                          className={`sequencer-row  ${numOfSteps === 32 ? 'xl' : ''}`}
+                        >
+                          {stepIds.map((stepId) => {
+                            // iterate over each step on each track to display a cell
+                            const id = `${trackId}-${stepId}`;
+                            const isSelected = selectedCells.includes(id);
 
-            <section className="sequencer-column">
-              {trackIds.map((trackId) => {
-                // iterate over each track
-                const isMuted = mutedTracks.includes(trackId); // Check if the channel is muted
-                // const isFxEnabled = fxEnabled[trackId];
-                return (
-                  <div
-                    key={trackId}
-                    className={`track-container  ${numOfSteps === 32 ? 'xl' : ''} ${
-                      isMuted ? 'muted' : ''
-                    }`}
-                  >
-                    <input
-                      className={`sequencer-mute-button  ${isMuted ? 'muted' : ''}  ${
-                        numOfSteps === 32 ? 'xl' : ''
-                      }`}
-                      type="checkbox"
-                      checked={isMuted}
-                      onChange={() => handleMuteButtonClick(trackId)}
-                    />
-                    <section
-                      key={trackId + 10}
-                      className={`sequencer-row  ${numOfSteps === 32 ? 'xl' : ''}`}
-                    >
-                      {stepIds.map((stepId) => {
-                        // iterate over each step on each track to display a cell
-                        const id = `${trackId}-${stepId}`;
-                        const isSelected = selectedCells.includes(id);
-
-                        return (
-                          <article key={id}>
-                            <label
-                              key={id}
-                              htmlFor={id + 20}
-                              onClick={() => handleCellClick(id)}
-                              className={`sequencer-cell ${isSelected ? 'selected' : ''}`}
-                            />
-                            <input
-                              className="sequencer-cell-input step-checkbox"
-                              key={id + 10}
-                              id={id + 20}
-                              type="checkbox"
-                              ref={(el) => {
-                                if (!el) return;
-                                if (!stepsRef.current[trackId]) {
-                                  stepsRef.current[trackId] = [];
-                                }
-                                stepsRef.current[trackId][stepId] = el;
-                              }}
-                            />
-                          </article>
-                        );
-                      })}
-                    </section>
-                  </div>
-                );
-              })}
-            </section>
+                            return (
+                              <article
+                                key={id}
+                                onClick={() => handleCellClick(id)}
+                                className={`sequencer-cell ${isSelected ? 'selected' : ''} ${
+                                  numOfSteps === 32 ? 'xl' : ''
+                                }`}
+                              >
+                                <label key={id} htmlFor={id + 20} />
+                                <input
+                                  className="sequencer-cell-input step-checkbox"
+                                  key={id + 10}
+                                  id={id + 20}
+                                  type="checkbox"
+                                  ref={(el) => {
+                                    if (!el) return;
+                                    if (!stepsRef.current[trackId]) {
+                                      stepsRef.current[trackId] = [];
+                                    }
+                                    stepsRef.current[trackId][stepId] = el;
+                                  }}
+                                />
+                              </article>
+                            );
+                          })}
+                        </section>
+                      </div>
+                    );
+                  })}
+                </section>
+              </section>
+            )}
           </section>
         </section>
       </section>

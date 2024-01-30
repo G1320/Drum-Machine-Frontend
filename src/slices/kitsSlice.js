@@ -13,11 +13,11 @@ const userKitsSlice = createSlice({
     setAllKits(state, action) {
       state.allKits = action.payload;
     },
-    setSelectedKitId(state, action) {
-      state.selectedKitId = action.payload;
-    },
     setSelectedKit(state, action) {
       state.selectedKit = action.payload;
+    },
+    setSelectedKitId(state, action) {
+      state.selectedKitId = action.payload;
     },
     setUserKits(state, action) {
       state.userKits = action.payload;
@@ -25,16 +25,14 @@ const userKitsSlice = createSlice({
     setCombinedKits(state, action) {
       state.combinedKits = action.payload;
     },
-    removeCombinedKit(state, action) {
+    removeFromCombinedKits(state, action) {
       state.combinedKits = state.combinedKits.filter((kit) => kit._id !== action.payload);
-      console.log('state.combinedKits: ', state.combinedKits);
     },
     addUserKit(state, action) {
       state.userKits.push(action.payload);
     },
     removeUserKit(state, action) {
       state.userKits = state.userKits.filter((kit) => kit._id !== action.payload);
-      console.log('state.userKits: ', state.userKits);
     },
   },
 });
@@ -45,7 +43,7 @@ export const {
   setUserKits,
   setSelectedKitId,
   setCombinedKits,
-  removeCombinedKit,
+  removeFromCombinedKits,
   addKit,
   removeUserKit,
 } = userKitsSlice.actions;

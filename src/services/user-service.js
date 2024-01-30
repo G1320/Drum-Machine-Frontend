@@ -3,7 +3,7 @@ import { httpService } from './http-service';
 const userEndpoint = '/users';
 
 export const getLocalUser = () => {
-  const user = sessionStorage.getItem('user');
+  const user = localStorage.getItem('user');
 
   if (user) return JSON.parse(user);
 

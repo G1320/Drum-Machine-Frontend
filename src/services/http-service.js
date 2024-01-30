@@ -36,7 +36,7 @@ async function ajax(endpoint, method = 'GET', data = null) {
         //refreshing access token if close to expiry, backend will sign (and return) a new accessToken
         const refreshedToken = await refreshAccessToken();
         if (refreshedToken) {
-          accessToken = Cookies.get('accessToken');
+          accessToken = refreshedToken;
         } else {
           console.error('Failed to refresh token');
           throw new Error('Failed to refresh token');
@@ -60,7 +60,8 @@ async function ajax(endpoint, method = 'GET', data = null) {
         if (refreshedToken) return ajax(endpoint, method, data);
       } catch (refreshError) {
         sessionStorage.clear();
-        window.location.assign('/login');
+        localStorage.clear();
+        window.location.assign('/');
       }
     }
     throw err;

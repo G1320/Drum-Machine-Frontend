@@ -12,12 +12,12 @@ import { addKitToUser, getLocalUser } from '../../services/user-service';
 import Loader from '../misc/loader';
 import SoundsList from '../sounds/sounds-list';
 import UserKitsList from '../kits/user-kits-list';
+import AudioVisualizer from '../visualizer/audio-visualizer';
 
 function Show() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
-  const selectedKit = useSelector((state) => state.kits.selectedKit);
   const [tempData, setTempData] = useState({ name: '', description: '' });
 
   const { kitId } = useParams();
@@ -95,10 +95,6 @@ function Show() {
     return <Loader />;
   }
 
-  const handleSubscribe = () => {
-    console.log('Subscribed');
-  };
-
   return (
     <>
       <Container className="edit-kit-container">
@@ -140,9 +136,6 @@ function Show() {
           Load Sequencer
         </Button>
 
-        <Button variant="contained" color="secondary" onClick={handleSubscribe}>
-          Subscribe
-        </Button>
         <Button variant="contained" color="error" onClick={handleDeleteKit}>
           Delete
         </Button>
@@ -152,7 +145,7 @@ function Show() {
       </Container>
       <section className="main-content-bottom-wrapper">
         <UserKitsList />
-        <SoundsList kitId={kitId} />
+        <AudioVisualizer />
       </section>
     </>
   );
