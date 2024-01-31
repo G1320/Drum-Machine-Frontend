@@ -10,7 +10,6 @@ const transportSlice = createSlice({
   reducers: {
     setIsPlaying(state, action) {
       state.isPlaying = action.payload;
-      //   console.log('state.isPlaying: ', state.isPlaying);
     },
   },
 });

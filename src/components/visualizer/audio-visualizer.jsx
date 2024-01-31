@@ -16,11 +16,11 @@ const AudioVisualizer = () => {
   };
   useEffect(() => {
     // Create a new p5 instance
+
     const sketch = new p5((p) => {
       window.addEventListener('resize', () => resizeCanvas(sketch));
       window.addEventListener('orientationchange', () => resizeCanvas(sketch));
       let analyzer;
-
       p.setup = () => {
         // Create a canvas and attach it to the canvasRef
         const canvasParent = canvasRef.current;
@@ -48,10 +48,12 @@ const AudioVisualizer = () => {
         p.noFill();
         // Draw the waveform
         p.beginShape();
-        for (let i = 0; i < waveform.length; i++) {
-          const x = p.map(i, 0, waveform.length, 0, p.width);
-          const y = p.map(waveform[i], -1, 1, p.height, 0);
-          p.vertex(x, y);
+        for (let i = 0; i < waveform.length - 1; i++) {
+          const x1 = p.map(i, 0, waveform.length, 0, p.width);
+          const y1 = p.map(waveform[i], -1, 1, p.height, 0);
+          const x2 = p.map(i + 1, 0, waveform.length, 0, p.width);
+          const y2 = p.map(waveform[i + 1], -1, 1, p.height, 0);
+          p.line(x1, y1, x2, y2);
         }
         p.endShape();
       };

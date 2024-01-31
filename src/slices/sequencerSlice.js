@@ -47,7 +47,7 @@ export const sequencerSlice = createSlice({
       state.numOfSteps = action.payload;
     },
     clearNumOfSteps: (state) => {
-      state.numOfSteps = 32;
+      state.numOfSteps = 16;
     },
     clearSequencerState: () => {
       clearSelectedCells();

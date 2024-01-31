@@ -24,7 +24,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Router>
         <App />
       </Router>
-      <ReactQueryDevtools initialIsOpen />
+      {/* <ReactQueryDevtools initialIsOpen /> */}
     </QueryClientProvider>
   </Provider>
   // </React.StrictMode>

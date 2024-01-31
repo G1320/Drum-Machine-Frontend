@@ -26,9 +26,9 @@ function NavMenu() {
             Edit kit
           </Link>
         )}
-        <Link to={`/drum/id/${validKitId}`} className="menu-item">
+        {/* <Link to={`/drum/id/${validKitId}`} className="menu-item">
           Drum Machine
-        </Link>
+        </Link> */}
 
         <Link to={`/sequencer/id/${validKitId}`} className="menu-item">
           Sequencer

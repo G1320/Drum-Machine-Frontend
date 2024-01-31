@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, createRef } from 'react';
 import '../../assets/styles/components/sequencer/sequencer.scss';
 import * as Tone from 'tone';
-import { PropagateLoader } from 'react-spinners';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useSounds } from '../../hooks/useSounds.js';
+import { PropagateLoader } from 'react-spinners';
 
 import {
   getLocalNumOfSteps,
@@ -37,7 +37,7 @@ function Sequencer() {
   const mutedTracks = useSelector((state) => state.sequencer.mutedTracks);
   const selectedCells = useSelector((state) => state.sequencer.selectedCells);
 
-  const [numOfSteps, setNumOfSteps] = useState(16);
+  const [numOfSteps, setNumOfSteps] = useState(getLocalNumOfSteps() || 16);
   const [numOfSounds, setNumOfSounds] = useState(0);
   const [numOfSelectedCells, setNumOfSelectedCells] = useState(0);
 
@@ -51,6 +51,9 @@ function Sequencer() {
   const stepsRef = useRef([...Array(selectedKitSounds.length)].map(() => Array(numOfSteps).fill(null))); // Create an array of arrays, the first array representing tracks, the second representing steps
   const seqRef = useRef(null);
 
+  useEffect(() => setNumOfSounds(selectedKitSounds.length), [selectedKitSounds]);
+  useEffect(() => setNumOfSelectedCells(selectedCells.length), [selectedCells]);
+
   useEffect(() => {
     if (!kitId) return;
     window.addEventListener('orientationchange', handleSetNumOfSteps);
@@ -63,6 +66,7 @@ function Sequencer() {
       const tempoFromStorage = getLocalTempo();
       const volumeFromStorage = getLocalVolume();
       const numOfStepsFromStorage = getLocalNumOfSteps();
+
       if (selectedCellsFromStorage) dispatch(setSelectedCells(selectedCellsFromStorage));
       if (mutedTracksFromStorage) dispatch(setMutedTracks(mutedTracksFromStorage));
       if (tempoFromStorage) dispatch(setTempo(tempoFromStorage));
@@ -79,18 +83,6 @@ function Sequencer() {
   }, [kitId, dispatch, numOfSounds]);
 
   useEffect(() => {
-    handleCheckedStepsUpdate();
-  }, [
-    kitId,
-    selectedCells,
-    selectedCells.length,
-    selectedKitSounds,
-    selectedKitSounds.length,
-    numOfSteps,
-    numOfSelectedCells,
-  ]);
-
-  useEffect(() => {
     handleSequenceInitialization();
     return () => {
       seqRef.current?.stop();
@@ -98,6 +90,10 @@ function Sequencer() {
       tracksRef.current.forEach((trk) => trk.sampler.dispose());
     };
   }, [selectedKitSounds, numOfSounds, numOfSteps, kitId]);
+
+  useEffect(() => {
+    handleCheckedStepsUpdate();
+  }, [kitId, numOfSelectedCells, numOfSounds, numOfSteps, selectedCells]);
 
   const handleCheckedStepsUpdate = () => {
     selectedCells?.forEach((cellId) => updateStepCheckedState(cellId));
@@ -193,6 +189,10 @@ function Sequencer() {
   const handleCellClick = (cellId) => {
     const updatedSelectedCells = toggleArrayItem(selectedCells, cellId);
 
+    const [trackIndex, stepIndex] = cellId.split('-').map(Number);
+    const stepRef = stepsRef.current[trackIndex]?.[stepIndex];
+    if (stepRef) stepRef.checked = updatedSelectedCells.includes(cellId);
+
     localSaveSelectedCells(updatedSelectedCells);
     dispatch(setSelectedCells(updatedSelectedCells));
   };
@@ -200,7 +200,9 @@ function Sequencer() {
   const handleMuteButtonClick = (trackId) => {
     const updatedMutedTracks = toggleArrayItem(mutedTracks, trackId);
 
-    tracksRef.current[trackId].muted = !tracksRef.current[trackId].muted;
+    const trackRef = tracksRef.current[trackId];
+    if (trackRef) trackRef.muted = !trackRef.muted;
+
     dispatch(setMutedTracks(updatedMutedTracks));
     localSaveMutedTracks(updatedMutedTracks);
   };
@@ -212,9 +214,6 @@ function Sequencer() {
     setNumOfSounds(newNumOfSteps); //Used to trigger a re-render of the sequencer
   };
 
-  useEffect(() => setNumOfSounds(selectedKitSounds.length), [selectedKitSounds]);
-  useEffect(() => setNumOfSelectedCells(selectedCells.length), [selectedCells]);
-
   useEffect(() => {
     //setting volume and tempo
     Tone.Transport.bpm.value = masterTempo;
@@ -222,15 +221,14 @@ function Sequencer() {
   }, [masterTempo, masterVolume]);
 
   const handleSetNumOfSteps = () => {
+    if (!window.screen.orientation || !window.screen.orientation.type) return;
     const orientation = window.screen.orientation.type;
     if (orientation.includes('portrait')) {
       setNumOfSteps(8);
       localSaveNumOfSteps(8);
-      return;
     } else if (numOfSteps > 8 && numOfSteps < 32) {
       setNumOfSteps(16);
       localSaveNumOfSteps(16);
-      return;
     } else if (numOfSteps > 16) {
       setNumOfSteps(32);
       localSaveNumOfSteps(32);
