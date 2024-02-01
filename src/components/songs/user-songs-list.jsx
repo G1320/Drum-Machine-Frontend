@@ -4,27 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { getUserSongs, createSong, deleteSong } from '../../services/song-service';
 import { setError } from '../../slices/errorSlice';
-import {
-  setSelectedCells,
-  setTempo,
-  setVolume,
-  setMutedTracks,
-  setNumOfSteps,
-  clearSequencerState,
-} from '../../slices/sequencerSlice';
+import { clearSequencerState } from '../../slices/sequencerSlice';
 import { getLocalUser } from '../../services/user-service';
 import {
-  getLocalSelectedCells,
-  localSaveSelectedCells,
-  getLocalTempo,
-  getLocalVolume,
-  getLocalMutedTracks,
-  localSaveTempo,
-  localSaveVolume,
-  localSaveMutedTracks,
-  getLocalNumOfSteps,
-  localSaveNumOfSteps,
-  clearSequencerStorage,
+  clearLocalSequencerState,
+  getLocalSequencerState,
+  localSaveSequencerState,
 } from '../../services/sequencer-service';
 
 const UserSongsList = () => {
@@ -54,57 +39,30 @@ const UserSongsList = () => {
     if (isLoading) return;
     setIsLoading(true);
 
-    const { tempo, volume, mutedTracks, pattern, numOfSteps, kit } = song;
+    clearLocalSequencerState();
+    dispatch(clearSequencerState());
 
-    if (tempo) {
-      dispatch(setTempo(tempo));
-      localSaveTempo(tempo);
-    }
-    if (volume) {
-      dispatch(setVolume(volume));
-      localSaveVolume(volume);
-    }
-    if (mutedTracks) {
-      dispatch(setMutedTracks(mutedTracks));
-      localSaveMutedTracks(mutedTracks);
-    }
-    if (pattern) {
-      dispatch(setSelectedCells(pattern));
-      localSaveSelectedCells(pattern);
-    }
-    if (numOfSteps) {
-      localSaveNumOfSteps(numOfSteps);
-      dispatch(setNumOfSteps(numOfSteps));
-    }
+    localSaveSequencerState(song);
 
-    navigate(`/sequencer/id/${kit}`);
+    navigate(`/sequencer/id/${song.kit}`);
     setIsLoading(false);
   };
 
   const handleSaveSong = async () => {
     if (isLoading) return;
     setIsLoading(true);
-
-    const selectedCells = getLocalSelectedCells();
-    const mutedTracks = getLocalMutedTracks();
-    const tempo = getLocalTempo();
-    const volume = getLocalVolume();
-    const numOfSteps = getLocalNumOfSteps();
+    const sequencerState = getLocalSequencerState();
 
     try {
       const newSong = {
         name: `${userSongs.length + 1}`,
-        pattern: selectedCells,
-        kitId,
-        tempo,
-        volume,
-        numOfSteps,
-        mutedTracks,
         userId: user._id,
+        kitId,
+        ...sequencerState,
       };
       const savedNewSong = await createSong(newSong);
 
-      clearSequencerStorage();
+      clearLocalSequencerState();
       dispatch(clearSequencerState());
 
       setUserSongs([...userSongs, savedNewSong]);

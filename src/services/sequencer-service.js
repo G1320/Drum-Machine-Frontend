@@ -1,19 +1,36 @@
-export const clearSequencerStorage = () => {
-  localStorage.setItem('selectedCells', JSON.stringify([]));
+export const clearLocalSequencerState = () => {
+  localStorage.setItem('pattern', JSON.stringify([]));
   localStorage.setItem('mutedTracks', JSON.stringify([]));
   localStorage.setItem('tempo', JSON.stringify(120));
   localStorage.setItem('volume', JSON.stringify(0.5));
   localStorage.setItem('numOfSteps', JSON.stringify(32));
 };
 
-export const localSaveSelectedCells = (selectedCells) => {
-  localStorage.setItem('selectedCells', JSON.stringify(selectedCells));
+export const getLocalSequencerState = () => {
+  const pattern = JSON.parse(localStorage.getItem('pattern'));
+  const mutedTracks = JSON.parse(localStorage.getItem('mutedTracks'));
+  const tempo = JSON.parse(localStorage.getItem('tempo'));
+  const volume = JSON.parse(localStorage.getItem('volume'));
+  const numOfSteps = JSON.parse(localStorage.getItem('numOfSteps'));
+  return { pattern, mutedTracks, tempo, volume, numOfSteps };
 };
 
-export const getLocalSelectedCells = () => {
-  const selectedCells = localStorage.getItem('selectedCells');
+export const localSaveSequencerState = (sequencerState) => {
+  localStorage.setItem('pattern', JSON.stringify(sequencerState.pattern));
+  localStorage.setItem('mutedTracks', JSON.stringify(sequencerState.mutedTracks));
+  localStorage.setItem('tempo', JSON.stringify(sequencerState.tempo));
+  localStorage.setItem('volume', JSON.stringify(sequencerState.volume));
+  localStorage.setItem('numOfSteps', JSON.stringify(sequencerState.numOfSteps));
+};
 
-  if (selectedCells) return JSON.parse(selectedCells);
+export const localSavePattern = (pattern) => {
+  localStorage.setItem('pattern', JSON.stringify(pattern));
+};
+
+export const getLocalPattern = () => {
+  const pattern = localStorage.getItem('pattern');
+
+  if (pattern) return JSON.parse(pattern);
 
   return [];
 };

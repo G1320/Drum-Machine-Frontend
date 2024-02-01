@@ -7,13 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import FilterKits from '../kits/filter-kits';
 import UserSongsList from '../songs/user-songs-list';
 import { setSelectedKit } from '../../slices/kitsSlice';
-import { setTempo, setVolume, clearSequencerState, setSelectedCells } from '../../slices/sequencerSlice';
+import { setTempo, setVolume, clearSequencerState } from '../../slices/sequencerSlice';
 import {
-  clearSequencerStorage,
-  localSaveSelectedCells,
+  clearLocalSequencerState,
+  localSavePattern,
   localSaveTempo,
   localSaveVolume,
-  getLocalMutedTracks,
   localSaveMutedTracks,
 } from '../../services/sequencer-service';
 import { getLoopedIndex } from '../../utils/getLoopedIndex';
@@ -25,7 +24,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   const dispatch = useDispatch();
   const combinedKits = useSelector((state) => state.kits.combinedKits);
   const selectedKit = useSelector((state) => state.kits.selectedKit);
-  const selectedCells = useSelector((state) => state.sequencer.selectedCells);
+  const pattern = useSelector((state) => state.sequencer.pattern);
   const masterTempo = useSelector((state) => state.sequencer.tempo);
   const masterVolume = useSelector((state) => state.sequencer.volume);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -56,7 +55,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   };
 
   const updateKit = (kit, index) => {
-    localSaveSelectedCells(selectedCells);
+    localSavePattern(pattern);
     localSaveMutedTracks([]);
     dispatch(setSelectedKit(kit));
     setCurrentIndex(index);
@@ -90,13 +89,11 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
 
   const handleClearPattern = () => {
     if (isLoading) return;
-    const mutedTracks = getLocalMutedTracks();
-    if (selectedCells.length === 0 && mutedTracks.length === 0) return;
     setIsLoading(true);
 
-    clearSequencerStorage();
+    clearLocalSequencerState();
     dispatch(clearSequencerState());
-    dispatch(setSelectedCells([]));
+
     setIsLoading(false);
   };
 

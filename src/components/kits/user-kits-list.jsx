@@ -12,7 +12,7 @@ import {
   setUserKits,
   removeFromCombinedKits,
 } from '../../slices/kitsSlice';
-import { clearMutedTracks, clearSelectedCells } from '../../slices/sequencerSlice';
+import { clearMutedTracks, clearPattern } from '../../slices/sequencerSlice';
 
 import UserKitDetails from './user-kit-details';
 import { localSaveMutedTracks } from '../../services/sequencer-service';
@@ -36,7 +36,7 @@ function UserKitsList() {
     const kit = userKits.find((userKit) => userKit._id === kitId);
 
     dispatch(setSelectedKit(kit));
-    dispatch(clearSelectedCells());
+    dispatch(clearPattern());
     dispatch(clearMutedTracks());
     localSaveMutedTracks([]);
     handleNavigateToSelectedKit(kitId);

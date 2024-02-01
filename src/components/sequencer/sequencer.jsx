@@ -8,13 +8,10 @@ import { PropagateLoader } from 'react-spinners';
 
 import {
   getLocalNumOfSteps,
-  getLocalSelectedCells,
   localSaveNumOfSteps,
-  localSaveSelectedCells,
-  getLocalMutedTracks,
+  localSavePattern,
   localSaveMutedTracks,
-  getLocalTempo,
-  getLocalVolume,
+  getLocalSequencerState,
 } from '../../services/sequencer-service';
 
 import SequencerStartBtn from './sequencer-start-btn';
@@ -24,7 +21,7 @@ import SequencerTrackLabelList from './sequencer-track-label-list';
 import UserKitsList from '../kits/user-kits-list';
 import OrientationLock from './sequencer-orientation-lock';
 
-import { setSelectedCells, setTempo, setVolume, setMutedTracks } from '../../slices/sequencerSlice';
+import { setPattern, setSequencerState, setMutedTracks } from '../../slices/sequencerSlice';
 import { toggleArrayItem } from '../../utils/toggleArrayItem';
 
 function Sequencer() {
@@ -35,11 +32,11 @@ function Sequencer() {
   const masterTempo = useSelector((state) => state.sequencer.tempo);
   const masterVolume = useSelector((state) => state.sequencer.volume);
   const mutedTracks = useSelector((state) => state.sequencer.mutedTracks);
-  const selectedCells = useSelector((state) => state.sequencer.selectedCells);
+  const pattern = useSelector((state) => state.sequencer.pattern);
 
   const [numOfSteps, setNumOfSteps] = useState(getLocalNumOfSteps() || 16);
   const [numOfSounds, setNumOfSounds] = useState(0);
-  const [numOfSelectedCells, setNumOfSelectedCells] = useState(0);
+  const [numOfPattern, setNumOfPattern] = useState(0);
 
   const { data: selectedKitSounds } = useSounds(kitId);
 
@@ -52,35 +49,29 @@ function Sequencer() {
   const seqRef = useRef(null);
 
   useEffect(() => setNumOfSounds(selectedKitSounds.length), [selectedKitSounds]);
-  useEffect(() => setNumOfSelectedCells(selectedCells.length), [selectedCells]);
+  useEffect(() => setNumOfPattern(pattern.length), [pattern]);
 
   useEffect(() => {
-    if (!kitId) return;
     window.addEventListener('orientationchange', handleSetNumOfSteps);
     window.addEventListener('resize', handleSetNumOfSteps);
     handleSetNumOfSteps();
+    return () => {
+      window.removeEventListener('orientationchange', handleSetNumOfSteps);
+      window.removeEventListener('resize', handleSetNumOfSteps);
+    };
+  }, []);
 
+  useEffect(() => {
+    if (!kitId) return;
     try {
-      const selectedCellsFromStorage = getLocalSelectedCells();
-      const mutedTracksFromStorage = getLocalMutedTracks();
-      const tempoFromStorage = getLocalTempo();
-      const volumeFromStorage = getLocalVolume();
-      const numOfStepsFromStorage = getLocalNumOfSteps();
-
-      if (selectedCellsFromStorage) dispatch(setSelectedCells(selectedCellsFromStorage));
-      if (mutedTracksFromStorage) dispatch(setMutedTracks(mutedTracksFromStorage));
-      if (tempoFromStorage) dispatch(setTempo(tempoFromStorage));
-      if (volumeFromStorage) dispatch(setVolume(volumeFromStorage));
-      if (numOfStepsFromStorage) setNumOfSteps(numOfStepsFromStorage);
-
-      return () => {
-        window.removeEventListener('orientationchange', handleSetNumOfSteps);
-        window.removeEventListener('resize', handleSetNumOfSteps);
-      };
+      const sequencerState = getLocalSequencerState();
+      dispatch(setSequencerState(sequencerState));
+      setNumOfSteps(sequencerState.numOfSteps);
+      handleCheckedStepsUpdate();
     } catch (error) {
       console.error('Failed to init data in sequencer', error);
     }
-  }, [kitId, dispatch, numOfSounds]);
+  }, [kitId, dispatch, numOfSounds, numOfSteps, numOfPattern]);
 
   useEffect(() => {
     handleSequenceInitialization();
@@ -93,10 +84,10 @@ function Sequencer() {
 
   useEffect(() => {
     handleCheckedStepsUpdate();
-  }, [kitId, numOfSelectedCells, numOfSounds, numOfSteps, selectedCells]);
+  }, [kitId, numOfSounds, numOfSteps, pattern]);
 
   const handleCheckedStepsUpdate = () => {
-    selectedCells?.forEach((cellId) => updateStepCheckedState(cellId));
+    pattern?.forEach((cellId) => updateStepCheckedState(cellId));
   };
 
   const updateStepCheckedState = (cellId) => {
@@ -187,14 +178,14 @@ function Sequencer() {
   };
 
   const handleCellClick = (cellId) => {
-    const updatedSelectedCells = toggleArrayItem(selectedCells, cellId);
+    const updatedPattern = toggleArrayItem(pattern, cellId);
 
     const [trackIndex, stepIndex] = cellId.split('-').map(Number);
     const stepRef = stepsRef.current[trackIndex]?.[stepIndex];
-    if (stepRef) stepRef.checked = updatedSelectedCells.includes(cellId);
+    if (stepRef) stepRef.checked = updatedPattern.includes(cellId);
 
-    localSaveSelectedCells(updatedSelectedCells);
-    dispatch(setSelectedCells(updatedSelectedCells));
+    localSavePattern(updatedPattern);
+    dispatch(setPattern(updatedPattern));
   };
 
   const handleMuteButtonClick = (trackId) => {
@@ -297,7 +288,7 @@ function Sequencer() {
                           {stepIds.map((stepId) => {
                             // iterate over each step on each track to display a cell
                             const id = `${trackId}-${stepId}`;
-                            const isSelected = selectedCells.includes(id);
+                            const isSelected = pattern.includes(id);
 
                             return (
                               <article

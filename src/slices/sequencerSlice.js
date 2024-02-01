@@ -1,29 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {
-  getLocalMutedTracks,
-  getLocalSelectedCells,
-  getLocalTempo,
-  getLocalVolume,
-  getLocalNumOfSteps,
-} from '../services/sequencer-service';
+import { getLocalSequencerState } from '../services/sequencer-service';
+const { pattern, mutedTracks, tempo, volume, numOfSteps } = getLocalSequencerState();
 
 const initialState = {
-  selectedCells: getLocalSelectedCells(),
-  tempo: getLocalTempo(),
-  volume: getLocalVolume(),
-  mutedTracks: getLocalMutedTracks(),
-  numOfSteps: getLocalNumOfSteps(),
+  pattern,
+  tempo,
+  volume,
+  mutedTracks,
+  numOfSteps,
 };
 
 export const sequencerSlice = createSlice({
   name: 'sequencer',
   initialState,
   reducers: {
-    setSelectedCells: (state, action) => {
-      state.selectedCells = action.payload;
+    setPattern: (state, action) => {
+      state.pattern = action.payload;
     },
-    clearSelectedCells: (state) => {
-      state.selectedCells = [];
+    clearPattern: (state) => {
+      state.pattern = [];
     },
     setMutedTracks: (state, action) => {
       state.mutedTracks = action.payload;
@@ -49,19 +44,30 @@ export const sequencerSlice = createSlice({
     clearNumOfSteps: (state) => {
       state.numOfSteps = 16;
     },
+    setSequencerState: (state, action) => {
+      return {
+        pattern: action.payload.pattern,
+        mutedTracks: action.payload.mutedTracks,
+        tempo: action.payload.tempo,
+        volume: action.payload.volume,
+        numOfSteps: action.payload.numOfSteps,
+      };
+    },
     clearSequencerState: () => {
-      clearSelectedCells();
-      clearMutedTracks();
-      clearTempo();
-      clearVolume();
-      clearNumOfSteps();
+      return {
+        pattern: [],
+        mutedTracks: [],
+        tempo: 120,
+        volume: 0.5,
+        numOfSteps: 16,
+      };
     },
   },
 });
 
 export const {
-  setSelectedCells,
-  clearSelectedCells,
+  setPattern,
+  clearPattern,
   setTempo,
   clearTempo,
   setVolume,
@@ -70,6 +76,7 @@ export const {
   clearMutedTracks,
   setNumOfSteps,
   clearNumOfSteps,
+  setSequencerState,
   clearSequencerState,
 } = sequencerSlice.actions;
 
