@@ -47,7 +47,6 @@ persistQueryClient({
 export const useSounds = (kitId) => {
   const dispatch = useDispatch();
 
-  // Check if persisted data is available
   const persistedData = queryClient.getQueryData(['sounds', kitId]);
 
   return useQuery(['sounds', kitId], async () => await getKitSounds(kitId), {

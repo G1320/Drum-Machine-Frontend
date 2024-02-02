@@ -10,10 +10,10 @@ import { setSelectedKit } from '../../slices/kitsSlice';
 import { setTempo, setVolume, clearSequencerState } from '../../slices/sequencerSlice';
 import {
   clearLocalSequencerState,
-  localSavePattern,
-  localSaveTempo,
-  localSaveVolume,
-  localSaveMutedTracks,
+  setLocalPattern,
+  setLocalTempo,
+  setLocalVolume,
+  setLocalMutedTracks,
 } from '../../services/sequencer-service';
 import { getLoopedIndex } from '../../utils/getLoopedIndex';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -55,8 +55,8 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   };
 
   const updateKit = (kit, index) => {
-    localSavePattern(pattern);
-    localSaveMutedTracks([]);
+    setLocalPattern(pattern);
+    setLocalMutedTracks([]);
     dispatch(setSelectedKit(kit));
     setCurrentIndex(index);
     navigate(`/sequencer/id/${kit._id}`);
@@ -77,13 +77,13 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
 
   const updateVolume = (volume) => {
     Tone.Destination.volume.value = Tone.gainToDb(volume);
-    localSaveVolume(Number(volume));
+    setLocalVolume(Number(volume));
     dispatch(setVolume(volume));
   };
 
   const updateBpm = (bpm) => {
     Tone.Transport.bpm.value = bpm;
-    localSaveTempo(bpm);
+    setLocalTempo(bpm);
     dispatch(setTempo(bpm));
   };
 

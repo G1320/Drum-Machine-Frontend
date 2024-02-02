@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getLocalSequencerState } from '../services/sequencer-service';
+
 const { pattern, mutedTracks, tempo, volume, numOfSteps } = getLocalSequencerState();
 
 const initialState = {

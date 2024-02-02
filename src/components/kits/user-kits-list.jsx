@@ -15,7 +15,7 @@ import {
 import { clearMutedTracks, clearPattern } from '../../slices/sequencerSlice';
 
 import UserKitDetails from './user-kit-details';
-import { localSaveMutedTracks } from '../../services/sequencer-service';
+import { setLocalMutedTracks } from '../../services/sequencer-service';
 
 function UserKitsList() {
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ function UserKitsList() {
     dispatch(setSelectedKit(kit));
     dispatch(clearPattern());
     dispatch(clearMutedTracks());
-    localSaveMutedTracks([]);
+    setLocalMutedTracks([]);
     handleNavigateToSelectedKit(kitId);
   };
 

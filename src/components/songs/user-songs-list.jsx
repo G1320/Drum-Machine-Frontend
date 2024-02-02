@@ -4,12 +4,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { getUserSongs, createSong, deleteSong } from '../../services/song-service';
 import { setError } from '../../slices/errorSlice';
-import { clearSequencerState } from '../../slices/sequencerSlice';
 import { getLocalUser } from '../../services/user-service';
+import { clearSequencerState } from '../../slices/sequencerSlice';
 import {
   clearLocalSequencerState,
   getLocalSequencerState,
-  localSaveSequencerState,
+  setLocalSequencerState,
 } from '../../services/sequencer-service';
 
 const UserSongsList = () => {
@@ -38,11 +38,11 @@ const UserSongsList = () => {
   const handleSongClick = (song) => {
     if (isLoading) return;
     setIsLoading(true);
+    console.log('song: ', song);
 
     clearLocalSequencerState();
     dispatch(clearSequencerState());
-
-    localSaveSequencerState(song);
+    setLocalSequencerState(song);
 
     navigate(`/sequencer/id/${song.kit}`);
     setIsLoading(false);

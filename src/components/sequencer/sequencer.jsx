@@ -8,9 +8,9 @@ import { PropagateLoader } from 'react-spinners';
 
 import {
   getLocalNumOfSteps,
-  localSaveNumOfSteps,
-  localSavePattern,
-  localSaveMutedTracks,
+  setLocalNumOfSteps,
+  setLocalPattern,
+  setLocalMutedTracks,
   getLocalSequencerState,
 } from '../../services/sequencer-service';
 
@@ -21,7 +21,12 @@ import SequencerTrackLabelList from './sequencer-track-label-list';
 import UserKitsList from '../kits/user-kits-list';
 import OrientationLock from './sequencer-orientation-lock';
 
-import { setPattern, setSequencerState, setMutedTracks } from '../../slices/sequencerSlice';
+import {
+  setPattern,
+  setNumOfSteps,
+  setSequencerState,
+  setMutedTracks,
+} from '../../slices/sequencerSlice';
 import { toggleArrayItem } from '../../utils/toggleArrayItem';
 
 function Sequencer() {
@@ -32,9 +37,11 @@ function Sequencer() {
   const masterTempo = useSelector((state) => state.sequencer.tempo);
   const masterVolume = useSelector((state) => state.sequencer.volume);
   const mutedTracks = useSelector((state) => state.sequencer.mutedTracks);
+  const numOfSteps = useSelector((state) => state.sequencer.numOfSteps);
   const pattern = useSelector((state) => state.sequencer.pattern);
 
-  const [numOfSteps, setNumOfSteps] = useState(getLocalNumOfSteps() || 16);
+  // const [numOfSteps, setNumOfSteps] = useState(getLocalNumOfSteps() || 16);
+
   const [numOfSounds, setNumOfSounds] = useState(0);
   const [numOfPattern, setNumOfPattern] = useState(0);
 
@@ -54,7 +61,6 @@ function Sequencer() {
   useEffect(() => {
     window.addEventListener('orientationchange', handleSetNumOfSteps);
     window.addEventListener('resize', handleSetNumOfSteps);
-    handleSetNumOfSteps();
     return () => {
       window.removeEventListener('orientationchange', handleSetNumOfSteps);
       window.removeEventListener('resize', handleSetNumOfSteps);
@@ -63,14 +69,10 @@ function Sequencer() {
 
   useEffect(() => {
     if (!kitId) return;
-    try {
-      const sequencerState = getLocalSequencerState();
-      dispatch(setSequencerState(sequencerState));
-      setNumOfSteps(sequencerState.numOfSteps);
-      handleCheckedStepsUpdate();
-    } catch (error) {
-      console.error('Failed to init data in sequencer', error);
-    }
+    const sequencerState = getLocalSequencerState();
+    dispatch(setSequencerState(sequencerState));
+    handleCheckedStepsUpdate();
+    handleSetNumOfSteps();
   }, [kitId, dispatch, numOfSounds, numOfSteps, numOfPattern]);
 
   useEffect(() => {
@@ -131,7 +133,7 @@ function Sequencer() {
     stepsRef.current = Array.from(Array(selectedKitSounds.length)).map(() =>
       Array(numOfSteps).fill(null)
     );
-    // array of refs for each lamp
+    // array of refs representing each lamp
     lampsRef.current = Array.from(Array(numOfSteps + 1)).map(() => ({
       ref: createRef(),
       checked: false,
@@ -163,9 +165,9 @@ function Sequencer() {
     (time, step) => {
     //Handles the sound triggering logic for each step
     triggerTrackSamplers(time, step);
-    // Set the checked property of the current step's lamp to true
+    // Sets the checked property of the current step's lamp to true
     lampsRef.current[step].checked = true;
-    // setting Tone.Sequence instance to start at step 0 + setting it to 16th notes
+    // sets the Tone.Sequence instance to start at step 0 & setting it to 16th notes
       },stepIds,'16n').start(0);
   };
 
@@ -184,7 +186,7 @@ function Sequencer() {
     const stepRef = stepsRef.current[trackIndex]?.[stepIndex];
     if (stepRef) stepRef.checked = updatedPattern.includes(cellId);
 
-    localSavePattern(updatedPattern);
+    setLocalPattern(updatedPattern);
     dispatch(setPattern(updatedPattern));
   };
 
@@ -195,13 +197,13 @@ function Sequencer() {
     if (trackRef) trackRef.muted = !trackRef.muted;
 
     dispatch(setMutedTracks(updatedMutedTracks));
-    localSaveMutedTracks(updatedMutedTracks);
+    setLocalMutedTracks(updatedMutedTracks);
   };
 
   const handleNumOfStepsChange = (e) => {
     const newNumOfSteps = parseInt(e.target.value);
-    setNumOfSteps(newNumOfSteps);
-    localSaveNumOfSteps(newNumOfSteps);
+    dispatch(setNumOfSteps(newNumOfSteps));
+    setLocalNumOfSteps(newNumOfSteps);
     setNumOfSounds(newNumOfSteps); //Used to trigger a re-render of the sequencer
   };
 
@@ -212,17 +214,18 @@ function Sequencer() {
   }, [masterTempo, masterVolume]);
 
   const handleSetNumOfSteps = () => {
+    const currentNumOfSteps = getLocalNumOfSteps();
     if (!window.screen.orientation || !window.screen.orientation.type) return;
     const orientation = window.screen.orientation.type;
     if (orientation.includes('portrait')) {
-      setNumOfSteps(8);
-      localSaveNumOfSteps(8);
-    } else if (numOfSteps > 8 && numOfSteps < 32) {
-      setNumOfSteps(16);
-      localSaveNumOfSteps(16);
-    } else if (numOfSteps > 16) {
-      setNumOfSteps(32);
-      localSaveNumOfSteps(32);
+      dispatch(setNumOfSteps(8));
+      setLocalNumOfSteps(8);
+    } else if (currentNumOfSteps > 8 && currentNumOfSteps < 32) {
+      dispatch(setNumOfSteps(16));
+      setLocalNumOfSteps(16);
+    } else if (currentNumOfSteps > 16) {
+      dispatch(setNumOfSteps(32));
+      setLocalNumOfSteps(32);
     }
   };
 
@@ -288,7 +291,7 @@ function Sequencer() {
                           {stepIds.map((stepId) => {
                             // iterate over each step on each track to display a cell
                             const id = `${trackId}-${stepId}`;
-                            const isSelected = pattern.includes(id);
+                            const isSelected = pattern?.includes(id);
 
                             return (
                               <article
