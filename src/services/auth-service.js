@@ -12,7 +12,7 @@ export const register = async (userData) => {
   } catch (error) {
     console.error('Registration failed', error);
     if (error.response && error.response.status === 400) {
-      throw new Error('A user with that email or username already exists.');
+      console.error('A user with that email or username already exists.');
     }
     throw error;
   }
@@ -28,7 +28,7 @@ export const login = async (credentials) => {
     }
   } catch (error) {
     console.error('Login failed', error);
-    throw new Error('Login failed');
+    throw error;
   }
 };
 
@@ -39,7 +39,7 @@ export const refreshAccessToken = async () => {
     return { accessToken };
   } catch (error) {
     console.error('Refresh token failed', error);
-    throw new Error('Refresh token failed');
+    throw error;
   }
 };
 
@@ -51,6 +51,6 @@ export const logout = async () => {
     Cookies.remove('refreshToken');
   } catch (error) {
     console.error('Logout failed', error);
-    throw new Error('Logout failed');
+    throw error;
   }
 };

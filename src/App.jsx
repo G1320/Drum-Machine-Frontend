@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import About from './components/basic/about';
+import Help from './components/basic/help';
 import Header from './components/header/header';
 import Create from './components/user/create-user';
 import Read from './components/admin/read-users';
@@ -46,6 +47,7 @@ function App() {
             <Route path="/read" element={<Read />} />
             <Route path="/update" element={<Update />} />
             <Route path="/about" element={<About />} />
+            <Route path="/help" element={<Help />} />
             <Route path="/create-kit" element={<CreateKit />} />
             <Route path="/create-kit/:userId" element={<CreateKit />} />
             <Route path="/drum" element={<DrumMachine />} />

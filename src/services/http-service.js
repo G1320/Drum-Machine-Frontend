@@ -44,14 +44,10 @@ async function ajax(endpoint, method = 'GET', data = null) {
       }
       axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
     }
-
-    const res = await axios({
-      url: `${BASE_URL}${endpoint}`,
-      method,
-      data,
-      params: method === 'GET' ? data : null,
-    });
-    return res.data;
+    //Building the request
+    return (
+      await axios({ url: `${BASE_URL}${endpoint}`, method, data, params: method === 'GET' && data })
+    ).data;
   } catch (err) {
     // Retrying the request if 401 Unauthorized
     if (err.response && err.response.status === 401) {

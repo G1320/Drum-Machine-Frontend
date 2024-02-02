@@ -46,6 +46,9 @@ function NavMenu() {
         <Link to={`/about`} className="menu-item">
           About
         </Link>
+        <Link to={'/help'} className="menu-item">
+          Help
+        </Link>
       </Menu>
     </div>
   );

@@ -26,7 +26,6 @@ const sequencerStartBtn = () => {
   }, []);
 
   const handleStartClick = async () => {
-    console.log('Tone.Transport.state: ', Tone.Transport.state);
     if (Tone.Transport.state === 'started') {
       Tone.Transport.pause();
       dispatch(setIsPlaying(false));

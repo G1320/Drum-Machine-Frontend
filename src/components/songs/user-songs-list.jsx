@@ -38,7 +38,6 @@ const UserSongsList = () => {
   const handleSongClick = (song) => {
     if (isLoading) return;
     setIsLoading(true);
-    console.log('song: ', song);
 
     clearLocalSequencerState();
     dispatch(clearSequencerState());

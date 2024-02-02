@@ -40,10 +40,8 @@ function Sequencer() {
   const numOfSteps = useSelector((state) => state.sequencer.numOfSteps);
   const pattern = useSelector((state) => state.sequencer.pattern);
 
-  // const [numOfSteps, setNumOfSteps] = useState(getLocalNumOfSteps() || 16);
-
   const [numOfSounds, setNumOfSounds] = useState(0);
-  const [numOfPattern, setNumOfPattern] = useState(0);
+  const [lengthOfPattern, setLengthOfPattern] = useState(0);
 
   const { data: selectedKitSounds } = useSounds(kitId);
 
@@ -52,11 +50,12 @@ function Sequencer() {
 
   const tracksRef = useRef([]);
   const lampsRef = useRef([]);
-  const stepsRef = useRef([...Array(selectedKitSounds.length)].map(() => Array(numOfSteps).fill(null))); // Create an array of arrays, the first array representing tracks, the second representing steps
+  // An array of arrays, the first representing tracks, the second representing steps
+  const stepsRef = useRef([...Array(selectedKitSounds.length)].map(() => Array(numOfSteps).fill(null)));
   const seqRef = useRef(null);
 
   useEffect(() => setNumOfSounds(selectedKitSounds.length), [selectedKitSounds]);
-  useEffect(() => setNumOfPattern(pattern.length), [pattern]);
+  useEffect(() => setLengthOfPattern(pattern.length), [pattern]);
 
   useEffect(() => {
     window.addEventListener('orientationchange', handleSetNumOfSteps);
@@ -71,9 +70,10 @@ function Sequencer() {
     if (!kitId) return;
     const sequencerState = getLocalSequencerState();
     dispatch(setSequencerState(sequencerState));
-    handleCheckedStepsUpdate();
+
     handleSetNumOfSteps();
-  }, [kitId, dispatch, numOfSounds, numOfSteps, numOfPattern]);
+    handleCheckedStepsUpdate();
+  }, [kitId, dispatch, numOfSounds, numOfSteps, lengthOfPattern]);
 
   useEffect(() => {
     handleSequenceInitialization();
@@ -101,6 +101,7 @@ function Sequencer() {
   const handleSequenceInitialization = () => {
     disposeOldSequence();
     initNewSequence();
+    // handleCheckedStepsUpdate();
   };
 
   const disposeOldSequence = () => {

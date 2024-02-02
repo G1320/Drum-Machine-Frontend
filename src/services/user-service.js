@@ -1,13 +1,10 @@
 import { httpService } from './http-service';
+import { parseJSON } from '../utils/storageUtils';
 
 const userEndpoint = '/users';
 
 export const getLocalUser = () => {
-  const user = localStorage.getItem('user');
-
-  if (user) return JSON.parse(user);
-
-  return null;
+  return parseJSON('user', null);
 };
 
 export const createUser = async (userData) => {
