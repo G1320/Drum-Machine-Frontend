@@ -1,15 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getLocalSequencerState } from '../services/sequencer-service';
 
-const { pattern, mutedTracks, tempo, volume, numOfSteps } = getLocalSequencerState();
-
-const initialState = {
-  pattern,
-  tempo,
-  volume,
-  mutedTracks,
-  numOfSteps,
-};
+const initialState = getLocalSequencerState();
 
 export const sequencerSlice = createSlice({
   name: 'sequencer',

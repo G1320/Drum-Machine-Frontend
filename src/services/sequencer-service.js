@@ -27,42 +27,42 @@ export const clearLocalSequencerState = () => {
   });
 };
 
-export const setLocalPattern = (pattern) => {
-  stringifyJSON('pattern', pattern);
-};
-
 export const getLocalPattern = () => {
   return parseJSON('pattern', []);
 };
 
-export const setLocalMutedTracks = (mutedTracks) => {
-  stringifyJSON('mutedTracks', mutedTracks);
+export const setLocalPattern = (pattern) => {
+  stringifyJSON('pattern', pattern);
 };
 
 export const getLocalMutedTracks = () => {
   return parseJSON('mutedTracks', []);
 };
 
-export const setLocalTempo = (tempo) => {
-  stringifyJSON('tempo', tempo);
+export const setLocalMutedTracks = (mutedTracks) => {
+  stringifyJSON('mutedTracks', mutedTracks);
 };
 
 export const getLocalTempo = () => {
   return parseJSON('tempo', 120);
 };
 
-export const setLocalVolume = (volume) => {
-  stringifyJSON('volume', volume);
+export const setLocalTempo = (tempo) => {
+  stringifyJSON('tempo', tempo);
 };
 
 export const getLocalVolume = () => {
   return parseJSON('volume', 0.5);
 };
 
-export const setLocalNumOfSteps = (numOfSteps) => {
-  stringifyJSON('numOfSteps', numOfSteps);
+export const setLocalVolume = (volume) => {
+  stringifyJSON('volume', volume);
 };
 
 export const getLocalNumOfSteps = () => {
   return parseJSON('numOfSteps', 32);
+};
+
+export const setLocalNumOfSteps = (numOfSteps) => {
+  stringifyJSON('numOfSteps', numOfSteps);
 };
