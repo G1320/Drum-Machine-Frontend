@@ -37,6 +37,12 @@ export const sequencerSlice = createSlice({
     clearNumOfSteps: (state) => {
       state.numOfSteps = 16;
     },
+    setSongId: (state, action) => {
+      state.songId = action.payload;
+    },
+    clearSongId: (state) => {
+      state.songId = null;
+    },
     setSequencerState: (state, action) => {
       return {
         pattern: action.payload.pattern,
@@ -44,6 +50,7 @@ export const sequencerSlice = createSlice({
         tempo: action.payload.tempo,
         volume: action.payload.volume,
         numOfSteps: action.payload.numOfSteps,
+        songId: action.payload.songId,
       };
     },
     clearSequencerState: () => {
@@ -53,6 +60,7 @@ export const sequencerSlice = createSlice({
         tempo: 120,
         volume: 0.5,
         numOfSteps: 16,
+        songId: null,
       };
     },
   },
@@ -69,6 +77,8 @@ export const {
   clearMutedTracks,
   setNumOfSteps,
   clearNumOfSteps,
+  setSongId,
+  clearSongId,
   setSequencerState,
   clearSequencerState,
 } = sequencerSlice.actions;

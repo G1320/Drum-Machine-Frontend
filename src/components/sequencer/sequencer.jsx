@@ -34,6 +34,7 @@ function Sequencer() {
   const { kitId } = useParams();
   const NOTE = 'C2';
 
+  const songId = useSelector((state) => state.sequencer.songId);
   const masterTempo = useSelector((state) => state.sequencer.tempo);
   const masterVolume = useSelector((state) => state.sequencer.volume);
   const mutedTracks = useSelector((state) => state.sequencer.mutedTracks);
@@ -73,16 +74,18 @@ function Sequencer() {
 
     handleSetNumOfSteps();
     handleCheckedStepsUpdate();
-  }, [kitId, dispatch, numOfSounds, numOfSteps, lengthOfPattern]);
+  }, [kitId, songId, dispatch, numOfSounds, numOfSteps, lengthOfPattern]);
 
   useEffect(() => {
     handleSequenceInitialization();
     return () => {
       seqRef.current?.stop();
       seqRef.current?.dispose();
+      seqRef.current = null;
       tracksRef.current.forEach((trk) => trk.sampler.dispose());
+      tracksRef.current = [];
     };
-  }, [selectedKitSounds, numOfSounds, numOfSteps, kitId]);
+  }, [kitId, songId, selectedKitSounds, numOfSounds, numOfSteps]);
 
   useEffect(() => {
     handleCheckedStepsUpdate();
@@ -101,7 +104,6 @@ function Sequencer() {
   const handleSequenceInitialization = () => {
     disposeOldSequence();
     initNewSequence();
-    // handleCheckedStepsUpdate();
   };
 
   const disposeOldSequence = () => {
@@ -150,9 +152,11 @@ function Sequencer() {
       const sampler = new Tone.Sampler({
         muted: muted,
         urls: { [NOTE]: sound.src },
+        isLoaded: false,
         onload: () => {
           sampler.connect(reverb);
           sampler.connect(delay);
+          sampler.isLoaded = true;
         },
       });
       return { id: i, sampler, muted };

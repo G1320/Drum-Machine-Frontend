@@ -2,30 +2,31 @@
   display: grid;
   grid-template-rows: repeat(auto-fit, minmax(10px, 1fr));
   padding: 0.5rem 0;
-  // margin-block-start: 3rem;
   align-self: center;
   align-items: center;
   justify-items: center;
-  height: 100%;
+  height: calc(100% - 0.5rem);
   grid-column: 1;
   grid-row: 2;
-  * {
-    position: relative;
-    top: 15%;
-   color: #fcfcfcda;
-  //  transform: translateY(-0.75rem);
+  .cell-title-container{
+    display: grid;
+    height: 100%;
+    grid-template-rows: repeat(3,1fr);
+    .cell-title {
+      grid-row: 2;
+      color: #fcfcfcda;
+       transform: translateY(-0.5rem);
+       
+       &.xl{
+         transform: translateY(-0.25rem);
+       }
+    }
   }
 }
 
 
-.cell-title-container{
-  height: 100%;
-}
 
 @media screen and (max-width: 950px) {
   
-  .cell-title-list {
-    margin-block-start: 0.5rem;
-    grid-template-rows: repeat(auto-fit, minmax(10px, 1fr));
-  }
+  
 }

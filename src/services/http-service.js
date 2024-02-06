@@ -21,7 +21,6 @@ async function ajax(endpoint, method = 'GET', data = null) {
   // debugger;
   try {
     const accessToken = await getAccessToken();
-    console.log('document.cookie:', document.cookie);
     setAuthorizationHeader(accessToken);
 
     // Building the request and returning the response data
@@ -36,10 +35,10 @@ async function ajax(endpoint, method = 'GET', data = null) {
         if (refreshedToken) return ajax(endpoint, method, data);
       } catch (refreshError) {
         console.error('Failed to refresh token', refreshError);
+        sessionStorage.clear();
+        localStorage.clear();
+        window.location.assign('/');
         throw refreshError;
-        // sessionStorage.clear();
-        // localStorage.clear();
-        // window.location.assign('/');
       }
     }
     throw err;
@@ -57,14 +56,11 @@ async function getAccessToken() {
       if (refreshedToken) {
         accessToken = refreshedToken;
       } else {
-        console.error('Failed to refresh token');
-        throw new Error('Failed to refresh token');
+        throw new Error('Token refresh failed. Token:', refreshedToken);
       }
     } catch (refreshError) {
       console.error('Failed to refresh token', refreshError);
-      sessionStorage.clear();
-      localStorage.clear();
-      // window.location.assign('/');
+      throw refreshError;
     }
   }
   return accessToken;

@@ -1,5 +1,6 @@
 import React from 'react';
 import '../../assets/styles/components/sequencer/sequencer-track-label-list.scss';
+import { useSelector } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useSounds } from '../../hooks/useSounds';
 
@@ -7,6 +8,7 @@ import { updateKitSounds } from '../../services/kit-service';
 
 function SequencerTrackLabelList({ kitId }) {
   const { data: selectedKitSounds } = useSounds(kitId);
+  const numOfSteps = useSelector((state) => state.sequencer.numOfSteps);
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
@@ -37,6 +39,7 @@ function SequencerTrackLabelList({ kitId }) {
                 {(provided) => (
                   <article className="cell-title-container">
                     <li
+                      className={`cell-title ${numOfSteps === 32 ? 'xl' : ''}`}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}

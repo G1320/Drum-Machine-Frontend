@@ -1,12 +1,13 @@
 import { httpService } from './http-service';
 import Cookies from 'js-cookie';
+import { sanitizeUserObject } from '../utils/sanitizeUserObject';
 
 const authEndpoint = '/auth';
 
 export const register = async (userData) => {
   try {
     const { accessToken, user } = await httpService.post(`${authEndpoint}/register`, userData);
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('user', JSON.stringify(sanitizeUserObject(user)));
     Cookies.set('accessToken', accessToken, { expires: 1 / 96 });
     return user;
   } catch (error) {
@@ -22,7 +23,7 @@ export const login = async (credentials) => {
   try {
     const { user, accessToken } = await httpService.post(`${authEndpoint}/login`, credentials);
     if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(sanitizeUserObject(user)));
       Cookies.set('accessToken', accessToken, { expires: 1 / 96 });
       return user;
     }

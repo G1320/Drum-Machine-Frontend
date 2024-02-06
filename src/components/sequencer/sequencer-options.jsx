@@ -90,7 +90,6 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   const handleClearPattern = () => {
     if (isLoading) return;
     setIsLoading(true);
-
     clearLocalSequencerState();
     dispatch(clearSequencerState());
 

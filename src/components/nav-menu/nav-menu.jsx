@@ -19,20 +19,23 @@ function NavMenu() {
   return (
     <div className="nav-menu">
       <Menu left>
-        <Link to="/create-kit">Create Kit</Link>
+        <Link to={`/sequencer/id/${validKitId}`} className="menu-item">
+          Sequencer
+        </Link>
+        <Link to="/create-kit">Create A Kit</Link>
 
-        {user && (
+        {user && user.isAdmin && (
           <Link to={`/pages/id/${validKitId}`} className="menu-item">
             Edit kit
           </Link>
         )}
-        {/* <Link to={`/drum/id/${validKitId}`} className="menu-item">
-          Drum Machine
-        </Link> */}
 
-        <Link to={`/sequencer/id/${validKitId}`} className="menu-item">
-          Sequencer
-        </Link>
+        {user && user.isAdmin && (
+          <Link to={`/drum/id/${validKitId}`} className="menu-item">
+            Drum Machine
+          </Link>
+        )}
+
         {user && user.isAdmin && (
           <Link to="/synth" className="menu-item">
             Synth
@@ -43,11 +46,11 @@ function NavMenu() {
             Browse Users
           </Link>
         )}
+        <Link to={'/help'} className="menu-item">
+          How To
+        </Link>
         <Link to={`/about`} className="menu-item">
           About
-        </Link>
-        <Link to={'/help'} className="menu-item">
-          Help
         </Link>
       </Menu>
     </div>

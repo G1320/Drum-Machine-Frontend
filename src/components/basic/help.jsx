@@ -22,9 +22,7 @@ const Help = () => {
       <p>
         <a href="#troubleshooting">Troubleshooting</a>
       </p>
-      <p>
-        <a href="#feedback-and-support">Feedback and Support</a>
-      </p>
+
       {/* </ol> */}
 
       <section id="getting-started">
@@ -35,8 +33,7 @@ const Help = () => {
         <ul>
           <li>A modern web browser (e.g., Chrome, Firefox, Safari).</li>
           <li>A reliable internet connection.</li>
-          <li>Speakers or headphones to hear the sounds.</li>
-          <li>A desire to create music!</li>
+          <li>Speakers or headphones to hear the sounds and A desire to create music!</li>
         </ul>
       </section>
 
@@ -111,9 +108,8 @@ const Help = () => {
 
         <h3> Clear Pattern</h3>
         <p>
-          When you want to start fresh, use the "Clear Pattern" button to remove the current sequence
-          pattern and reset the sequencers controls. It's a quick way to reset your canvas and begin a
-          new creation.
+          When you want to start fresh, use the CLR button to remove the current sequence pattern and
+          reset the sequencers controls. It's a quick way to reset your canvas and begin a new creation.
         </p>
 
         <h3> BPM (Beats Per Minute)</h3>
@@ -124,36 +120,27 @@ const Help = () => {
 
         <h3> Volume Control</h3>
         <p>
-          Manage the overall volume of your sequencer by using the Volume slider. Slide it to the left or
-          right to achieve the perfect balance for your musical arrangement.
+          Manage the overall volume of your sequencer by using the VOL slider. Slide it to the left or
+          right to achieve your desired level.
         </p>
 
         <h3> Sounds List</h3>
         <p>
           Explore and customize the sounds in your kit using the Sounds List. You can add or remove
-          sounds from your kit, allowing you to tailor your musical palette to your liking.
+          sounds from your kit, allowing you to tailor your sequencer however you prefer. When a sound in
+          the sound list is included in the kit, it will be highlighted with a white border.
         </p>
       </section>
 
       <section id="troubleshooting">
         <h2>Troubleshooting</h2>
-
-        {/* Provide solutions to common issues or link to a troubleshooting guide */}
-      </section>
-
-      <section id="feedback-and-support">
-        <h2>Feedback and Support</h2>
-
-        <h3> Providing Feedback</h3>
+        <h3>Audio issues</h3>
         <p>
-          We value your feedback! If you encounter issues or have suggestions, share them through our
-          [feedback form].
-        </p>
-
-        <h3> Getting Support</h3>
-        <p>
-          For assistance, reach out to our support team at [support@example.com]. They are dedicated to
-          helping you on your musical journey.
+          If your unable to hear sounds when the cells are selected and the sequencer is running Please
+          verify the following: If using a mobile device, make sure the mute switch is not in silent
+          mode, and the volume is turned up. if using a computer, ensure the volume is turned up and the
+          speakers or headphones are selected as your current output device in your main computer
+          settings.
         </p>
       </section>
     </div>

@@ -10,7 +10,6 @@ import { setSuccess } from '../../slices/successSlice';
 import { TextField, Button, Box, FormGroup, Container, CircularProgress } from '@mui/material';
 import { addKitToUser, getLocalUser } from '../../services/user-service';
 import Loader from '../misc/loader';
-import SoundsList from '../sounds/sounds-list';
 import UserKitsList from '../kits/user-kits-list';
 import AudioVisualizer from '../visualizer/audio-visualizer';
 
