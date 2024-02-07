@@ -100,7 +100,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
     <section className="sequencer-options">
       <section className="options-wrapper">
         <section className="step-length-wrapper">
-          <label>
+          <label className={`${numOfSteps === 16 ? 'checked' : ''}`}>
             <input
               type="radio"
               value="16"
@@ -109,7 +109,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             />
             16
           </label>
-          <label>
+          <label className={`${numOfSteps === 32 ? 'checked' : ''}`}>
             <input
               type="radio"
               value="32"

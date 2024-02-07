@@ -7,11 +7,12 @@ import { useSounds } from '../../hooks/useSounds.js';
 import { PropagateLoader } from 'react-spinners';
 
 import {
-  getLocalNumOfSteps,
   setLocalNumOfSteps,
   setLocalPattern,
   setLocalMutedTracks,
   getLocalSequencerState,
+  getLocalNumOfStepsPrePortrait,
+  setLocalNumOfStepsPrePortrait,
 } from '../../services/sequencer-service';
 
 import SequencerStartBtn from './sequencer-start-btn';
@@ -70,8 +71,8 @@ function Sequencer() {
   useEffect(() => {
     if (!kitId) return;
     const sequencerState = getLocalSequencerState();
-    dispatch(setSequencerState(sequencerState));
 
+    dispatch(setSequencerState(sequencerState));
     handleSetNumOfSteps();
     handleCheckedStepsUpdate();
   }, [kitId, songId, dispatch, numOfSounds, numOfSteps, lengthOfPattern]);
@@ -108,12 +109,13 @@ function Sequencer() {
 
   const disposeOldSequence = () => {
     seqRef.current?.dispose();
+    seqRef.current = null;
     tracksRef.current?.forEach((trk) => trk.sampler?.dispose());
+    tracksRef.current = [];
   };
 
   const initNewSequence = () => {
     const effects = setupEffects();
-
     setupRefsForTracksAndLamps();
     createTrackSamplers(effects);
     createSequence();
@@ -166,13 +168,13 @@ function Sequencer() {
   const createSequence = () => {
     //prettier-ignore
     seqRef.current = new Tone.Sequence(
-    // Callback function that will be called on each step of the sequence
-    (time, step) => {
-    //Handles the sound triggering logic for each step
-    triggerTrackSamplers(time, step);
-    // Sets the checked property of the current step's lamp to true
-    lampsRef.current[step].checked = true;
-    // sets the Tone.Sequence instance to start at step 0 & setting it to 16th notes
+      // Callback function that will be called on each step of the sequence
+      (time, step) => {
+        //Handles the sound triggering logic for each step
+        triggerTrackSamplers(time, step);
+        // Sets the checked property of the current step's lamp to true
+        lampsRef.current[step].checked = true;
+        // sets the Tone.Sequence instance to start at step 0 & setting it to 16th notes
       },stepIds,'16n').start(0);
   };
 
@@ -209,6 +211,7 @@ function Sequencer() {
     const newNumOfSteps = parseInt(e.target.value);
     dispatch(setNumOfSteps(newNumOfSteps));
     setLocalNumOfSteps(newNumOfSteps);
+    setLocalNumOfStepsPrePortrait(newNumOfSteps);
     setNumOfSounds(newNumOfSteps); //Used to trigger a re-render of the sequencer
   };
 
@@ -219,18 +222,27 @@ function Sequencer() {
   }, [masterTempo, masterVolume]);
 
   const handleSetNumOfSteps = () => {
-    const currentNumOfSteps = getLocalNumOfSteps();
     if (!window.screen.orientation || !window.screen.orientation.type) return;
+
     const orientation = window.screen.orientation.type;
+    let newNumOfSteps;
+    const savedNumOfSteps = getLocalNumOfStepsPrePortrait();
+
     if (orientation.includes('portrait')) {
-      dispatch(setNumOfSteps(8));
-      setLocalNumOfSteps(8);
-    } else if (currentNumOfSteps > 8 && currentNumOfSteps < 32) {
-      dispatch(setNumOfSteps(16));
-      setLocalNumOfSteps(16);
-    } else if (currentNumOfSteps > 16) {
-      dispatch(setNumOfSteps(32));
-      setLocalNumOfSteps(32);
+      newNumOfSteps = 8;
+      setLocalNumOfStepsPrePortrait(savedNumOfSteps);
+    } else if (savedNumOfSteps > 8 && savedNumOfSteps < 32) {
+      newNumOfSteps = 16;
+      setLocalNumOfStepsPrePortrait(16);
+    } else if (savedNumOfSteps > 16) {
+      newNumOfSteps = 32;
+      setLocalNumOfStepsPrePortrait(32);
+    }
+    console.log('savedNumOfSteps: ', savedNumOfSteps);
+    // Only update if the new number of steps is different
+    if (newNumOfSteps) {
+      dispatch(setNumOfSteps(newNumOfSteps));
+      setLocalNumOfSteps(newNumOfSteps);
     }
   };
 

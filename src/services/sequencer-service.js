@@ -77,3 +77,11 @@ export const setLocalSongId = (songId) => {
 export const getLocalSongId = () => {
   return parseJSON('songId', null);
 };
+
+export const setLocalNumOfStepsPrePortrait = (numOfSteps) => {
+  stringifyJSON('numOfStepsPrePortrait', numOfSteps);
+};
+
+export const getLocalNumOfStepsPrePortrait = () => {
+  return parseJSON('numOfStepsPrePortrait', 32);
+};

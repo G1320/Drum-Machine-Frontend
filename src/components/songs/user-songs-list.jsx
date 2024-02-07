@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import * as Tone from 'tone';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { getUserSongs, createSong, deleteSong } from '../../services/song-service';
 import { setError } from '../../slices/errorSlice';
 import { getLocalUser } from '../../services/user-service';
-import { clearSequencerState, setSongId } from '../../slices/sequencerSlice';
+import { clearSequencerState } from '../../slices/sequencerSlice';
 import {
   clearLocalSequencerState,
+  setLocalNumOfStepsPrePortrait,
   getLocalSequencerState,
   setLocalSequencerState,
   setLocalSongId,
 } from '../../services/sequencer-service';
-import { setIsPlaying } from '../../slices/transportSlice';
 
 const UserSongsList = () => {
   const [userSongs, setUserSongs] = useState([]);
@@ -41,10 +40,12 @@ const UserSongsList = () => {
   const handleSongClick = (song) => {
     if (isLoading) return;
     setIsLoading(true);
+    console.log('song.numOfSteps before: ', song.numOfSteps);
 
     clearLocalSequencerState();
     dispatch(clearSequencerState());
     setLocalSequencerState(song);
+    setLocalNumOfStepsPrePortrait(song.numOfSteps);
     setLocalSongId(song._id);
     navigate(`/sequencer/id/${song.kit}`);
     setIsLoading(false);

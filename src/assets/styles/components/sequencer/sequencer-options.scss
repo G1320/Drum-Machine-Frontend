@@ -68,22 +68,9 @@
       }
     }
 
-
     .save-song-btn,
     .clear-song-btn {
       max-width: 60px;
-    }
-  }
-
-  @media screen and (max-width: 700px) {
-    grid-template-columns: 0.2fr 0.2fr 0.1fr 0.1fr;
-    .song-options-menu {
-      display: none;
-    }
-
-    .range-controls {
-      width: 75%;
-      justify-self: end;
     }
   }
 
@@ -97,14 +84,35 @@
     justify-items: center;
     max-width: 70px;
     min-width: 70px;
-   *{
-    width: 100%;
-   }
-  }
+    height: 21px;
+    
+    label {
+      cursor: pointer;
+      height: 100%;
+      width: 50%; 
+      margin: 0.1rem !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #36225c;
+      border-radius: 8px;
+      transition: 250ms;
+      color: #fcfcfc;
+      
+      &:hover{
+        box-shadow: inset 0 0 0 1px #fcfcfc;
+      }
 
-  @media screen and (max-width: 700px) {
-    .step-length-wrapper {
-      display: none;
+      &.checked {
+        background-color: #9058f7; 
+        box-shadow: inset 0 0 0 1px #fcfcfc;
+      }
+      
+      input[type='radio'] {
+        cursor: pointer;
+        display: none; /* Hide the default radio input */
+  
+      }
     }
   }
 
@@ -146,3 +154,18 @@
     }
   }
 }
+
+@media screen and (max-width: 700px) {
+  .sequencer-options .song-options-menu {
+    display: none;
+  }
+  .sequencer-options .step-length-wrapper {
+    display: none;
+  }
+
+  .range-controls {
+    width: 75%;
+    justify-self: end;
+  }
+}
+
