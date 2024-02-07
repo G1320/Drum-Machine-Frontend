@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import FilterKits from '../kits/filter-kits';
 import UserSongsList from '../songs/user-songs-list';
 import { setSelectedKit } from '../../slices/kitsSlice';
-import { setTempo, setVolume, clearSequencerState } from '../../slices/sequencerSlice';
+import { setTempo, setVolume, clearSequencerState, setSongId } from '../../slices/sequencerSlice';
 import {
   clearLocalSequencerState,
   setLocalPattern,
@@ -92,6 +92,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
     setIsLoading(true);
     clearLocalSequencerState();
     dispatch(clearSequencerState());
+    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
 
     setIsLoading(false);
   };
