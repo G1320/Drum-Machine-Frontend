@@ -166,14 +166,14 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
 .sequencer-fx-button {
   position: absolute;
   cursor: pointer;
-  left: calc(-2.75rem - 31px);
+  left: calc(-2.75rem - 30.5px);
   top: 1.98rem;
 
   &.xl {
     top: 4rem;
 
     &.muted {
-      top: 3.75rem;
+      top: 3.5rem;
     }
   }
 

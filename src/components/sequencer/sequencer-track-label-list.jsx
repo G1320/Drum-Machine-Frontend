@@ -37,7 +37,7 @@ function SequencerTrackLabelList({ kitId }) {
             {selectedKitSounds.map((sound, index) => (
               <Draggable key={sound._id} draggableId={sound._id} index={index}>
                 {(provided) => (
-                  <article className="cell-title-container">
+                  <article className={`cell-title-container ${numOfSteps === 32 ? 'xl' : ''}`}>
                     <li
                       className={`cell-title ${numOfSteps === 32 ? 'xl' : ''}`}
                       ref={provided.innerRef}

@@ -10,9 +10,13 @@
   grid-row: 2;
   .cell-title-container{
     display: grid;
-    height: 100%;
-    
+    height: 52px;
     grid-template-rows: repeat(3,1fr);
+
+    &.xl{
+      height: 100%;
+    }
+    
     .cell-title {
       grid-row: 2;
       color: #fcfcfcda;
@@ -25,9 +29,3 @@
   }
 }
 
-
-
-@media screen and (max-width: 950px) {
-  
-  
-}

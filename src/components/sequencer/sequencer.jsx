@@ -238,7 +238,6 @@ function Sequencer() {
       newNumOfSteps = 32;
       setLocalNumOfStepsPrePortrait(32);
     }
-    console.log('savedNumOfSteps: ', savedNumOfSteps);
     // Only update if the new number of steps is different
     if (newNumOfSteps) {
       dispatch(setNumOfSteps(newNumOfSteps));
@@ -249,7 +248,7 @@ function Sequencer() {
   return (
     <>
       <OrientationLock handleNumOfStepsChange={handleNumOfStepsChange} />{' '}
-      <section className="sequencer-external-container">
+      <section key={songId} className="sequencer-external-container">
         <section className="sequencer">
           <SequencerStartBtn />
 
