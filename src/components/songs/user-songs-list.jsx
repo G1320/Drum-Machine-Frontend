@@ -5,7 +5,7 @@ import { CircularProgress } from '@mui/material';
 import { getUserSongs, createSong, deleteSong } from '../../services/song-service';
 import { setError } from '../../slices/errorSlice';
 import { getLocalUser } from '../../services/user-service';
-import { clearSequencerState } from '../../slices/sequencerSlice';
+import { clearSequencerState, setSongId } from '../../slices/sequencerSlice';
 import {
   clearLocalSequencerState,
   setLocalNumOfStepsPrePortrait,
@@ -40,7 +40,6 @@ const UserSongsList = () => {
   const handleSongClick = (song) => {
     if (isLoading) return;
     setIsLoading(true);
-    console.log('song.numOfSteps before: ', song.numOfSteps);
 
     clearLocalSequencerState();
     dispatch(clearSequencerState());
@@ -67,6 +66,7 @@ const UserSongsList = () => {
 
       clearLocalSequencerState();
       dispatch(clearSequencerState());
+      dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
 
       setUserSongs([...userSongs, savedNewSong]);
     } catch (error) {

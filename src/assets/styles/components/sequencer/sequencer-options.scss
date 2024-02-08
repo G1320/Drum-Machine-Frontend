@@ -159,7 +159,12 @@
   .sequencer-options .song-options-menu {
     display: none;
   }
+  
   .sequencer-options .step-length-wrapper {
+    display: none;
+  }
+
+  .sequencer-options .delay, .sequencer-options .reverb {
     display: none;
   }
 

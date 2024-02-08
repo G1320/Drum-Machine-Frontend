@@ -7,12 +7,21 @@ import { useNavigate } from 'react-router-dom';
 import FilterKits from '../kits/filter-kits';
 import UserSongsList from '../songs/user-songs-list';
 import { setSelectedKit } from '../../slices/kitsSlice';
-import { setTempo, setVolume, clearSequencerState, setSongId } from '../../slices/sequencerSlice';
+import {
+  setTempo,
+  setVolume,
+  setReverb,
+  setDelay,
+  clearSequencerState,
+  setSongId,
+} from '../../slices/sequencerSlice';
 import {
   clearLocalSequencerState,
   setLocalPattern,
   setLocalTempo,
   setLocalVolume,
+  setLocalReverb,
+  setLocalDelay,
   setLocalMutedTracks,
 } from '../../services/sequencer-service';
 import { getLoopedIndex } from '../../utils/getLoopedIndex';
@@ -27,6 +36,8 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   const pattern = useSelector((state) => state.sequencer.pattern);
   const masterTempo = useSelector((state) => state.sequencer.tempo);
   const masterVolume = useSelector((state) => state.sequencer.volume);
+  const masterReverb = useSelector((state) => state.sequencer.reverb);
+  const masterDelay = useSelector((state) => state.sequencer.delay);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,6 +70,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
     setLocalMutedTracks([]);
     dispatch(setSelectedKit(kit));
     setCurrentIndex(index);
+    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
     navigate(`/sequencer/id/${kit._id}`);
     setIsLoading(false);
   };
@@ -79,6 +91,30 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
     Tone.Destination.volume.value = Tone.gainToDb(volume);
     setLocalVolume(Number(volume));
     dispatch(setVolume(volume));
+  };
+
+  const handleReverbChange = (e) => {
+    if (!e.target.value) return;
+    const newReverb = Number(e.target.value);
+    updateReverb(newReverb);
+  };
+
+  const updateReverb = (reverb) => {
+    dispatch(setReverb(reverb));
+    setLocalReverb(reverb);
+    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
+  };
+
+  const handleDelayChange = (e) => {
+    if (!e.target.value) return;
+    const newDelay = Number(e.target.value);
+    updateDelay(newDelay);
+  };
+
+  const updateDelay = (delay) => {
+    dispatch(setDelay(delay));
+    setLocalDelay(delay);
+    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
   };
 
   const updateBpm = (bpm) => {
@@ -137,6 +173,30 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
       <UserSongsList />
 
       <section className="range-controls">
+        <article className="delay">
+          <span>FX 1</span>
+          <label className="delay-label"></label>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.25}
+            onChange={handleDelayChange}
+            value={masterDelay}
+          />
+        </article>
+        <article className="reverb">
+          <span>FX 2</span>
+          <label className="reverb-label"></label>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.25}
+            onChange={handleReverbChange}
+            value={masterReverb}
+          />
+        </article>
         <article className="bpm">
           <span>BPM</span>
           <label className="bpm-label"></label>

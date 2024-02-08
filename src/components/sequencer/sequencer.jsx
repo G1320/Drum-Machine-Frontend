@@ -27,6 +27,7 @@ import {
   setNumOfSteps,
   setSequencerState,
   setMutedTracks,
+  setSongId,
 } from '../../slices/sequencerSlice';
 import { toggleArrayItem } from '../../utils/toggleArrayItem';
 
@@ -38,12 +39,13 @@ function Sequencer() {
   const songId = useSelector((state) => state.sequencer.songId);
   const masterTempo = useSelector((state) => state.sequencer.tempo);
   const masterVolume = useSelector((state) => state.sequencer.volume);
+  const masterReverb = useSelector((state) => state.sequencer.reverb);
+  const masterDelay = useSelector((state) => state.sequencer.delay);
   const mutedTracks = useSelector((state) => state.sequencer.mutedTracks);
   const numOfSteps = useSelector((state) => state.sequencer.numOfSteps);
   const pattern = useSelector((state) => state.sequencer.pattern);
 
   const [numOfSounds, setNumOfSounds] = useState(0);
-  const [lengthOfPattern, setLengthOfPattern] = useState(0);
 
   const { data: selectedKitSounds } = useSounds(kitId);
 
@@ -57,7 +59,6 @@ function Sequencer() {
   const seqRef = useRef(null);
 
   useEffect(() => setNumOfSounds(selectedKitSounds.length), [selectedKitSounds]);
-  useEffect(() => setLengthOfPattern(pattern.length), [pattern]);
 
   useEffect(() => {
     window.addEventListener('orientationchange', handleSetNumOfSteps);
@@ -71,26 +72,11 @@ function Sequencer() {
   useEffect(() => {
     if (!kitId) return;
     const sequencerState = getLocalSequencerState();
-
     dispatch(setSequencerState(sequencerState));
+
     handleSetNumOfSteps();
     handleCheckedStepsUpdate();
-  }, [kitId, songId, dispatch, numOfSounds, numOfSteps, lengthOfPattern]);
-
-  useEffect(() => {
-    handleSequenceInitialization();
-    return () => {
-      seqRef.current?.stop();
-      seqRef.current?.dispose();
-      seqRef.current = null;
-      tracksRef.current.forEach((trk) => trk.sampler.dispose());
-      tracksRef.current = [];
-    };
-  }, [kitId, songId, selectedKitSounds, numOfSounds, numOfSteps]);
-
-  useEffect(() => {
-    handleCheckedStepsUpdate();
-  }, [kitId, numOfSounds, numOfSteps, pattern]);
+  }, [kitId, songId, dispatch, numOfSounds, numOfSteps]);
 
   const handleCheckedStepsUpdate = () => {
     pattern?.forEach((cellId) => updateStepCheckedState(cellId));
@@ -101,6 +87,17 @@ function Sequencer() {
     const stepRef = stepsRef.current[trackIndex]?.[stepIndex];
     if (stepRef) stepRef.checked = true;
   };
+
+  useEffect(() => {
+    handleSequenceInitialization();
+    return () => {
+      seqRef.current?.stop();
+      seqRef.current?.dispose();
+      seqRef.current = null;
+      tracksRef.current.forEach((trk) => trk.sampler.dispose());
+      tracksRef.current = [];
+    };
+  }, [kitId, songId, numOfSounds, numOfSteps]);
 
   const handleSequenceInitialization = () => {
     disposeOldSequence();
@@ -116,6 +113,7 @@ function Sequencer() {
 
   const initNewSequence = () => {
     const effects = setupEffects();
+
     setupRefsForTracksAndLamps();
     createTrackSamplers(effects);
     createSequence();
@@ -124,11 +122,11 @@ function Sequencer() {
   const setupEffects = () => {
     const reverb = new Tone.Reverb().toDestination();
     reverb.decay = 3;
-    reverb.wet.value = 0;
+    reverb.wet.value = masterReverb || 0;
 
     const delay = new Tone.FeedbackDelay('8n', 0.5).toDestination();
     delay.decay = 3;
-    delay.wet.value = 0;
+    delay.wet.value = masterDelay || 0;
 
     return { reverb, delay };
   };
@@ -150,9 +148,9 @@ function Sequencer() {
     const delay = effects.delay;
     // array of track objects containing a sampler with a muted property
     tracksRef.current = selectedKitSounds.map((sound, i) => {
-      const muted = mutedTracks.includes(i); // Check if the channel is muted
+      const muted = mutedTracks.includes(i); // Check if the track is muted
       const sampler = new Tone.Sampler({
-        muted: muted,
+        muted,
         urls: { [NOTE]: sound.src },
         isLoaded: false,
         onload: () => {
@@ -174,7 +172,7 @@ function Sequencer() {
         triggerTrackSamplers(time, step);
         // Sets the checked property of the current step's lamp to true
         lampsRef.current[step].checked = true;
-        // sets the Tone.Sequence instance to start at step 0 & setting it to 16th notes
+        // Sets the Tone.Sequence instance to start at step 0 + config it to 16th notes
       },stepIds,'16n').start(0);
   };
 
@@ -212,7 +210,7 @@ function Sequencer() {
     dispatch(setNumOfSteps(newNumOfSteps));
     setLocalNumOfSteps(newNumOfSteps);
     setLocalNumOfStepsPrePortrait(newNumOfSteps);
-    setNumOfSounds(newNumOfSteps); //Used to trigger a re-render of the sequencer
+    dispatch(setSongId(Math.random())); //Used to trigger a re-render of the sequencer
   };
 
   useEffect(() => {
@@ -225,11 +223,13 @@ function Sequencer() {
     if (!window.screen.orientation || !window.screen.orientation.type) return;
 
     const orientation = window.screen.orientation.type;
+
     let newNumOfSteps;
     const savedNumOfSteps = getLocalNumOfStepsPrePortrait();
 
     if (orientation.includes('portrait')) {
       newNumOfSteps = 8;
+      //Saving the prev step config so that it can be restored when switching back to landscape
       setLocalNumOfStepsPrePortrait(savedNumOfSteps);
     } else if (savedNumOfSteps > 8 && savedNumOfSteps < 32) {
       newNumOfSteps = 16;
@@ -238,7 +238,6 @@ function Sequencer() {
       newNumOfSteps = 32;
       setLocalNumOfStepsPrePortrait(32);
     }
-    // Only update if the new number of steps is different
     if (newNumOfSteps) {
       dispatch(setNumOfSteps(newNumOfSteps));
       setLocalNumOfSteps(newNumOfSteps);
@@ -248,7 +247,7 @@ function Sequencer() {
   return (
     <>
       <OrientationLock handleNumOfStepsChange={handleNumOfStepsChange} />{' '}
-      <section key={songId} className="sequencer-external-container">
+      <section className="sequencer-external-container">
         <section className="sequencer">
           <SequencerStartBtn />
 
@@ -281,7 +280,7 @@ function Sequencer() {
               <section className="sequencer-internal-scroll-container">
                 <SequencerTrackLabelList kitId={kitId} />
 
-                <section className="sequencer-column">
+                <section key={songId} className="sequencer-column">
                   {trackIds.map((trackId) => {
                     // iterate over each track
                     const isMuted = mutedTracks.includes(trackId); // Check if the channel is muted

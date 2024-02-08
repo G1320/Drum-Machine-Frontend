@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../assets/styles/components/header/header.scss';
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout as logoutService } from '../../services/auth-service';
 import { logout as logoutAction } from '../../slices/authSlice';
 
@@ -10,7 +10,8 @@ import { getLocalUser } from '../../services/user-service';
 
 function Header() {
   const dispatch = useDispatch();
-  const user = getLocalUser();
+  // const user = getLocalUser();
+  const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
   const handleLogout = async () => {

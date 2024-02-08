@@ -7,7 +7,9 @@ export const getLocalSequencerState = () => {
   const volume = parseJSON('volume', 0.5);
   const numOfSteps = parseJSON('numOfSteps', 32);
   const songId = parseJSON('songId', null);
-  return { pattern, mutedTracks, tempo, volume, numOfSteps, songId };
+  const reverb = parseJSON('reverb', 0);
+  const delay = parseJSON('delay', 0);
+  return { pattern, mutedTracks, tempo, volume, reverb, delay, numOfSteps, songId };
 };
 
 export const setLocalSequencerState = (sequencerState) => {
@@ -17,6 +19,8 @@ export const setLocalSequencerState = (sequencerState) => {
   stringifyJSON('volume', sequencerState.volume);
   stringifyJSON('numOfSteps', sequencerState.numOfSteps);
   stringifyJSON('songId', sequencerState._id || null);
+  stringifyJSON('reverb', sequencerState.reverb || 0);
+  stringifyJSON('delay', sequencerState.delay || 0);
 };
 
 export const clearLocalSequencerState = () => {
@@ -27,6 +31,8 @@ export const clearLocalSequencerState = () => {
     volume: 0.5,
     numOfSteps: 16,
     songId: null,
+    reverb: 0,
+    delay: 0,
   });
 };
 
@@ -70,18 +76,34 @@ export const setLocalNumOfSteps = (numOfSteps) => {
   stringifyJSON('numOfSteps', numOfSteps);
 };
 
+export const getLocalSongId = () => {
+  return parseJSON('songId', null);
+};
+
 export const setLocalSongId = (songId) => {
   stringifyJSON('songId', songId);
 };
 
-export const getLocalSongId = () => {
-  return parseJSON('songId', null);
+export const getLocalNumOfStepsPrePortrait = () => {
+  return parseJSON('numOfStepsPrePortrait', 32);
 };
 
 export const setLocalNumOfStepsPrePortrait = (numOfSteps) => {
   stringifyJSON('numOfStepsPrePortrait', numOfSteps);
 };
 
-export const getLocalNumOfStepsPrePortrait = () => {
-  return parseJSON('numOfStepsPrePortrait', 32);
+export const getLocalReverb = () => {
+  return parseJSON('reverb', 0);
+};
+
+export const setLocalReverb = (reverb) => {
+  stringifyJSON('reverb', reverb);
+};
+
+export const getLocalDelay = () => {
+  return parseJSON('delay', 0);
+};
+
+export const setLocalDelay = (delay) => {
+  stringifyJSON('delay', delay);
 };
