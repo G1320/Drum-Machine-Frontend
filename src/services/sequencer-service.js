@@ -9,7 +9,8 @@ export const getLocalSequencerState = () => {
   const songId = parseJSON('songId', null);
   const reverb = parseJSON('reverb', 0);
   const delay = parseJSON('delay', 0);
-  return { pattern, mutedTracks, tempo, volume, reverb, delay, numOfSteps, songId };
+  const swing = parseJSON('swing', 0);
+  return { pattern, mutedTracks, tempo, volume, reverb, delay, swing, numOfSteps, songId };
 };
 
 export const setLocalSequencerState = (sequencerState) => {
@@ -21,6 +22,7 @@ export const setLocalSequencerState = (sequencerState) => {
   stringifyJSON('songId', sequencerState._id || null);
   stringifyJSON('reverb', sequencerState.reverb || 0);
   stringifyJSON('delay', sequencerState.delay || 0);
+  stringifyJSON('swing', sequencerState.swing || 0);
 };
 
 export const clearLocalSequencerState = () => {
@@ -33,6 +35,7 @@ export const clearLocalSequencerState = () => {
     songId: null,
     reverb: 0,
     delay: 0,
+    swing: 0,
   });
 };
 
@@ -106,4 +109,12 @@ export const getLocalDelay = () => {
 
 export const setLocalDelay = (delay) => {
   stringifyJSON('delay', delay);
+};
+
+export const getLocalSwing = () => {
+  return parseJSON('swing', 0);
+};
+
+export const setLocalSwing = (swing) => {
+  stringifyJSON('swing', swing);
 };

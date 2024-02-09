@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 import { getUserSongs, createSong, deleteSong } from '../../services/song-service';
@@ -13,10 +13,19 @@ import {
   setLocalSequencerState,
   setLocalSongId,
 } from '../../services/sequencer-service';
+import { arraysEqual } from '../../utils/compareArrays';
 
 const UserSongsList = () => {
   const [userSongs, setUserSongs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const tempo = useSelector((state) => state.sequencer.tempo);
+  const pattern = useSelector((state) => state.sequencer.pattern);
+  const songId = useSelector((state) => state.sequencer.songId);
+  const numOfSteps = useSelector((state) => state.sequencer.numOfSteps);
+  const volume = useSelector((state) => state.sequencer.volume);
+  const delay = useSelector((state) => state.sequencer.delay);
+  const reverb = useSelector((state) => state.sequencer.reverb);
+  const swing = useSelector((state) => state.sequencer.swing);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -91,6 +100,23 @@ const UserSongsList = () => {
       setIsLoading(false);
     }
   };
+
+  const compareSongToState = (song) => {
+    if (
+      song._id !== songId ||
+      !arraysEqual(song.pattern, pattern) ||
+      song.numOfSteps !== numOfSteps ||
+      song.tempo !== tempo ||
+      song.volume !== volume ||
+      song.delay !== delay ||
+      song.reverb !== reverb ||
+      song.swing !== swing
+    )
+      return false;
+    else {
+      return true;
+    }
+  };
   return (
     <>
       {user && (
@@ -101,9 +127,19 @@ const UserSongsList = () => {
           <div className="user-songs-list">
             {userSongs.length > 0
               ? userSongs.map((song, index) => (
-                  <div className="user-song" key={index}>
-                    <button onClick={() => handleSongClick(song)}>S{index + 1}</button>
-                    <button onClick={() => handleDeleteSong(song._id)}>X</button>
+                  <div className={`user-song`} key={index}>
+                    <button
+                      className={`user-song-select-btn ${compareSongToState(song) ? 'selected' : ''}`}
+                      onClick={() => handleSongClick(song)}
+                    >
+                      S{index + 1}
+                    </button>
+                    <button
+                      className={`user-song-delete-btn ${compareSongToState(song) ? 'selected' : ''}`}
+                      onClick={() => handleDeleteSong(song._id)}
+                    >
+                      X
+                    </button>
                   </div>
                 ))
               : null}

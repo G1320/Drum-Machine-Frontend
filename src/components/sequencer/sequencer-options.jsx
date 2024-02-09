@@ -12,6 +12,7 @@ import {
   setVolume,
   setReverb,
   setDelay,
+  setSwing,
   clearSequencerState,
   setSongId,
 } from '../../slices/sequencerSlice';
@@ -22,6 +23,7 @@ import {
   setLocalVolume,
   setLocalReverb,
   setLocalDelay,
+  setLocalSwing,
   setLocalMutedTracks,
 } from '../../services/sequencer-service';
 import { getLoopedIndex } from '../../utils/getLoopedIndex';
@@ -38,6 +40,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   const masterVolume = useSelector((state) => state.sequencer.volume);
   const masterReverb = useSelector((state) => state.sequencer.reverb);
   const masterDelay = useSelector((state) => state.sequencer.delay);
+  const masterSwing = useSelector((state) => state.sequencer.swing);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -97,6 +100,18 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
     if (!e.target.value) return;
     const newReverb = Number(e.target.value);
     updateReverb(newReverb);
+  };
+
+  const handleSwingChange = (e) => {
+    if (!e.target.value) return;
+    const newSwing = Number(e.target.value);
+    updateSwing(newSwing);
+  };
+
+  const updateSwing = (swing) => {
+    dispatch(setSwing(swing));
+    setLocalSwing(swing);
+    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
   };
 
   const updateReverb = (reverb) => {
@@ -174,7 +189,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
 
       <section className="range-controls">
         <article className="delay">
-          <span>FX 1</span>
+          <span>FX1</span>
           <label className="delay-label"></label>
           <input
             type="range"
@@ -186,7 +201,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
           />
         </article>
         <article className="reverb">
-          <span>FX 2</span>
+          <span>FX2</span>
           <label className="reverb-label"></label>
           <input
             type="range"
@@ -195,6 +210,18 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             step={0.25}
             onChange={handleReverbChange}
             value={masterReverb}
+          />
+        </article>
+        <article className="swing">
+          <span>SWG</span>
+          <label className="swing-label"></label>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.25}
+            onChange={handleSwingChange}
+            value={masterSwing}
           />
         </article>
         <article className="bpm">

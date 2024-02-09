@@ -44,6 +44,8 @@
     grid-column: 6;
     display: flex;
     gap: 0.5rem;
+    width: 90%;
+    justify-self: end;
    
   }
 
@@ -66,11 +68,15 @@
       &:hover {
         transition: 250ms;
       }
+
+      &.selected{
+        background-color: #36225c;
+      }
     }
 
     .save-song-btn,
     .clear-song-btn {
-      max-width: 60px;
+      width: 60px;
     }
   }
 
@@ -159,7 +165,7 @@
   .sequencer-options .song-options-menu {
     display: none;
   }
-  
+
   .sequencer-options .step-length-wrapper {
     display: none;
   }

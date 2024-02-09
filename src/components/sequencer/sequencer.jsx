@@ -41,6 +41,7 @@ function Sequencer() {
   const masterVolume = useSelector((state) => state.sequencer.volume);
   const masterReverb = useSelector((state) => state.sequencer.reverb);
   const masterDelay = useSelector((state) => state.sequencer.delay);
+  const masterSwing = useSelector((state) => state.sequencer.swing);
   const mutedTracks = useSelector((state) => state.sequencer.mutedTracks);
   const numOfSteps = useSelector((state) => state.sequencer.numOfSteps);
   const pattern = useSelector((state) => state.sequencer.pattern);
@@ -97,7 +98,7 @@ function Sequencer() {
       tracksRef.current.forEach((trk) => trk.sampler.dispose());
       tracksRef.current = [];
     };
-  }, [kitId, songId, numOfSounds, numOfSteps]);
+  }, [kitId, songId, numOfSounds, numOfSteps, masterReverb]);
 
   const handleSequenceInitialization = () => {
     disposeOldSequence();
@@ -127,6 +128,12 @@ function Sequencer() {
     const delay = new Tone.FeedbackDelay('8n', 0.5).toDestination();
     delay.decay = 3;
     delay.wet.value = masterDelay || 0;
+
+    const normalizedTargetDelayTime = Math.min(Math.max(masterDelay / 4, 0), 1);
+
+    // Use setTargetAtTime for smooth changes in delayTime
+    const smoothingTime = 0.25;
+    delay.delayTime.setTargetAtTime(normalizedTargetDelayTime, Tone.now(), smoothingTime);
 
     return { reverb, delay };
   };
@@ -162,6 +169,10 @@ function Sequencer() {
       return { id: i, sampler, muted };
     });
   };
+
+  // Tone.Transport's callbacks pass time into the callback because, without the Web Audio API, Javascript timing can be quite imprecise. For example, setTimeout(callback, 100) will be invoked around 100 milliseconds later,
+  // but many musical applications require sub-millisecond accuracy. The Web Audio API provides sample-accurate scheduling for methods like start, stop and setValueAtTime,
+  // so we have to use the precise time parameter passed into the callback to schedule methods within the callback.
 
   const createSequence = () => {
     //prettier-ignore
@@ -215,9 +226,10 @@ function Sequencer() {
 
   useEffect(() => {
     //setting volume and tempo
-    Tone.Transport.bpm.value = masterTempo;
     Tone.Destination.volume.value = Tone.gainToDb(Number(masterVolume));
-  }, [masterTempo, masterVolume]);
+    Tone.Transport.bpm.value = masterTempo;
+    Tone.Transport.swing = masterSwing;
+  }, [masterTempo, masterVolume, masterSwing]);
 
   const handleSetNumOfSteps = () => {
     if (!window.screen.orientation || !window.screen.orientation.type) return;
