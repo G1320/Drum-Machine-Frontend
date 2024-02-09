@@ -36,27 +36,21 @@ function Sequencer() {
   const { kitId } = useParams();
   const NOTE = 'C2';
 
-  const songId = useSelector((state) => state.sequencer.songId);
-  const masterTempo = useSelector((state) => state.sequencer.tempo);
-  const masterVolume = useSelector((state) => state.sequencer.volume);
-  const masterReverb = useSelector((state) => state.sequencer.reverb);
-  const masterDelay = useSelector((state) => state.sequencer.delay);
-  const masterSwing = useSelector((state) => state.sequencer.swing);
-  const mutedTracks = useSelector((state) => state.sequencer.mutedTracks);
-  const numOfSteps = useSelector((state) => state.sequencer.numOfSteps);
-  const pattern = useSelector((state) => state.sequencer.pattern);
+  const sequencerState = useSelector((state) => state.sequencer);
 
   const [numOfSounds, setNumOfSounds] = useState(0);
 
   const { data: selectedKitSounds } = useSounds(kitId);
 
   const trackIds = [...Array(selectedKitSounds.length).keys()];
-  const stepIds = [...Array(numOfSteps).keys()];
+  const stepIds = [...Array(sequencerState.numOfSteps).keys()];
 
   const tracksRef = useRef([]);
   const lampsRef = useRef([]);
   // An array of arrays, the first representing tracks, the second representing steps
-  const stepsRef = useRef([...Array(selectedKitSounds.length)].map(() => Array(numOfSteps).fill(null)));
+  const stepsRef = useRef(
+    [...Array(selectedKitSounds.length)].map(() => Array(sequencerState.numOfSteps).fill(null))
+  );
   const seqRef = useRef(null);
 
   useEffect(() => setNumOfSounds(selectedKitSounds.length), [selectedKitSounds]);
@@ -77,10 +71,10 @@ function Sequencer() {
 
     handleSetNumOfSteps();
     handleCheckedStepsUpdate();
-  }, [kitId, songId, dispatch, numOfSounds, numOfSteps]);
+  }, [kitId, sequencerState.songId, dispatch, numOfSounds, sequencerState.numOfSteps]);
 
   const handleCheckedStepsUpdate = () => {
-    pattern?.forEach((cellId) => updateStepCheckedState(cellId));
+    sequencerState.pattern?.forEach((cellId) => updateStepCheckedState(cellId));
   };
 
   const updateStepCheckedState = (cellId) => {
@@ -98,7 +92,7 @@ function Sequencer() {
       tracksRef.current.forEach((trk) => trk.sampler.dispose());
       tracksRef.current = [];
     };
-  }, [kitId, songId, numOfSounds, numOfSteps, masterReverb]);
+  }, [kitId, sequencerState.songId, numOfSounds, sequencerState.numOfSteps, sequencerState.reverb]);
 
   const handleSequenceInitialization = () => {
     disposeOldSequence();
@@ -123,13 +117,13 @@ function Sequencer() {
   const setupEffects = () => {
     const reverb = new Tone.Reverb().toDestination();
     reverb.decay = 3;
-    reverb.wet.value = masterReverb || 0;
+    reverb.wet.value = sequencerState.reverb || 0;
 
     const delay = new Tone.FeedbackDelay('8n', 0.5).toDestination();
     delay.decay = 3;
-    delay.wet.value = masterDelay || 0;
+    delay.wet.value = sequencerState.delay || 0;
 
-    const normalizedTargetDelayTime = Math.min(Math.max(masterDelay / 4, 0), 1);
+    const normalizedTargetDelayTime = Math.min(Math.max(sequencerState.delay / 4, 0), 1);
 
     // Use setTargetAtTime for smooth changes in delayTime
     const smoothingTime = 0.25;
@@ -141,10 +135,10 @@ function Sequencer() {
   const setupRefsForTracksAndLamps = () => {
     // 2d array of refs representing each step on each track
     stepsRef.current = Array.from(Array(selectedKitSounds.length)).map(() =>
-      Array(numOfSteps).fill(null)
+      Array(sequencerState.numOfSteps).fill(null)
     );
     // array of refs representing each lamp
-    lampsRef.current = Array.from(Array(numOfSteps + 1)).map(() => ({
+    lampsRef.current = Array.from(Array(sequencerState.numOfSteps + 1)).map(() => ({
       ref: createRef(),
       checked: false,
     }));
@@ -155,7 +149,7 @@ function Sequencer() {
     const delay = effects.delay;
     // array of track objects containing a sampler with a muted property
     tracksRef.current = selectedKitSounds.map((sound, i) => {
-      const muted = mutedTracks.includes(i); // Check if the track is muted
+      const muted = sequencerState.mutedTracks.includes(i); // Check if the track is muted
       const sampler = new Tone.Sampler({
         muted,
         urls: { [NOTE]: sound.src },
@@ -196,7 +190,7 @@ function Sequencer() {
   };
 
   const handleCellClick = (cellId) => {
-    const updatedPattern = toggleArrayItem(pattern, cellId);
+    const updatedPattern = toggleArrayItem(sequencerState.pattern, cellId);
 
     const [trackIndex, stepIndex] = cellId.split('-').map(Number);
     const stepRef = stepsRef.current[trackIndex]?.[stepIndex];
@@ -207,7 +201,7 @@ function Sequencer() {
   };
 
   const handleMuteButtonClick = (trackId) => {
-    const updatedMutedTracks = toggleArrayItem(mutedTracks, trackId);
+    const updatedMutedTracks = toggleArrayItem(sequencerState.mutedTracks, trackId);
 
     const trackRef = tracksRef.current[trackId];
     if (trackRef) trackRef.muted = !trackRef.muted;
@@ -226,10 +220,10 @@ function Sequencer() {
 
   useEffect(() => {
     //setting volume and tempo
-    Tone.Destination.volume.value = Tone.gainToDb(Number(masterVolume));
-    Tone.Transport.bpm.value = masterTempo;
-    Tone.Transport.swing = masterSwing;
-  }, [masterTempo, masterVolume, masterSwing]);
+    Tone.Destination.volume.value = Tone.gainToDb(Number(sequencerState.volume));
+    Tone.Transport.bpm.value = sequencerState.tempo;
+    Tone.Transport.swing = sequencerState.swing;
+  }, [sequencerState.tempo, sequencerState.volume, sequencerState.swing]);
 
   const handleSetNumOfSteps = () => {
     if (!window.screen.orientation || !window.screen.orientation.type) return;
@@ -263,7 +257,7 @@ function Sequencer() {
         <section className="sequencer">
           <SequencerStartBtn />
 
-          <section className={`sequencer-lamp-row  ${numOfSteps === 32 ? 'xl' : ''}`}>
+          <section className={`sequencer-lamp-row  ${sequencerState.numOfSteps === 32 ? 'xl' : ''}`}>
             {stepIds.map((stepId) => (
               // iterate over each step to display a lamp
               <label key={stepId} className="sequencer-lamp">
@@ -292,20 +286,20 @@ function Sequencer() {
               <section className="sequencer-internal-scroll-container">
                 <SequencerTrackLabelList kitId={kitId} />
 
-                <section key={songId} className="sequencer-column">
+                <section key={sequencerState.songId} className="sequencer-column">
                   {trackIds.map((trackId) => {
                     // iterate over each track
-                    const isMuted = mutedTracks.includes(trackId); // Check if the channel is muted
+                    const isMuted = sequencerState.mutedTracks.includes(trackId); // Check if the channel is muted
                     return (
                       <div
                         key={trackId}
-                        className={`track-container  ${numOfSteps === 32 ? 'xl' : ''} ${
+                        className={`track-container  ${sequencerState.numOfSteps === 32 ? 'xl' : ''} ${
                           isMuted ? 'muted' : ''
                         }`}
                       >
                         <input
                           className={`sequencer-mute-button  ${isMuted ? 'muted' : ''}  ${
-                            numOfSteps === 32 ? 'xl' : ''
+                            sequencerState.numOfSteps === 32 ? 'xl' : ''
                           }`}
                           type="checkbox"
                           checked={isMuted}
@@ -313,19 +307,19 @@ function Sequencer() {
                         />
                         <section
                           key={trackId + 10}
-                          className={`sequencer-row  ${numOfSteps === 32 ? 'xl' : ''}`}
+                          className={`sequencer-row  ${sequencerState.numOfSteps === 32 ? 'xl' : ''}`}
                         >
                           {stepIds.map((stepId) => {
                             // iterate over each step on each track to display a cell
                             const id = `${trackId}-${stepId}`;
-                            const isSelected = pattern?.includes(id);
+                            const isSelected = sequencerState.pattern?.includes(id);
 
                             return (
                               <article
                                 key={id}
                                 onClick={() => handleCellClick(id)}
                                 className={`sequencer-cell ${isSelected ? 'selected' : ''} ${
-                                  numOfSteps === 32 ? 'xl' : ''
+                                  sequencerState.numOfSteps === 32 ? 'xl' : ''
                                 }`}
                               >
                                 <label key={id} htmlFor={id + 20} />
@@ -355,7 +349,10 @@ function Sequencer() {
           </section>
         </section>
       </section>
-      <SequencerOptions numOfSteps={numOfSteps} handleNumOfStepsChange={handleNumOfStepsChange} />
+      <SequencerOptions
+        numOfSteps={sequencerState.numOfSteps}
+        handleNumOfStepsChange={handleNumOfStepsChange}
+      />
       <section className="main-content-bottom-wrapper">
         <UserKitsList />
         <SoundsList kitId={kitId} />

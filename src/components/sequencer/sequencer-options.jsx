@@ -35,12 +35,9 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   const dispatch = useDispatch();
   const combinedKits = useSelector((state) => state.kits.combinedKits);
   const selectedKit = useSelector((state) => state.kits.selectedKit);
-  const pattern = useSelector((state) => state.sequencer.pattern);
-  const masterTempo = useSelector((state) => state.sequencer.tempo);
-  const masterVolume = useSelector((state) => state.sequencer.volume);
-  const masterReverb = useSelector((state) => state.sequencer.reverb);
-  const masterDelay = useSelector((state) => state.sequencer.delay);
-  const masterSwing = useSelector((state) => state.sequencer.swing);
+
+  const sequencerState = useSelector((state) => state.sequencer);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -69,7 +66,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
   };
 
   const updateKit = (kit, index) => {
-    setLocalPattern(pattern);
+    setLocalPattern(sequencerState.pattern);
     setLocalMutedTracks([]);
     dispatch(setSelectedKit(kit));
     setCurrentIndex(index);
@@ -197,7 +194,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             max={1}
             step={0.25}
             onChange={handleDelayChange}
-            value={masterDelay}
+            value={sequencerState.delay}
           />
         </article>
         <article className="reverb">
@@ -209,7 +206,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             max={1}
             step={0.25}
             onChange={handleReverbChange}
-            value={masterReverb}
+            value={sequencerState.reverb}
           />
         </article>
         <article className="swing">
@@ -221,7 +218,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             max={1}
             step={0.25}
             onChange={handleSwingChange}
-            value={masterSwing}
+            value={sequencerState.swing}
           />
         </article>
         <article className="bpm">
@@ -233,7 +230,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             max={220}
             step={1}
             onChange={handleBpmChange}
-            value={masterTempo}
+            value={sequencerState.tempo}
           />
         </article>
         <article className="volume">
@@ -245,7 +242,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
             max={1}
             step={0.01}
             onChange={handleVolumeChange}
-            value={masterVolume}
+            value={sequencerState.volume}
           />
         </article>
       </section>

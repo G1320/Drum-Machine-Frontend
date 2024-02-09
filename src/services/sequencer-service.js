@@ -14,11 +14,11 @@ export const getLocalSequencerState = () => {
 };
 
 export const setLocalSequencerState = (sequencerState) => {
-  stringifyJSON('pattern', sequencerState.pattern);
-  stringifyJSON('mutedTracks', sequencerState.mutedTracks);
-  stringifyJSON('tempo', sequencerState.tempo);
-  stringifyJSON('volume', sequencerState.volume);
-  stringifyJSON('numOfSteps', sequencerState.numOfSteps);
+  stringifyJSON('pattern', sequencerState.pattern || []);
+  stringifyJSON('mutedTracks', sequencerState.mutedTracks || []);
+  stringifyJSON('tempo', sequencerState.tempo || 120);
+  stringifyJSON('volume', sequencerState.volume || 0.5);
+  stringifyJSON('numOfSteps', sequencerState.numOfSteps || 16);
   stringifyJSON('songId', sequencerState._id || null);
   stringifyJSON('reverb', sequencerState.reverb || 0);
   stringifyJSON('delay', sequencerState.delay || 0);

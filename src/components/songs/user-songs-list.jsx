@@ -18,14 +18,8 @@ import { arraysEqual } from '../../utils/compareArrays';
 const UserSongsList = () => {
   const [userSongs, setUserSongs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const tempo = useSelector((state) => state.sequencer.tempo);
-  const pattern = useSelector((state) => state.sequencer.pattern);
-  const songId = useSelector((state) => state.sequencer.songId);
-  const numOfSteps = useSelector((state) => state.sequencer.numOfSteps);
-  const volume = useSelector((state) => state.sequencer.volume);
-  const delay = useSelector((state) => state.sequencer.delay);
-  const reverb = useSelector((state) => state.sequencer.reverb);
-  const swing = useSelector((state) => state.sequencer.swing);
+
+  const sequencerState = useSelector((state) => state.sequencer);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -103,14 +97,15 @@ const UserSongsList = () => {
 
   const compareSongToState = (song) => {
     if (
-      song._id !== songId ||
-      !arraysEqual(song.pattern, pattern) ||
-      song.numOfSteps !== numOfSteps ||
-      song.tempo !== tempo ||
-      song.volume !== volume ||
-      song.delay !== delay ||
-      song.reverb !== reverb ||
-      song.swing !== swing
+      song._id !== sequencerState.songId ||
+      !arraysEqual(song.pattern, sequencerState.pattern) ||
+      !arraysEqual(song.muteTracks, sequencerState.muteTracks) ||
+      song.numOfSteps !== sequencerState.numOfSteps ||
+      song.tempo !== sequencerState.tempo ||
+      song.volume !== sequencerState.volume ||
+      song.delay !== sequencerState.delay ||
+      song.reverb !== sequencerState.reverb ||
+      song.swing !== sequencerState.swing
     )
       return false;
     else {
