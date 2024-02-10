@@ -1,7 +1,6 @@
 import React from 'react';
 import '../../assets/styles/components/sequencer/sequencer-track-label-list.scss';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useSounds } from '../../hooks/useSounds';
 
 import { updateKitSounds } from '../../services/kit-service';
 

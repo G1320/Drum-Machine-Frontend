@@ -8,9 +8,7 @@ import AudioVisualizer from '../visualizer/audio-visualizer';
 import { getLocalUser } from '../../services/user-service';
 import { setSelectedKit } from '../../slices/kitsSlice';
 
-import { useSounds } from '../../hooks/useSounds.js';
-
-function SoundsList({ kitId }) {
+function SoundsList({ kitId, selectedKitSounds }) {
   const dispatch = useDispatch();
   const [sounds, setSounds] = useState([]);
   const audioRefs = useRef([]);
@@ -19,7 +17,6 @@ function SoundsList({ kitId }) {
   const selectedKit = useSelector((state) => state.kits.selectedKit);
   const combinedKits = useSelector((state) => state.kits.combinedKits);
   const allSounds = useSelector((state) => state.sounds.allSounds);
-  const { data: selectedKitSounds } = useSounds(kitId);
 
   useEffect(() => {
     // prettier-ignore

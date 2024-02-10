@@ -286,7 +286,7 @@ function Sequencer() {
       <SequencerOptions sequencerState={sequencerState} />
       <section className="main-content-bottom-wrapper">
         <UserKitsList />
-        <SoundsList kitId={kitId} />
+        <SoundsList kitId={kitId} selectedKitSounds={selectedKitSounds} />
       </section>
     </>
   );

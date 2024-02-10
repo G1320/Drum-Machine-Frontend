@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../../assets/styles/components/sounds/sound-details.scss';
 import { playAudio } from '../../services/sound-service';
 import { useParams } from 'react-router-dom';
@@ -28,26 +28,20 @@ function SoundDetails({ sound, audioRef, className }) {
     playAudio(audioRef);
   };
 
-  const handleAddToKit = async () => {
-    if (sound.alert) return handleRemoveFromKit();
+  const handleKitAction = async () => {
     try {
-      await addSoundToKitService(kitId, sound._id);
-      dispatch(addSoundToKitSlice(sound));
-      refetchSounds();
-    } catch (error) {
-      console.error('Failed to add sound to kit', error);
-      dispatch(setError(error.response.data || 'Failed to add sound to kit'));
-    }
-  };
+      if (sound.alert) {
+        await removeSoundFromKitService(kitId, sound._id);
+        dispatch(removeSoundFromKitSlice(sound));
+      } else {
+        await addSoundToKitService(kitId, sound._id);
+        dispatch(addSoundToKitSlice(sound));
+      }
 
-  const handleRemoveFromKit = async () => {
-    try {
-      await removeSoundFromKitService(kitId, sound._id);
-      dispatch(removeSoundFromKitSlice(sound));
       refetchSounds();
     } catch (error) {
-      console.error('Failed to remove sound from kit', error);
-      dispatch(setError(error.response.data || 'Failed to add sound to kit'));
+      console.error('Failed to perform sound action', error);
+      dispatch(setError(error?.response?.data || 'Failed to perform sound action'));
     }
   };
 
@@ -58,15 +52,13 @@ function SoundDetails({ sound, audioRef, className }) {
       <button onClick={handleClick}>
         <FontAwesomeIcon className="preview-icon" icon={faVolumeHigh} size="2xs" />
       </button>
-      {sound.alert ? (
-        <button onClick={handleRemoveFromKit}>
-          <FontAwesomeIcon className="remove-icon" icon={faXmark} size="2xs" />
-        </button>
-      ) : (
-        <button onClick={handleAddToKit}>
-          <FontAwesomeIcon className="add-icon" icon={faPlus} size="2xs" />
-        </button>
-      )}
+      <button onClick={handleKitAction}>
+        <FontAwesomeIcon
+          className={sound.alert ? 'remove-icon' : 'add-icon'}
+          icon={sound.alert ? faXmark : faPlus}
+          size="2xs"
+        />
+      </button>
     </article>
   );
 }
