@@ -99,11 +99,7 @@ const sequencerOptions = ({ sequencerState }) => {
         dispatch(setSongId(Math.random()));
         break;
       case 'numOfSteps':
-        const newNumOfSteps = parseInt(e.target.value);
-        dispatch(setNumOfSteps(newNumOfSteps));
-        setLocalNumOfSteps(newNumOfSteps);
-        setLocalNumOfStepsPrePortrait(newNumOfSteps);
-
+        setLocalNumOfStepsPrePortrait(newValue);
         dispatch(setSongId(Math.random()));
         break;
       default:

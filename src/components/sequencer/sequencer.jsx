@@ -181,13 +181,6 @@ function Sequencer() {
     setLocalMutedTracks(updatedMutedTracks);
   };
 
-  //sequencer global state change listeners
-  useEffect(() => {
-    //setting volume and tempo
-    Tone.Destination.volume.value = Tone.gainToDb(Number(sequencerState.volume));
-    Tone.Transport.bpm.value = sequencerState.tempo;
-  }, [sequencerState.tempo, sequencerState.volume]);
-
   return (
     <>
       <section className="sequencer-external-container">
