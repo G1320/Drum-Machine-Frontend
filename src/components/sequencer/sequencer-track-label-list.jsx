@@ -1,18 +1,14 @@
 import React from 'react';
 import '../../assets/styles/components/sequencer/sequencer-track-label-list.scss';
-import { useSelector } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useSounds } from '../../hooks/useSounds';
 
 import { updateKitSounds } from '../../services/kit-service';
 
-function SequencerTrackLabelList({ kitId }) {
-  const { data: selectedKitSounds } = useSounds(kitId);
-  const numOfSteps = useSelector((state) => state.sequencer.numOfSteps);
-
+function SequencerTrackLabelList({ kitId, numOfSteps, selectedKitSounds }) {
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
-
+    // TODO: Fix drag end event, sounds always return to original position, sounds are fetched by updatedAt attribute
     const newKitSounds = Array.from(selectedKitSounds);
     const [reorderedSound] = newKitSounds.splice(result.source.index, 1);
     newKitSounds.splice(result.destination.index, 0, reorderedSound);

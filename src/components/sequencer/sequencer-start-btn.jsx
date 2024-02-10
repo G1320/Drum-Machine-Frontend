@@ -8,9 +8,9 @@ import { getSilence } from '../../services/sound-service';
 
 const sequencerStartBtn = () => {
   const dispatch = useDispatch();
-  const isPlaying = useSelector((state) => state.transport.isPlaying);
   const audioRef = useRef(null);
   const silenceAudioRef = useRef(null);
+  const isPlaying = useSelector((state) => state.transport.isPlaying);
 
   useEffect(() => {
     const handleKeyDown = (e) => {

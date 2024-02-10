@@ -13,6 +13,7 @@ import {
   setReverb,
   setDelay,
   setSwing,
+  setNumOfSteps,
   clearSequencerState,
   setSongId,
 } from '../../slices/sequencerSlice';
@@ -24,19 +25,21 @@ import {
   setLocalReverb,
   setLocalDelay,
   setLocalSwing,
+  setLocalNumOfSteps,
   setLocalMutedTracks,
+  getLocalNumOfStepsPrePortrait,
+  setLocalNumOfStepsPrePortrait,
 } from '../../services/sequencer-service';
 import { getLoopedIndex } from '../../utils/getLoopedIndex';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
-const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
+const sequencerOptions = ({ sequencerState }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const combinedKits = useSelector((state) => state.kits.combinedKits);
   const selectedKit = useSelector((state) => state.kits.selectedKit);
-
-  const sequencerState = useSelector((state) => state.sequencer);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,92 +50,64 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
     setCurrentIndex(index);
   }, [combinedKits, selectedKit]);
 
-  const handleNextKit = () => {
+  const handleNextKit = () => handleKitChange('next');
+  const handlePrevKit = () => handleKitChange('prev');
+
+  const handleKitChange = (direction) => {
     if (isLoading) return;
     setIsLoading(true);
-    const nextIndex = getLoopedIndex(currentIndex, combinedKits.length, 'next');
-    const nextKit = combinedKits[nextIndex];
+    const newIndex = getLoopedIndex(currentIndex, combinedKits.length, direction);
+    const newKit = combinedKits[newIndex];
 
-    updateKit(nextKit, nextIndex);
-  };
-
-  const handlePrevKit = () => {
-    if (isLoading) return;
-    setIsLoading(true);
-    const prevIndex = getLoopedIndex(currentIndex, combinedKits.length, 'prev');
-    const prevKit = combinedKits[prevIndex];
-
-    updateKit(prevKit, prevIndex);
-  };
-
-  const updateKit = (kit, index) => {
     setLocalPattern(sequencerState.pattern);
     setLocalMutedTracks([]);
-    dispatch(setSelectedKit(kit));
-    setCurrentIndex(index);
-    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
-    navigate(`/sequencer/id/${kit._id}`);
+    dispatch(setSelectedKit(newKit));
+    setCurrentIndex(newIndex);
+    dispatch(setSongId(Math.random())); //Used to trigger a re-render of the sequencer  };
+    navigate(`/sequencer/id/${newKit._id}`);
     setIsLoading(false);
   };
 
-  const handleBpmChange = (e) => {
+  const handleBpmChange = (e) => handleParamChange('tempo', e, setLocalTempo, setTempo);
+  const handleVolumeChange = (e) => handleParamChange('volume', e, setLocalVolume, setVolume);
+  const handleReverbChange = (e) => handleParamChange('reverb', e, setLocalReverb, setReverb);
+  const handleDelayChange = (e) => handleParamChange('delay', e, setLocalDelay, setDelay);
+  const handleSwingChange = (e) => handleParamChange('swing', e, setLocalSwing, setSwing);
+  const handleNumOfStepsChange = (e) =>
+    handleParamChange('numOfSteps', e, setLocalNumOfSteps, setNumOfSteps);
+
+  const handleParamChange = (paramName, e, localSetter, dispatchSetter) => {
     if (!e.target.value) return;
-    const newBpm = Number(e.target.value);
-    updateBpm(newBpm);
-  };
+    const newValue = Number(e.target.value);
+    dispatch(dispatchSetter(newValue));
+    localSetter(newValue);
 
-  const handleVolumeChange = (e) => {
-    if (!e.target.value) return;
-    const newVolume = Number(e.target.value);
-    updateVolume(newVolume);
-  };
+    switch (paramName) {
+      case 'tempo':
+        Tone.Transport.bpm.value = newValue;
+        break;
+      case 'volume':
+        Tone.Destination.volume.value = Tone.gainToDb(newValue);
+        break;
+      case 'swing':
+        Tone.Transport.swing = newValue;
+        break;
+      case 'reverb':
+        dispatch(setSongId(Math.random()));
+        break;
+      case 'delay':
+        dispatch(setSongId(Math.random()));
+        break;
+      case 'numOfSteps':
+        const newNumOfSteps = parseInt(e.target.value);
+        dispatch(setNumOfSteps(newNumOfSteps));
+        setLocalNumOfSteps(newNumOfSteps);
+        setLocalNumOfStepsPrePortrait(newNumOfSteps);
 
-  const updateVolume = (volume) => {
-    Tone.Destination.volume.value = Tone.gainToDb(volume);
-    setLocalVolume(Number(volume));
-    dispatch(setVolume(volume));
-  };
-
-  const handleReverbChange = (e) => {
-    if (!e.target.value) return;
-    const newReverb = Number(e.target.value);
-    updateReverb(newReverb);
-  };
-
-  const handleSwingChange = (e) => {
-    if (!e.target.value) return;
-    const newSwing = Number(e.target.value);
-    updateSwing(newSwing);
-  };
-
-  const updateSwing = (swing) => {
-    dispatch(setSwing(swing));
-    setLocalSwing(swing);
-    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
-  };
-
-  const updateReverb = (reverb) => {
-    dispatch(setReverb(reverb));
-    setLocalReverb(reverb);
-    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
-  };
-
-  const handleDelayChange = (e) => {
-    if (!e.target.value) return;
-    const newDelay = Number(e.target.value);
-    updateDelay(newDelay);
-  };
-
-  const updateDelay = (delay) => {
-    dispatch(setDelay(delay));
-    setLocalDelay(delay);
-    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
-  };
-
-  const updateBpm = (bpm) => {
-    Tone.Transport.bpm.value = bpm;
-    setLocalTempo(bpm);
-    dispatch(setTempo(bpm));
+        dispatch(setSongId(Math.random()));
+        break;
+      default:
+    }
   };
 
   const handleClearPattern = () => {
@@ -140,29 +115,62 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
     setIsLoading(true);
     clearLocalSequencerState();
     dispatch(clearSequencerState());
-    dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
+    dispatch(setSongId(Math.random()));
 
     setIsLoading(false);
+  };
+
+  // Handles sequencer resizing for smaller screens by changing the numOfSteps
+  useEffect(() => {
+    window.addEventListener('orientationchange', handleSetNumOfSteps);
+    window.addEventListener('resize', handleSetNumOfSteps);
+    return () => {
+      window.removeEventListener('orientationchange', handleSetNumOfSteps);
+      window.removeEventListener('resize', handleSetNumOfSteps);
+    };
+  }, []);
+
+  const handleSetNumOfSteps = () => {
+    const orientation = window.screen.orientation?.type;
+    const savedNumOfSteps = getLocalNumOfStepsPrePortrait();
+
+    let newNumOfSteps;
+
+    if (orientation?.includes('portrait')) {
+      newNumOfSteps = 8;
+      //Saving the prev step config so that it can be restored when switching back to landscape
+      setLocalNumOfStepsPrePortrait(savedNumOfSteps);
+    } else if (savedNumOfSteps > 8 && savedNumOfSteps < 32) {
+      newNumOfSteps = 16;
+      setLocalNumOfStepsPrePortrait(16);
+    } else if (savedNumOfSteps > 16) {
+      newNumOfSteps = 32;
+      setLocalNumOfStepsPrePortrait(32);
+    }
+    if (newNumOfSteps) {
+      dispatch(setNumOfSteps(newNumOfSteps));
+      setLocalNumOfSteps(newNumOfSteps);
+    }
   };
 
   return (
     <section className="sequencer-options">
       <section className="options-wrapper">
         <section className="step-length-wrapper">
-          <label className={`${numOfSteps === 16 ? 'checked' : ''}`}>
+          <label className={`${sequencerState.numOfSteps === 16 ? 'checked' : ''}`}>
             <input
               type="radio"
               value="16"
-              checked={numOfSteps === 16}
+              checked={sequencerState.numOfSteps === 16}
               onChange={handleNumOfStepsChange}
             />
             16
           </label>
-          <label className={`${numOfSteps === 32 ? 'checked' : ''}`}>
+          <label className={`${sequencerState.numOfSteps === 32 ? 'checked' : ''}`}>
             <input
               type="radio"
               value="32"
-              checked={numOfSteps === 32}
+              checked={sequencerState.numOfSteps === 32}
               onChange={handleNumOfStepsChange}
             />
             32
@@ -182,7 +190,7 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
           CLR
         </button>
       </section>
-      <UserSongsList />
+      <UserSongsList sequencerState={sequencerState} />
 
       <section className="range-controls">
         <article className="delay">
@@ -210,13 +218,13 @@ const sequencerOptions = ({ numOfSteps, handleNumOfStepsChange }) => {
           />
         </article>
         <article className="swing">
-          <span>SWG</span>
+          <span>SWNG</span>
           <label className="swing-label"></label>
           <input
             type="range"
             min={0}
             max={1}
-            step={0.25}
+            step={0.01}
             onChange={handleSwingChange}
             value={sequencerState.swing}
           />

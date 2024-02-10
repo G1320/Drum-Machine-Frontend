@@ -15,11 +15,9 @@ import {
 } from '../../services/sequencer-service';
 import { arraysEqual } from '../../utils/compareArrays';
 
-const UserSongsList = () => {
+const UserSongsList = ({ sequencerState }) => {
   const [userSongs, setUserSongs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const sequencerState = useSelector((state) => state.sequencer);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,6 +47,7 @@ const UserSongsList = () => {
     setLocalSequencerState(song);
     setLocalNumOfStepsPrePortrait(song.numOfSteps);
     setLocalSongId(song._id);
+
     navigate(`/sequencer/id/${song.kit}`);
     setIsLoading(false);
   };
@@ -95,23 +94,16 @@ const UserSongsList = () => {
     }
   };
 
-  const compareSongToState = (song) => {
-    if (
-      song._id !== sequencerState.songId ||
-      !arraysEqual(song.pattern, sequencerState.pattern) ||
-      !arraysEqual(song.muteTracks, sequencerState.muteTracks) ||
-      song.numOfSteps !== sequencerState.numOfSteps ||
-      song.tempo !== sequencerState.tempo ||
-      song.volume !== sequencerState.volume ||
-      song.delay !== sequencerState.delay ||
-      song.reverb !== sequencerState.reverb ||
-      song.swing !== sequencerState.swing
-    )
-      return false;
-    else {
-      return true;
-    }
-  };
+  const compareSongToState = (song) =>
+    song._id === sequencerState.songId &&
+    arraysEqual(song.pattern, sequencerState.pattern) &&
+    arraysEqual(song.mutedTracks, sequencerState.mutedTracks) &&
+    song.numOfSteps === sequencerState.numOfSteps &&
+    song.tempo === sequencerState.tempo &&
+    song.volume === sequencerState.volume &&
+    song.delay === sequencerState.delay &&
+    song.reverb === sequencerState.reverb &&
+    song.swing === sequencerState.swing;
   return (
     <>
       {user && (
