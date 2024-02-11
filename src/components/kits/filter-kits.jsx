@@ -28,19 +28,19 @@ function KitFilter() {
     const fetchKits = async () => {
       try {
         const params = {};
-        if (filter) params.name = filter; // Set the name filter parameter if filter state is not empty
-        if (sortBy) params.sortBy = sortBy; // Set the sortBy filter parameter if sortBy state is not empty
-        if (order) params.order = order; // Set the order filter parameter if order state is not empty
-        const kits = await getKits(params); // Fetch kits based on the filter parameters
-        dispatch(setAllKits(kits)); // Update the Redux store with all kits
+        if (filter) params.name = filter;
+        if (sortBy) params.sortBy = sortBy;
+        if (order) params.order = order;
+        const kits = await getKits(params);
+        dispatch(setAllKits(kits));
 
         if (kitId) {
-          const { kit } = await getKitById(kitId); // Fetch the selected kit by ID
-          dispatch(setSelectedKit(kit)); // Update the Redux store with the selected kit
+          const { kit } = await getKitById(kitId);
+          dispatch(setSelectedKit(kit));
         }
         if (user) {
-          const userKits = await getUserKits(user._id); // Fetch the user-specific kits
-          dispatch(setUserKits(userKits)); // Update the Redux store with the user-specific kits
+          const userKits = await getUserKits(user._id);
+          dispatch(setUserKits(userKits));
 
           const filteredKits = kits.filter(
             (kit) => !kit.isCustom && !userKits.some((userKit) => userKit._id === kit._id)

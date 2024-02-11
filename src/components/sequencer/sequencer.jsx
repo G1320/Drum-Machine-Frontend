@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createRef } from 'react';
+import React, { useEffect, useRef, createRef } from 'react';
 import '../../assets/styles/components/sequencer/sequencer.scss';
 import * as Tone from 'tone';
 import { useSelector, useDispatch } from 'react-redux';
@@ -46,7 +46,7 @@ function Sequencer() {
     const localSequencerState = getLocalSequencerState();
     dispatch(setSequencerState(localSequencerState));
     handleCheckedStepsUpdate();
-  }, [kitId, sequencerState.songId, dispatch, selectedKitSounds.length, sequencerState.numOfSteps]);
+  }, [kitId, sequencerState.songId, selectedKitSounds.length, dispatch, sequencerState.numOfSteps]);
 
   const handleCheckedStepsUpdate = () => {
     sequencerState.pattern?.forEach((cellId) => updateStepCheckedState(cellId));
@@ -114,8 +114,6 @@ function Sequencer() {
   };
 
   const createTrackSamplers = (effects) => {
-    const reverb = effects.reverb;
-    const delay = effects.delay;
     // array of track objects containing a sampler with a muted property
     tracksRef.current = selectedKitSounds.map((sound, i) => {
       const muted = sequencerState.mutedTracks.includes(i); // Check if the track is muted
@@ -124,8 +122,8 @@ function Sequencer() {
         urls: { [NOTE]: sound.src },
         isLoaded: false,
         onload: () => {
-          sampler.connect(reverb);
-          sampler.connect(delay);
+          sampler.connect(effects.reverb);
+          sampler.connect(effects.delay);
           sampler.isLoaded = true;
         },
       });
@@ -134,7 +132,7 @@ function Sequencer() {
   };
 
   //prettier-ignore
-  // Tone.Transport callbacks pass a scheduled time into the callback because without the Web Audio API, Javascript timing can be quite imprecise. For example, setTimeout(callback, 100) will only be invoked  around 100 milliseconds after called,
+  // Tone.Transport callbacks pass a scheduled time into the callback because without the Web Audio API, Javascript timing can be quite imprecise. i.e, setTimeout(callback, 100) will only be invoked around 100 milliseconds after called,
   // Many musical applications require sub-millisecond accuracy. The Web Audio API only provides sample-accurate scheduling for methods like start, stop and setValueAtTime,
   // Thus we must use the precise time parameter created by Tone and passed into the callback to schedule methods within the callback.
   const createSequence = () => {
@@ -158,9 +156,8 @@ function Sequencer() {
   };
 
   const handleCellClick = (cellId) => {
-    const updatedPattern = toggleArrayItem(sequencerState.pattern, cellId);
-
     const [trackIndex, stepIndex] = cellId.split('-').map(Number);
+    const updatedPattern = toggleArrayItem(sequencerState.pattern, cellId);
 
     const stepRef = stepsRef.current[trackIndex]?.[stepIndex];
     if (stepRef) stepRef.checked = updatedPattern.includes(cellId);
@@ -170,9 +167,9 @@ function Sequencer() {
   };
 
   const handleMuteButtonClick = (trackId) => {
+    const trackRef = tracksRef.current[trackId];
     const updatedMutedTracks = toggleArrayItem(sequencerState.mutedTracks, trackId);
 
-    const trackRef = tracksRef.current[trackId];
     if (trackRef) trackRef.muted = !trackRef.muted;
 
     dispatch(setMutedTracks(updatedMutedTracks));

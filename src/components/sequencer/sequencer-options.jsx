@@ -7,29 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import FilterKits from '../kits/filter-kits';
 import UserSongsList from '../songs/user-songs-list';
 import { setSelectedKit } from '../../slices/kitsSlice';
-import {
-  setTempo,
-  setVolume,
-  setReverb,
-  setDelay,
-  setSwing,
-  setNumOfSteps,
-  clearSequencerState,
-  setSongId,
-} from '../../slices/sequencerSlice';
-import {
-  clearLocalSequencerState,
-  setLocalPattern,
-  setLocalTempo,
-  setLocalVolume,
-  setLocalReverb,
-  setLocalDelay,
-  setLocalSwing,
-  setLocalNumOfSteps,
-  setLocalMutedTracks,
-  getLocalNumOfStepsPrePortrait,
-  setLocalNumOfStepsPrePortrait,
-} from '../../services/sequencer-service';
+
+import * as sequencerSlice from '../../slices/sequencerSlice';
+import * as sequencerService from '../../services/sequencer-service';
 import { getLoopedIndex } from '../../utils/getLoopedIndex';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -47,30 +27,41 @@ const sequencerOptions = ({ sequencerState }) => {
     // Updating the currentIndex when the selectedKit changes
     const index = combinedKits.findIndex((kit) => kit._id === selectedKit._id);
     setCurrentIndex(index);
-  }, [combinedKits, selectedKit]);
+  }, [selectedKit]);
 
+  //arrow function expressions
   const handleNextKit = () => handleKitChange('next');
   const handlePrevKit = () => handleKitChange('prev');
+
+  const handleBpmChange = (e) =>
+    handleParamChange('tempo', e, sequencerService.setLocalTempo, sequencerSlice.setTempo);
+
+  const handleVolumeChange = (e) =>
+    handleParamChange('volume', e, sequencerService.setLocalVolume, sequencerSlice.setVolume);
+
+  const handleReverbChange = (e) =>
+    handleParamChange('reverb', e, sequencerService.setLocalReverb, sequencerSlice.setReverb);
+
+  const handleDelayChange = (e) =>
+    handleParamChange('delay', e, sequencerService.setLocalDelay, sequencerSlice.setDelay);
+
+  const handleSwingChange = (e) =>
+    handleParamChange('swing', e, sequencerService.setLocalSwing, sequencerSlice.setSwing);
+  //prettier-ignore
+  const handleNumOfStepsChange = (e) =>
+    handleParamChange('numOfSteps',e,sequencerService.setLocalNumOfSteps,sequencerSlice.setNumOfSteps);
 
   const handleKitChange = (direction) => {
     const newIndex = getLoopedIndex(currentIndex, combinedKits.length, direction);
     const newKit = combinedKits[newIndex];
 
-    setLocalPattern(sequencerState.pattern);
-    setLocalMutedTracks([]);
+    sequencerService.setLocalPattern(sequencerState.pattern);
+    sequencerService.setLocalMutedTracks([]);
     dispatch(setSelectedKit(newKit));
     setCurrentIndex(newIndex);
-    dispatch(setSongId(Math.random())); //Used to trigger a re-render of the sequencer  };
+    dispatch(sequencerSlice.setSongId(Math.random())); //Used to trigger a re-render of the sequencer  };
     navigate(`/sequencer/id/${newKit._id}`);
   };
-
-  const handleBpmChange = (e) => handleParamChange('tempo', e, setLocalTempo, setTempo);
-  const handleVolumeChange = (e) => handleParamChange('volume', e, setLocalVolume, setVolume);
-  const handleReverbChange = (e) => handleParamChange('reverb', e, setLocalReverb, setReverb);
-  const handleDelayChange = (e) => handleParamChange('delay', e, setLocalDelay, setDelay);
-  const handleSwingChange = (e) => handleParamChange('swing', e, setLocalSwing, setSwing);
-  const handleNumOfStepsChange = (e) =>
-    handleParamChange('numOfSteps', e, setLocalNumOfSteps, setNumOfSteps);
 
   const handleParamChange = (paramName, e, localSetter, dispatchSetter) => {
     if (!e.target.value) return;
@@ -90,20 +81,20 @@ const sequencerOptions = ({ sequencerState }) => {
         break;
       case 'reverb':
       case 'delay':
-        dispatch(setSongId(Math.random()));
+        dispatch(sequencerSlice.setSongId(Math.random()));
         break;
       case 'numOfSteps':
-        setLocalNumOfStepsPrePortrait(newValue);
-        dispatch(setSongId(Math.random()));
+        sequencerService.setLocalNumOfStepsPrePortrait(newValue);
+        dispatch(sequencerSlice.setSongId(Math.random()));
         break;
       default:
     }
   };
 
   const handleClearPattern = () => {
-    clearLocalSequencerState();
-    dispatch(clearSequencerState());
-    dispatch(setSongId(Math.random()));
+    sequencerService.clearLocalSequencerState();
+    dispatch(sequencerSlice.clearSequencerState());
+    dispatch(sequencerSlice.setSongId(Math.random()));
   };
 
   // Handles sequencer resizing for smaller screens by changing the numOfSteps
@@ -118,24 +109,24 @@ const sequencerOptions = ({ sequencerState }) => {
 
   const handleSetNumOfSteps = () => {
     const orientation = window.screen.orientation?.type;
-    const savedNumOfSteps = getLocalNumOfStepsPrePortrait();
+    const savedNumOfSteps = sequencerService.getLocalNumOfStepsPrePortrait();
 
     let newNumOfSteps;
 
     if (orientation?.includes('portrait')) {
       newNumOfSteps = 8;
       //Saving the prev step config so that it can be restored when switching back to landscape
-      setLocalNumOfStepsPrePortrait(savedNumOfSteps);
+      sequencerService.setLocalNumOfStepsPrePortrait(savedNumOfSteps);
     } else if (savedNumOfSteps > 8 && savedNumOfSteps < 32) {
       newNumOfSteps = 16;
-      setLocalNumOfStepsPrePortrait(16);
+      sequencerService.setLocalNumOfStepsPrePortrait(16);
     } else if (savedNumOfSteps > 16) {
       newNumOfSteps = 32;
-      setLocalNumOfStepsPrePortrait(32);
+      sequencerService.setLocalNumOfStepsPrePortrait(32);
     }
     if (newNumOfSteps) {
-      dispatch(setNumOfSteps(newNumOfSteps));
-      setLocalNumOfSteps(newNumOfSteps);
+      dispatch(sequencerSlice.setNumOfSteps(newNumOfSteps));
+      sequencerService.setLocalNumOfSteps(newNumOfSteps);
     }
   };
 

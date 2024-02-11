@@ -28,19 +28,20 @@ function SoundsList({ kitId, selectedKitSounds }) {
         return sound;
       })
     );
-
+    // creating an audioRef for each sound
     audioRefs.current = sounds.map((_, index) => audioRefs.current[index] ?? createRef());
-  }, [selectedKitSounds.length]);
+  }, [selectedKitSounds]);
 
   useEffect(() => {
+    // finding and setting the selectedKit via kitId
     const getSelectedKit = () => {
-      if (kitId && user?._id) {
+      if (kitId && combinedKits.length > 0) {
         const selectedKit = combinedKits.find((kit) => kit._id === kitId);
         if (selectedKit) dispatch(setSelectedKit(selectedKit));
       }
     };
     getSelectedKit();
-  }, [kitId, user?._id, dispatch, selectedKitSounds]);
+  }, [kitId, dispatch]);
 
   return (
     <>

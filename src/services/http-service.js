@@ -56,7 +56,7 @@ async function getAccessToken() {
       if (refreshedToken) {
         accessToken = refreshedToken;
       } else {
-        throw new Error('Token refresh failed. Token:', refreshedToken);
+        throw new Error('Failed to get new access token');
       }
     } catch (refreshError) {
       console.error('Failed to refresh token', refreshError);
