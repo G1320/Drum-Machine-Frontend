@@ -26,7 +26,6 @@ function Sequencer() {
   const { kitId } = useParams();
   const NOTE = 'C2';
 
-  const [numOfSounds, setNumOfSounds] = useState(0);
   const { data: selectedKitSounds } = useSounds(kitId);
   const sequencerState = useSelector((state) => state.sequencer);
 
@@ -41,15 +40,13 @@ function Sequencer() {
   const trackIds = [...Array(selectedKitSounds.length).keys()];
   const stepIds = [...Array(sequencerState.numOfSteps).keys()];
 
-  useEffect(() => setNumOfSounds(selectedKitSounds.length), [selectedKitSounds]);
-
   useEffect(() => {
     if (!kitId) return;
 
     const localSequencerState = getLocalSequencerState();
     dispatch(setSequencerState(localSequencerState));
     handleCheckedStepsUpdate();
-  }, [kitId, sequencerState.songId, dispatch, numOfSounds, sequencerState.numOfSteps]);
+  }, [kitId, sequencerState.songId, dispatch, selectedKitSounds.length, sequencerState.numOfSteps]);
 
   const handleCheckedStepsUpdate = () => {
     sequencerState.pattern?.forEach((cellId) => updateStepCheckedState(cellId));
@@ -64,7 +61,7 @@ function Sequencer() {
   useEffect(() => {
     handleSequenceInitialization();
     return () => disposeOldSequence();
-  }, [kitId, sequencerState.songId, numOfSounds, sequencerState.numOfSteps]);
+  }, [kitId, sequencerState.songId, selectedKitSounds.length, sequencerState.numOfSteps]);
 
   const handleSequenceInitialization = () => {
     disposeOldSequence();
@@ -164,6 +161,7 @@ function Sequencer() {
     const updatedPattern = toggleArrayItem(sequencerState.pattern, cellId);
 
     const [trackIndex, stepIndex] = cellId.split('-').map(Number);
+
     const stepRef = stepsRef.current[trackIndex]?.[stepIndex];
     if (stepRef) stepRef.checked = updatedPattern.includes(cellId);
 

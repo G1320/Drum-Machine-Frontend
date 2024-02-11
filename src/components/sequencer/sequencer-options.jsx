@@ -42,7 +42,6 @@ const sequencerOptions = ({ sequencerState }) => {
   const selectedKit = useSelector((state) => state.kits.selectedKit);
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Updating the currentIndex when the selectedKit changes
@@ -54,8 +53,6 @@ const sequencerOptions = ({ sequencerState }) => {
   const handlePrevKit = () => handleKitChange('prev');
 
   const handleKitChange = (direction) => {
-    if (isLoading) return;
-    setIsLoading(true);
     const newIndex = getLoopedIndex(currentIndex, combinedKits.length, direction);
     const newKit = combinedKits[newIndex];
 
@@ -65,7 +62,6 @@ const sequencerOptions = ({ sequencerState }) => {
     setCurrentIndex(newIndex);
     dispatch(setSongId(Math.random())); //Used to trigger a re-render of the sequencer  };
     navigate(`/sequencer/id/${newKit._id}`);
-    setIsLoading(false);
   };
 
   const handleBpmChange = (e) => handleParamChange('tempo', e, setLocalTempo, setTempo);
@@ -93,8 +89,6 @@ const sequencerOptions = ({ sequencerState }) => {
         Tone.Transport.swing = newValue;
         break;
       case 'reverb':
-        dispatch(setSongId(Math.random()));
-        break;
       case 'delay':
         dispatch(setSongId(Math.random()));
         break;
@@ -107,13 +101,9 @@ const sequencerOptions = ({ sequencerState }) => {
   };
 
   const handleClearPattern = () => {
-    if (isLoading) return;
-    setIsLoading(true);
     clearLocalSequencerState();
     dispatch(clearSequencerState());
     dispatch(setSongId(Math.random()));
-
-    setIsLoading(false);
   };
 
   // Handles sequencer resizing for smaller screens by changing the numOfSteps

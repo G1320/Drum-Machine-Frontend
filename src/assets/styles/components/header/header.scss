@@ -16,12 +16,15 @@ header {
 }
 
 .hero {
+  cursor: pointer;
   grid-column: 2;
   grid-row: 1;
-  color: white;
-  white-space: inherit;
   display: flex;
+  color: white;
+  width: fit-content;
+  white-space: inherit;
   justify-content: center;
+  justify-self: center  ;
   font-weight: bold;
   font-size: 2.8rem;
   margin: 0;
