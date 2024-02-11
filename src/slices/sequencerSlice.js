@@ -43,6 +43,12 @@ export const sequencerSlice = createSlice({
     clearSwing: (state) => {
       state.swing = 0;
     },
+    setStep: (state, action) => {
+      state.step = action.payload;
+    },
+    clearStep: (state) => {
+      state.step = 0;
+    },
     setDelay: (state, action) => {
       state.delay = action.payload;
     },
@@ -72,6 +78,7 @@ export const sequencerSlice = createSlice({
         reverb: action.payload.reverb,
         delay: action.payload.delay,
         swing: action.payload.swing,
+        step: action.payload.step,
       };
     },
     clearSequencerState: () => {
@@ -85,6 +92,7 @@ export const sequencerSlice = createSlice({
         reverb: 0,
         delay: 0,
         swing: 0,
+        step: 0,
       };
     },
   },
@@ -103,6 +111,8 @@ export const {
   clearDelay,
   setSwing,
   clearSwing,
+  setStep,
+  clearStep,
   setMutedTracks,
   clearMutedTracks,
   setNumOfSteps,

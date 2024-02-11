@@ -5,14 +5,9 @@ import { CircularProgress } from '@mui/material';
 import { getUserSongs, createSong, deleteSong } from '../../services/song-service';
 import { setError } from '../../slices/errorSlice';
 import { getLocalUser } from '../../services/user-service';
-import { clearSequencerState, setSongId } from '../../slices/sequencerSlice';
-import {
-  clearLocalSequencerState,
-  setLocalNumOfStepsPrePortrait,
-  getLocalSequencerState,
-  setLocalSequencerState,
-  setLocalSongId,
-} from '../../services/sequencer-service';
+import * as sequencerSlice from '../../slices/sequencerSlice';
+import * as sequencerService from '../../services/sequencer-service';
+
 import { arraysEqual } from '../../utils/compareArrays';
 
 const UserSongsList = ({ sequencerState }) => {
@@ -42,11 +37,11 @@ const UserSongsList = ({ sequencerState }) => {
     if (isLoading) return;
     setIsLoading(true);
 
-    clearLocalSequencerState();
-    dispatch(clearSequencerState());
-    setLocalSequencerState(song);
-    setLocalNumOfStepsPrePortrait(song.numOfSteps);
-    setLocalSongId(song._id);
+    sequencerService.clearLocalSequencerState();
+    dispatch(sequencerSlice.clearSequencerState());
+    sequencerService.setLocalSequencerState(song);
+    sequencerService.setLocalNumOfStepsPrePortrait(song.numOfSteps);
+    sequencerService.setLocalSongId(song._id);
 
     navigate(`/sequencer/id/${song.kit}`);
     setIsLoading(false);
@@ -55,7 +50,7 @@ const UserSongsList = ({ sequencerState }) => {
   const handleSaveSong = async () => {
     if (isLoading) return;
     setIsLoading(true);
-    const sequencerState = getLocalSequencerState();
+    const sequencerState = sequencerService.getLocalSequencerState();
 
     try {
       const newSong = {
@@ -66,9 +61,9 @@ const UserSongsList = ({ sequencerState }) => {
       };
       const savedNewSong = await createSong(newSong);
 
-      clearLocalSequencerState();
-      dispatch(clearSequencerState());
-      dispatch(setSongId(Math.random())); //Used to trigger a rerender of the sequencer
+      sequencerService.clearLocalSequencerState();
+      dispatch(sequencerSlice.clearSequencerState());
+      dispatch(sequencerSlice.setSongId(Math.random())); //Used to trigger a rerender of the sequencer
 
       setUserSongs([...userSongs, savedNewSong]);
     } catch (error) {
@@ -93,7 +88,7 @@ const UserSongsList = ({ sequencerState }) => {
       setIsLoading(false);
     }
   };
-
+  // Compares the song to the current sequencerState and returns a boolean
   const compareSongToState = (song) =>
     song._id === sequencerState.songId &&
     arraysEqual(song.pattern, sequencerState.pattern) &&
@@ -104,6 +99,7 @@ const UserSongsList = ({ sequencerState }) => {
     song.delay === sequencerState.delay &&
     song.reverb === sequencerState.reverb &&
     song.swing === sequencerState.swing;
+
   return (
     <>
       {user && (

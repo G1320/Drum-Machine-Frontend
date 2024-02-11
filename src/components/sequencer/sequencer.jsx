@@ -6,18 +6,14 @@ import { useParams } from 'react-router-dom';
 import { useSounds } from '../../hooks/useSounds.js';
 import { PropagateLoader } from 'react-spinners';
 
-import {
-  setLocalPattern,
-  setLocalMutedTracks,
-  getLocalSequencerState,
-} from '../../services/sequencer-service';
-
-import { setPattern, setMutedTracks, setSequencerState } from '../../slices/sequencerSlice';
 import SequencerStartBtn from './sequencer-start-btn';
 import SequencerOptions from './sequencer-options';
 import SoundsList from '../sounds/sounds-list';
 import SequencerTrackLabelList from './sequencer-track-label-list';
 import UserKitsList from '../kits/user-kits-list';
+
+import * as sequencerService from '../../services/sequencer-service';
+import * as sequencerSlice from '../../slices/sequencerSlice';
 
 import { toggleArrayItem } from '../../utils/toggleArrayItem';
 
@@ -43,8 +39,8 @@ function Sequencer() {
   useEffect(() => {
     if (!kitId) return;
 
-    const localSequencerState = getLocalSequencerState();
-    dispatch(setSequencerState(localSequencerState));
+    const localSequencerState = sequencerService.getLocalSequencerState();
+    dispatch(sequencerSlice.setSequencerState(localSequencerState));
     handleCheckedStepsUpdate();
   }, [kitId, sequencerState.songId, selectedKitSounds.length, dispatch, sequencerState.numOfSteps]);
 
@@ -114,17 +110,15 @@ function Sequencer() {
   };
 
   const createTrackSamplers = (effects) => {
-    // array of track objects containing a sampler with a muted property
+    // creating an array of track objects containing a sampler with a muted property
     tracksRef.current = selectedKitSounds.map((sound, i) => {
       const muted = sequencerState.mutedTracks.includes(i); // Check if the track is muted
       const sampler = new Tone.Sampler({
         muted,
         urls: { [NOTE]: sound.src },
-        isLoaded: false,
         onload: () => {
           sampler.connect(effects.reverb);
           sampler.connect(effects.delay);
-          sampler.isLoaded = true;
         },
       });
       return { id: i, sampler, muted };
@@ -132,7 +126,8 @@ function Sequencer() {
   };
 
   //prettier-ignore
-  // Tone.Transport callbacks pass a scheduled time into the callback because without the Web Audio API, Javascript timing can be quite imprecise. i.e, setTimeout(callback, 100) will only be invoked around 100 milliseconds after called,
+  // Tone.Transport callbacks pass a scheduled time into the callback because without the Web Audio API, Javascript timing can be quite imprecise.
+  // i.e, setTimeout(callback, 100) will only be invoked around 100 milliseconds after called.
   // Many musical applications require sub-millisecond accuracy. The Web Audio API only provides sample-accurate scheduling for methods like start, stop and setValueAtTime,
   // Thus we must use the precise time parameter created by Tone and passed into the callback to schedule methods within the callback.
   const createSequence = () => {
@@ -143,6 +138,7 @@ function Sequencer() {
         triggerTrackSamplers(time, step);
         // Sets the checked property of the current step's lamp to true
         lampsRef.current[step].checked = true;
+        dispatch(sequencerSlice.setStep(step));
         // Sets the Tone.Sequence instance to start at step 0 + configs it to 16th notes
       },stepIds,'16n').start(0);
   };
@@ -156,24 +152,24 @@ function Sequencer() {
   };
 
   const handleCellClick = (cellId) => {
-    const [trackIndex, stepIndex] = cellId.split('-').map(Number);
     const updatedPattern = toggleArrayItem(sequencerState.pattern, cellId);
+    const [trackIndex, stepIndex] = cellId.split('-').map(Number);
 
     const stepRef = stepsRef.current[trackIndex]?.[stepIndex];
     if (stepRef) stepRef.checked = updatedPattern.includes(cellId);
 
-    setLocalPattern(updatedPattern);
-    dispatch(setPattern(updatedPattern));
+    sequencerService.setLocalPattern(updatedPattern);
+    dispatch(sequencerSlice.setPattern(updatedPattern));
   };
 
   const handleMuteButtonClick = (trackId) => {
-    const trackRef = tracksRef.current[trackId];
     const updatedMutedTracks = toggleArrayItem(sequencerState.mutedTracks, trackId);
 
-    if (trackRef) trackRef.muted = !trackRef.muted;
+    const trackRef = tracksRef.current[trackId];
+    if (trackRef) trackRef.muted = sequencerState.mutedTracks.includes(trackId);
 
-    dispatch(setMutedTracks(updatedMutedTracks));
-    setLocalMutedTracks(updatedMutedTracks);
+    sequencerService.setLocalMutedTracks(updatedMutedTracks);
+    dispatch(sequencerSlice.setMutedTracks(updatedMutedTracks));
   };
 
   return (
@@ -238,10 +234,11 @@ function Sequencer() {
                           key={trackId + 10}
                           className={`sequencer-row  ${sequencerState.numOfSteps === 32 ? 'xl' : ''}`}
                         >
-                          {stepIds.map((stepId) => {
+                          {stepIds.map((stepId, i) => {
                             // iterate over each step on each track to display a cell
                             const id = `${trackId}-${stepId}`;
                             const isSelected = sequencerState.pattern?.includes(id);
+                            const isCurrentStep = sequencerState.step === i;
 
                             return (
                               <article
@@ -249,7 +246,7 @@ function Sequencer() {
                                 onClick={() => handleCellClick(id)}
                                 className={`sequencer-cell ${isSelected ? 'selected' : ''} ${
                                   sequencerState.numOfSteps === 32 ? 'xl' : ''
-                                }`}
+                                } ${isCurrentStep ? 'current-step' : ''}`}
                               >
                                 <label key={id} htmlFor={id + 20} />
                                 <input

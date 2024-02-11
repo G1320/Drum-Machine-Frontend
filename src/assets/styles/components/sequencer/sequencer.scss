@@ -20,6 +20,7 @@
 }
 
 .sequencer-cell {
+  
   cursor: pointer;
   height: 30px;
   width: 30px;
@@ -31,6 +32,10 @@
   input[type='checkbox']{
     cursor: pointer;
   }
+}
+
+.current-step{
+  background-color: #463f53 !important;
 }
 
 .sequencer-lamp {
@@ -125,24 +130,9 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
 .track-container {
   position: relative;
   display: grid;
-  
   transition: 200ms;
   margin-block: 0.5rem;
   gap: 1rem;
-  // Underline effect for tracks when in XL mode (32 step)
-  // &.xl:not(.muted):not(:last-child)::after {
-  //   content: "";
-  //   position: absolute;
-  //   bottom: -0.37rem;
-  //   left: 50px;
-  //   width: 80%;
-  //   height: 2px;
-  //   background-image: linear-gradient(to right,
-  //    rgba(255, 255, 255,0), 
-  //    rgba(255, 255, 255, 0.863),
-  //     rgba(255,255, 255, 0));
-  // }
-
   &.muted {
     background-color: #463f53;
     padding-inline-start: 0.5rem;

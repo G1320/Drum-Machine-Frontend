@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../assets/styles/components/sequencer/sequencer-options.scss';
-import * as Tone from 'tone';
+import { Transport, Destination, gainToDb } from 'tone';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,10 +18,9 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 const sequencerOptions = ({ sequencerState }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [currentIndex, setCurrentIndex] = useState(0);
   const combinedKits = useSelector((state) => state.kits.combinedKits);
   const selectedKit = useSelector((state) => state.kits.selectedKit);
-
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     // Updating the currentIndex when the selectedKit changes
@@ -71,13 +70,13 @@ const sequencerOptions = ({ sequencerState }) => {
 
     switch (paramName) {
       case 'tempo':
-        Tone.Transport.bpm.value = newValue;
+        Transport.bpm.value = newValue;
         break;
       case 'volume':
-        Tone.Destination.volume.value = Tone.gainToDb(newValue);
+        Destination.volume.value = gainToDb(newValue);
         break;
       case 'swing':
-        Tone.Transport.swing = newValue;
+        Transport.swing = newValue;
         break;
       case 'reverb':
       case 'delay':
@@ -125,8 +124,8 @@ const sequencerOptions = ({ sequencerState }) => {
       sequencerService.setLocalNumOfStepsPrePortrait(32);
     }
     if (newNumOfSteps) {
-      dispatch(sequencerSlice.setNumOfSteps(newNumOfSteps));
       sequencerService.setLocalNumOfSteps(newNumOfSteps);
+      dispatch(sequencerSlice.setNumOfSteps(newNumOfSteps));
     }
   };
 
