@@ -49,7 +49,7 @@
     &::before {
       content: ''; 
       display: block;
-      height: 7.5px;
+      height: 6px;
       width: 30px;
       border-radius: 6px;
       background-color: #bdbdbd37;
@@ -213,13 +213,21 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   display: grid;
   align-items: center;
   margin-inline: 3px;
+  &.xxl{
+    align-content: center;
+  }
 }
 
 .sequencer-lamp {
   height: 15px;
   width: 40px;
-  border: 2px solid #fcfcfc;
+  &:not(.xxl){
+    background-color: #bdbdbd37;
+  }
   border-radius: 8px;
+  &.xxl{
+    height: 13px;
+  }
 }
 
 .sequencer-lamp input[type='radio']:checked  {
@@ -239,7 +247,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
     top: 50%;
     left: 50%;
     transform: translate(-50%,-150%);
-    height: 7.5px;
+    height: 6px;
     width: 30px;
     transform: rotateY(-0.25rem);
     z-index: 1000;
@@ -277,6 +285,10 @@ input {
   .sequencer-lamp {
     height: 12.5px;
     width: 25px;
+
+    &.xxl{
+      height: 10px;
+    }
   }
 }
 

@@ -54,12 +54,16 @@ const sequencerOptions = ({ sequencerState }) => {
     const newIndex = getLoopedIndex(currentIndex, combinedKits.length, direction);
     const newKit = combinedKits[newIndex];
 
-    sequencerService.setLocalPattern(sequencerState.pattern);
-    sequencerService.setLocalMutedTracks([]);
-    dispatch(setSelectedKit(newKit));
-    setCurrentIndex(newIndex);
-    dispatch(sequencerSlice.setSongId(Math.random())); //Used to trigger a re-render of the sequencer  };
-    navigate(`/sequencer/id/${newKit._id}`);
+    if (newKit) {
+      sequencerService.setLocalPattern(sequencerState.pattern);
+      sequencerService.setLocalMutedTracks([]);
+      dispatch(setSelectedKit(newKit));
+      setCurrentIndex(newIndex);
+      dispatch(sequencerSlice.setSongId(Math.random()));
+      navigate(`/sequencer/id/${newKit._id}`);
+    } else {
+      console.error('New kit is undefined. combinedKits:', combinedKits, 'newIndex:', newIndex);
+    }
   };
 
   const handleParamChange = (paramName, e, localSetter, dispatchSetter) => {
@@ -96,23 +100,33 @@ const sequencerOptions = ({ sequencerState }) => {
     dispatch(sequencerSlice.setSongId(Math.random()));
   };
 
-  // Handles sequencer resizing for smaller screens by changing the numOfSteps
   useEffect(() => {
+    const handleArrowKeyPress = (e) => {
+      if (e.key === 'ArrowRight') {
+        handleNextKit();
+      } else if (e.key === 'ArrowLeft') {
+        handlePrevKit();
+      }
+    };
+
     window.addEventListener('orientationchange', handleSetNumOfSteps);
     window.addEventListener('resize', handleSetNumOfSteps);
+    window.addEventListener('keydown', handleArrowKeyPress);
     return () => {
       window.removeEventListener('orientationchange', handleSetNumOfSteps);
       window.removeEventListener('resize', handleSetNumOfSteps);
+      window.removeEventListener('keydown', handleArrowKeyPress);
     };
-  }, []);
+  }, [handleNextKit, handlePrevKit]);
 
   const handleSetNumOfSteps = () => {
     const orientation = window.screen.orientation?.type;
+    const windowWidth = window.innerWidth;
     const savedNumOfSteps = sequencerService.getLocalNumOfStepsPrePortrait();
 
     let newNumOfSteps;
 
-    if (orientation?.includes('portrait')) {
+    if (orientation?.includes('portrait') || windowWidth < 700) {
       newNumOfSteps = 8;
       //Saving the prev step config so that it can be restored when switching back to landscape
       sequencerService.setLocalNumOfStepsPrePortrait(savedNumOfSteps);

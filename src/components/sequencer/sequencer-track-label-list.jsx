@@ -7,7 +7,7 @@ import { updateKitSounds } from '../../services/kit-service';
 function SequencerTrackLabelList({ kitId, numOfSteps, selectedKitSounds }) {
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
-    // TODO: Fix drag end event, sounds always return to original position, sounds are fetched by updatedAt attribute
+    // TODO: Fix drag end event, sounds always return to original position because sounds are fetched by order of updatedAt attribute
     const newKitSounds = Array.from(selectedKitSounds);
     const [reorderedSound] = newKitSounds.splice(result.source.index, 1);
     newKitSounds.splice(result.destination.index, 0, reorderedSound);
