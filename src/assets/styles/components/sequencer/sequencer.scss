@@ -35,7 +35,6 @@
 }
 
 .current-step{
-  transition: 50ms;
   border:  2px solid #834de7 !important;
   border-radius: 25% !important;
   box-shadow: none !important;
@@ -45,21 +44,20 @@
   height: 15px;
   width: 30px;
   &.xxl {
-    height: 7.5px ;
     border: none;
-
-  // optional underline effect for lamps when xxl
-    // &::before {
-    //   content: "";
-    //   display: block;
-    //   border-bottom: 2px solid #fcfcfc; 
-    //   border-radius: 8px;
-    //   width: 85%;
-    //   margin: auto;
-    //   position: relative;
-    //   bottom: 0;
-    // }
-    
+    border-radius: 50%;
+    &::before {
+      content: ''; 
+      display: block;
+      height: 7.5px;
+      width: 30px;
+      border-radius: 6px;
+      background-color: #bdbdbd37;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 }
 
@@ -90,6 +88,10 @@
 }
 
 .sequencer-row {
+
+  &.xl{
+    margin-block-end: 0.5rem;
+  }
   &.xxl{
     margin-block-end: 1rem;
   }
@@ -187,10 +189,10 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
 
   &.xl {
     top: 4rem;
+  }
 
-    &.muted {
-      top: 3.5rem;
-    }
+  &.xxl {
+    top: 8rem;
   }
 
   width: 60px;
@@ -231,6 +233,17 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   margin: 0;
   background-color: #9058f7;
   border-radius: 6px;
+
+  &.xxl{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-150%);
+    height: 7.5px;
+    width: 30px;
+    transform: rotateY(-0.25rem);
+    z-index: 1000;
+  }
 }
 
 input {

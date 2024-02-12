@@ -187,7 +187,7 @@ function Sequencer() {
               // iterate over each step to display a lamp
               <label key={stepId} className={`sequencer-lamp ${isXxl() ? 'xxl' : ''}`}>
                 <input
-                  className="sequencer-lamp-input"
+                  className={`sequencer-lamp-input ${isXxl() ? 'xxl' : ''}`}
                   type="radio"
                   name="lamp"
                   id={`lamp-${stepId}`}
@@ -227,7 +227,7 @@ function Sequencer() {
                         <input
                           className={`sequencer-mute-button  ${isMuted ? 'muted' : ''}  ${
                             isXl() ? 'xl' : ''
-                          }`}
+                          } ${isXxl() ? 'xxl' : ''}`}
                           type="checkbox"
                           checked={isMuted}
                           onChange={() => handleMuteButtonClick(trackId)}

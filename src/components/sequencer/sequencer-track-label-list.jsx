@@ -19,6 +19,9 @@ function SequencerTrackLabelList({ kitId, numOfSteps, selectedKitSounds }) {
     }
   };
 
+  const isXl = () => numOfSteps === 32;
+  const isXxl = () => numOfSteps === 64;
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId="selectedKitSounds">
@@ -32,9 +35,11 @@ function SequencerTrackLabelList({ kitId, numOfSteps, selectedKitSounds }) {
             {selectedKitSounds.map((sound, index) => (
               <Draggable key={sound._id} draggableId={sound._id} index={index}>
                 {(provided) => (
-                  <article className={`cell-title-container ${numOfSteps === 32 ? 'xl' : ''}`}>
+                  <article
+                    className={`cell-title-container ${isXl() ? 'xl' : ''} ${isXxl() ? 'xxl' : ''}  `}
+                  >
                     <li
-                      className={`cell-title ${numOfSteps === 32 ? 'xl' : ''}`}
+                      className={`cell-title ${isXl() ? 'xl' : ''} ${isXxl() ? 'xxl' : ''}`}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}

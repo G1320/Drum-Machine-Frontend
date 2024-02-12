@@ -116,13 +116,13 @@ const sequencerOptions = ({ sequencerState }) => {
       newNumOfSteps = 8;
       //Saving the prev step config so that it can be restored when switching back to landscape
       sequencerService.setLocalNumOfStepsPrePortrait(savedNumOfSteps);
-    } else if (savedNumOfSteps > 8 && savedNumOfSteps < 32) {
+    } else if (savedNumOfSteps === 16) {
       newNumOfSteps = 16;
       sequencerService.setLocalNumOfStepsPrePortrait(16);
-    } else if (savedNumOfSteps > 16) {
+    } else if (savedNumOfSteps === 32) {
       newNumOfSteps = 32;
       sequencerService.setLocalNumOfStepsPrePortrait(32);
-    } else if (savedNumOfSteps > 32) {
+    } else if (savedNumOfSteps === 64) {
       newNumOfSteps = 64;
       sequencerService.setLocalNumOfStepsPrePortrait(64);
     }
