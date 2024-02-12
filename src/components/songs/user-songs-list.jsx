@@ -61,11 +61,10 @@ const UserSongsList = ({ sequencerState }) => {
       };
       const savedNewSong = await createSong(newSong);
 
+      setUserSongs([...userSongs, savedNewSong]);
       sequencerService.clearLocalSequencerState();
       dispatch(sequencerSlice.clearSequencerState());
       dispatch(sequencerSlice.setSongId(Math.random())); //Used to trigger a rerender of the sequencer
-
-      setUserSongs([...userSongs, savedNewSong]);
     } catch (error) {
       dispatch(setError(error?.response?.data || 'Failed to save song'));
       console.error('Error saving song:', error);

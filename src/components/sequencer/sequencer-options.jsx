@@ -122,6 +122,9 @@ const sequencerOptions = ({ sequencerState }) => {
     } else if (savedNumOfSteps > 16) {
       newNumOfSteps = 32;
       sequencerService.setLocalNumOfStepsPrePortrait(32);
+    } else if (savedNumOfSteps > 32) {
+      newNumOfSteps = 64;
+      sequencerService.setLocalNumOfStepsPrePortrait(64);
     }
     if (newNumOfSteps) {
       sequencerService.setLocalNumOfSteps(newNumOfSteps);
@@ -150,6 +153,15 @@ const sequencerOptions = ({ sequencerState }) => {
               onChange={handleNumOfStepsChange}
             />
             32
+          </label>
+          <label className={`${sequencerState.numOfSteps === 64 ? 'checked' : ''}`}>
+            <input
+              type="radio"
+              value="64"
+              checked={sequencerState.numOfSteps === 64}
+              onChange={handleNumOfStepsChange}
+            />
+            64
           </label>
         </section>
 

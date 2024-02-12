@@ -138,8 +138,9 @@ function Sequencer() {
         triggerTrackSamplers(time, step);
         // Sets the checked property of the current step's lamp to true
         lampsRef.current[step].checked = true;
+        // updating the current step in the sequencer state
         dispatch(sequencerSlice.setStep(step));
-        // Sets the Tone.Sequence instance to start at step 0 + configs it to 16th notes
+        // Setting the Tone.Sequence instance to start at step 0 + config to 16th notes
       },stepIds,'16n').start(0);
   };
 
@@ -172,16 +173,19 @@ function Sequencer() {
     dispatch(sequencerSlice.setMutedTracks(updatedMutedTracks));
   };
 
+  const isXl = () => sequencerState.numOfSteps === 32 || sequencerState.numOfSteps === 64;
+  const isXxl = () => sequencerState.numOfSteps === 64;
+
   return (
     <>
       <section className="sequencer-external-container">
         <section className="sequencer">
           <SequencerStartBtn />
 
-          <section className={`sequencer-lamp-row  ${sequencerState.numOfSteps === 32 ? 'xl' : ''}`}>
-            {stepIds.map((stepId) => (
+          <section className={`sequencer-lamp-row  ${isXl() ? 'xl' : ''} ${isXxl() ? 'xxl' : ''}`}>
+            {stepIds.map((stepId, i) => (
               // iterate over each step to display a lamp
-              <label key={stepId} className="sequencer-lamp">
+              <label key={stepId} className={`sequencer-lamp ${isXxl() ? 'xxl' : ''}`}>
                 <input
                   className="sequencer-lamp-input"
                   type="radio"
@@ -218,13 +222,11 @@ function Sequencer() {
                     return (
                       <div
                         key={trackId}
-                        className={`track-container  ${sequencerState.numOfSteps === 32 ? 'xl' : ''} ${
-                          isMuted ? 'muted' : ''
-                        }`}
+                        className={`track-container  ${isXl() ? 'xl' : ''} ${isMuted ? 'muted' : ''}`}
                       >
                         <input
                           className={`sequencer-mute-button  ${isMuted ? 'muted' : ''}  ${
-                            sequencerState.numOfSteps === 32 ? 'xl' : ''
+                            isXl() ? 'xl' : ''
                           }`}
                           type="checkbox"
                           checked={isMuted}
@@ -232,7 +234,7 @@ function Sequencer() {
                         />
                         <section
                           key={trackId + 10}
-                          className={`sequencer-row  ${sequencerState.numOfSteps === 32 ? 'xl' : ''}`}
+                          className={`sequencer-row  ${isXl() ? 'xl' : ''} ${isXxl() ? 'xxl' : ''}`}
                         >
                           {stepIds.map((stepId, i) => {
                             // iterate over each step on each track to display a cell
@@ -245,7 +247,7 @@ function Sequencer() {
                                 key={id}
                                 onClick={() => handleCellClick(id)}
                                 className={`sequencer-cell ${isSelected ? 'selected' : ''} ${
-                                  sequencerState.numOfSteps === 32 ? 'xl' : ''
+                                  isXl() ? 'xl' : ''
                                 } ${isCurrentStep ? 'current-step' : ''}`}
                               >
                                 <label key={id} htmlFor={id + 20} />
@@ -259,6 +261,7 @@ function Sequencer() {
                                     if (!stepsRef.current[trackId]) {
                                       stepsRef.current[trackId] = [];
                                     }
+                                    //Populating the current stepsRef step with the current step's dom element
                                     stepsRef.current[trackId][stepId] = el;
                                   }}
                                 />
