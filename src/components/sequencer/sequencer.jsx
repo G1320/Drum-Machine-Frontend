@@ -110,7 +110,7 @@ function Sequencer() {
   };
 
   const createTrackSamplers = (effects) => {
-    // creating an array of track objects containing a sampler with a muted property
+    // creating an array of track objects, each containing a sampler with a muted property
     tracksRef.current = selectedKitSounds.map((sound, i) => {
       const muted = sequencerState.mutedTracks.includes(i); // Check if the track is muted
       const sampler = new Tone.Sampler({
@@ -126,7 +126,7 @@ function Sequencer() {
   };
 
   //prettier-ignore
-  // Tone.Transport callbacks pass a scheduled time into the callback because without the Web Audio API, Javascript timing can be quite imprecise.
+  // Tone.Sequence callbacks pass a scheduled time into the callback because without the Web Audio API, Javascript timing can be quite imprecise.
   // i.e, setTimeout(callback, 100) will only be invoked around 100 milliseconds after called.
   // Many musical applications require sub-millisecond accuracy. The Web Audio API only provides sample-accurate scheduling for methods like start, stop and setValueAtTime,
   // Thus we must use the precise time parameter created by Tone and passed into the callback to schedule methods within the callback.
@@ -136,9 +136,9 @@ function Sequencer() {
       (time, step) => {
         //Handles the sound triggering logic for each step at its precise scheduled time (the sound will trigger when it's time is scheduled, not immediately)
         triggerTrackSamplers(time, step);
-        // Sets the checked property of the current step's lamp to true
+        // Sets the checked property of the current step's lamp 
         lampsRef.current[step].checked = true;
-        // updating the current step in the sequencer state
+        // updating the current step in the sequencer state and storage
         dispatch(sequencerSlice.setStep(step));
         // Setting the Tone.Sequence instance to start at step 0 + config to 16th notes
       },stepIds,'16n').start(0);
@@ -183,7 +183,7 @@ function Sequencer() {
           <SequencerStartBtn />
 
           <section className={`sequencer-lamp-row  ${isXl() ? 'xl' : ''} ${isXxl() ? 'xxl' : ''}`}>
-            {stepIds.map((stepId, i) => (
+            {stepIds.map((stepId) => (
               // iterate over each step to display a lamp
               <label key={stepId} className={`sequencer-lamp ${isXxl() ? 'xxl' : ''}`}>
                 <input

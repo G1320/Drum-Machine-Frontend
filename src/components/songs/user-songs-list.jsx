@@ -52,6 +52,11 @@ const UserSongsList = ({ sequencerState }) => {
     setIsLoading(true);
     const sequencerState = sequencerService.getLocalSequencerState();
 
+    if (sequencerState.pattern.length === 0) {
+      setIsLoading(false);
+      dispatch(setError('Select a few cells first!'));
+      return;
+    }
     try {
       const newSong = {
         name: `${userSongs.length + 1}`,
@@ -59,6 +64,7 @@ const UserSongsList = ({ sequencerState }) => {
         kitId,
         ...sequencerState,
       };
+
       const savedNewSong = await createSong(newSong);
 
       setUserSongs([...userSongs, savedNewSong]);
@@ -108,22 +114,17 @@ const UserSongsList = ({ sequencerState }) => {
           </button>
           <div className="user-songs-list">
             {userSongs.length > 0
-              ? userSongs.map((song, index) => (
+              ? userSongs.map((song, index) =>
+                  //prettier-ignore
                   <div className={`user-song`} key={index}>
-                    <button
-                      className={`user-song-select-btn ${compareSongToState(song) ? 'selected' : ''}`}
-                      onClick={() => handleSongClick(song)}
-                    >
-                      S{index + 1}
+                    <button className={`user-song-select-btn ${compareSongToState(song) ? 'selected' : ''}`}
+                      onClick={() => handleSongClick(song)}>S{index + 1}
                     </button>
-                    <button
-                      className={`user-song-delete-btn ${compareSongToState(song) ? 'selected' : ''}`}
-                      onClick={() => handleDeleteSong(song._id)}
-                    >
-                      X
+                    <button className={`user-song-delete-btn ${compareSongToState(song) ? 'selected' : ''}`}
+                      onClick={() => handleDeleteSong(song._id)}>X
                     </button>
                   </div>
-                ))
+                )
               : null}
           </div>
         </section>
