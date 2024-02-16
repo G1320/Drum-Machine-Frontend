@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Loader from '../misc/loader';
 
 import { removeKitFromUser, getUserKits, getLocalUser } from '../../services/user-service';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { setError } from '../../slices/errorSlice';
 import {
   removeUserKit,
@@ -25,35 +25,37 @@ function UserKitsList() {
   const userKits = useSelector((state) => state.kits.combinedKits);
   const selectedKit = useSelector((state) => state.kits.selectedKit);
   const selectedKitRef = useRef(null);
+  const kitId = useParams();
 
   useEffect(() => {
     if (selectedKitRef.current) {
       selectedKitRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [selectedKit]);
+  }, [kitId, selectedKit]);
 
-  const handleSelectKit = (kitId) => {
-    const kit = userKits.find((userKit) => userKit._id === kitId);
+  const handleSelectKit = (kId) => {
+    if (kId === kitId) return;
+    const kit = userKits.find((userKit) => userKit._id === kId);
 
     dispatch(setSelectedKit(kit));
     dispatch(clearPattern());
     dispatch(clearMutedTracks());
     setLocalMutedTracks([]);
-    handleNavigateToSelectedKit(kitId);
+    handleNavigateToSelectedKit(kId);
   };
 
-  const handleNavigateToSelectedKit = (kitId) => {
+  const handleNavigateToSelectedKit = (kId) => {
     const locationPath = location.pathname.split('/')[1];
     if (locationPath === 'drum') {
-      navigate(`/drum/id/${kitId}`);
+      navigate(`/drum/id/${kId}`);
     } else if (locationPath === 'sequencer') {
-      navigate(`/sequencer/id/${kitId}`);
+      navigate(`/sequencer/id/${kId}`);
     }
   };
 
-  const handleRemoveKit = async (kitId) => {
+  const handleRemoveKit = async (kId) => {
     try {
-      const kit = await removeKitFromUser(user._id, kitId);
+      const kit = await removeKitFromUser(user._id, kId);
       dispatch(removeUserKit(kit._id));
       dispatch(removeFromCombinedKits(kit._id));
       const updatedUserKits = await getUserKits(user._id);

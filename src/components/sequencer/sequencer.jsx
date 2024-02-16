@@ -141,19 +141,17 @@ function Sequencer() {
         triggerTrackSamplers(time, step);
         // Sets the checked property of the current step's lamp 
         if (lampsRef.current[step].checked) lampsRef.current[step].checked = true;
-        // updating the current step in the sequencer state and storage
+        // updating the current step in the sequencer state 
         dispatch(sequencerSlice.setStep(step));
         // Setting the Tone.Sequence instance to start at step 0 + config to 16th notes
       },stepIds,'16n').start(0);
   };
 
   const triggerTrackSamplers = (time, step) => {
+    //prettier-ignore
     tracksRef.current.forEach((trk) => {
-      if (
-        !trk.muted &&
-        loadedSamplers === selectedKitSounds.length &&
-        stepsRef.current[trk.id]?.[step]?.checked
-      ) {
+      if (!trk.muted && stepsRef.current[trk.id]?.[step]?.checked &&
+        loadedSamplers === selectedKitSounds.length) {
         trk.sampler.triggerAttack(NOTE, time);
       }
     });

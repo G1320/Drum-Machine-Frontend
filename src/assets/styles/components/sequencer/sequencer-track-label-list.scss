@@ -5,29 +5,31 @@
   align-self: center;
   align-items: center;
   justify-items: center;
-  height: calc(100% - 0.5rem);
   grid-column: 1;
   grid-row: 2;
+  height: 100% ;
+  
   .cell-title-container{
     display: grid;
     height: 52px;
     grid-template-rows: repeat(3,1fr);
-
+    
     &.xl{
       height: 100%;
+      height: calc(100% + 0.5rem );
     }
     
     .cell-title {
       grid-row: 2;
       color: #fcfcfcda;
-       transform: translateY(-0.5rem);
+       transform: translateY(-0.25rem);
        
        &.xl{
-         transform: translateY(-0.25rem);
+         transform: translateY(0.25rem);
         }
         
         &.xxl{
-          transform: translateY(-1.25rem);
+          transform: translateY(-0.25rem);
        }
     }
   }

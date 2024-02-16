@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../../assets/styles/components/songs/user-songs-list.scss';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
@@ -93,6 +94,7 @@ const UserSongsList = ({ sequencerState }) => {
   };
   // Compares a song to the current sequencerState and returns a boolean
   const compareSongToState = (song) =>
+    song.kit === kitId &&
     song._id === sequencerState.songId &&
     arraysEqual(song.pattern, sequencerState.pattern) &&
     arraysEqual(song.mutedTracks, sequencerState.mutedTracks) &&

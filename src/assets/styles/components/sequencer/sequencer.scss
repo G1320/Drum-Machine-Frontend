@@ -50,16 +50,6 @@
   }
 }
 
-.sequencer-row {
-
-  &.xl{
-    margin-block-end: 0.5rem;
-  }
-  &.xxl{
-    margin-block-end: 1rem;
-  }
-}
-
 .sequencer-row, .sequencer-lamp-row {
   article{
     cursor: pointer;
@@ -67,14 +57,11 @@
   display: grid;
   height: fit-content;
   align-self: center;
+  align-content: space-evenly ;
   min-width: 680px;
-  padding-inline-end: 0rem;
   grid-template-columns: repeat(16, 1fr);
-}
 
-.sequencer-row:not(.xl), .sequencer-lamp-row:not(.xl){
-  padding-inline-end: 0.5rem;
-} 
+}
 
 .sequencer-column {
   grid-row: 2;
@@ -84,6 +71,12 @@
 .sequencer-row > *:nth-child(4n):not(:last-child) {
     margin-inline-end: 5rem;
 }
+
+.sequencer-row > *:nth-child(4n):not(:last-child) {
+    margin-inline-end: 5rem;
+}
+
+
 
 .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
   margin-inline-end: 5rem;
@@ -134,8 +127,11 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   position: relative;
   display: grid;
   transition: 200ms;
-  margin-block: 0.5rem;
+  margin-block-start: 0.5rem;
   gap: 1rem;
+  &.xl:not(:first-of-type), &.xxl:not(:first-of-type) {
+    margin-block-start: 1rem;
+  }
   &.muted {
     background-color: #463f53;
     padding-inline-start: 0.5rem;
@@ -145,9 +141,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
     
     .current-step{
       &.selected{
-        // background-color: #af4de7;
-        border: 2px solid #fcfcfc !important;
-
+        background-color: #af4de758;        
       }
     }
     
@@ -156,11 +150,8 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
       background-color: #463f53;
       
       &.selected {
-        // box-shadow: 0 0 15px 5px #834de7 !important;
-        border: 2px solid #af4de7;
-        
+        background-color: #af4de77e;        
         &.current-step{
-          // background-color: #af4de7;
 
         }
       }
