@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, createRef } from 'react';
+import React, { useEffect, useState, useRef, createRef } from 'react';
 import '../../assets/styles/components/sequencer/sequencer.scss';
 import * as Tone from 'tone';
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,6 +24,7 @@ function Sequencer() {
 
   const { data: selectedKitSounds } = useSounds(kitId);
   const sequencerState = useSelector((state) => state.sequencer);
+  let loadedSamplers = 0;
 
   const seqRef = useRef(null);
   const tracksRef = useRef([]);
@@ -40,6 +41,7 @@ function Sequencer() {
     if (!kitId) return;
 
     const localSequencerState = sequencerService.getLocalSequencerState();
+
     dispatch(sequencerSlice.setSequencerState(localSequencerState));
     handleCheckedStepsUpdate();
   }, [kitId, sequencerState.songId, selectedKitSounds.length, dispatch, sequencerState.numOfSteps]);
@@ -90,7 +92,7 @@ function Sequencer() {
     delay.wet.value = sequencerState.delay || 0;
 
     const normalizedTargetDelayTime = Math.min(Math.max(sequencerState.delay / 4, 0), 1);
-    // Use setTargetAtTime for smooth changes in delayTime
+    // Use setTargetAtTime for smooth ramping changes to the delayTime
     const smoothingTime = 0.25;
     delay.delayTime.setTargetAtTime(normalizedTargetDelayTime, Tone.now(), smoothingTime);
 
@@ -112,13 +114,14 @@ function Sequencer() {
   const createTrackSamplers = (effects) => {
     // creating an array of track objects, each containing a sampler with a muted property
     tracksRef.current = selectedKitSounds.map((sound, i) => {
-      const muted = sequencerState.mutedTracks.includes(i); // Check if the track is muted
+      const muted = sequencerState.mutedTracks.includes(i);
       const sampler = new Tone.Sampler({
-        muted,
+        muted: muted,
         urls: { [NOTE]: sound.src },
         onload: () => {
           sampler.connect(effects.reverb);
           sampler.connect(effects.delay);
+          loadedSamplers++;
         },
       });
       return { id: i, sampler, muted };
@@ -137,7 +140,7 @@ function Sequencer() {
         //Handles the sound triggering logic for each step at its precise scheduled time (the sound will trigger when it's time is scheduled, not immediately)
         triggerTrackSamplers(time, step);
         // Sets the checked property of the current step's lamp 
-        lampsRef.current[step].checked = true;
+        if (lampsRef.current[step].checked) lampsRef.current[step].checked = true;
         // updating the current step in the sequencer state and storage
         dispatch(sequencerSlice.setStep(step));
         // Setting the Tone.Sequence instance to start at step 0 + config to 16th notes
@@ -146,7 +149,11 @@ function Sequencer() {
 
   const triggerTrackSamplers = (time, step) => {
     tracksRef.current.forEach((trk) => {
-      if (!trk.muted && stepsRef.current[trk.id]?.[step]?.checked) {
+      if (
+        !trk.muted &&
+        loadedSamplers === selectedKitSounds.length &&
+        stepsRef.current[trk.id]?.[step]?.checked
+      ) {
         trk.sampler.triggerAttack(NOTE, time);
       }
     });
@@ -166,8 +173,7 @@ function Sequencer() {
   const handleMuteButtonClick = (trackId) => {
     const updatedMutedTracks = toggleArrayItem(sequencerState.mutedTracks, trackId);
 
-    const trackRef = tracksRef.current[trackId];
-    if (trackRef) trackRef.muted = sequencerState.mutedTracks.includes(trackId);
+    tracksRef.current[trackId].muted = updatedMutedTracks.includes(trackId);
 
     sequencerService.setLocalMutedTracks(updatedMutedTracks);
     dispatch(sequencerSlice.setMutedTracks(updatedMutedTracks));

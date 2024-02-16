@@ -24,11 +24,9 @@ const sequencerOptions = ({ sequencerState }) => {
 
   useEffect(() => {
     // Updating the currentIndex when the selectedKit changes
-    const index = combinedKits.findIndex((kit) => kit._id === selectedKit._id);
-    setCurrentIndex(index);
+    setCurrentIndex(combinedKits.findIndex((kit) => kit._id === selectedKit._id));
   }, [selectedKit]);
 
-  //arrow function expressions
   const handleNextKit = () => handleKitChange('next');
   const handlePrevKit = () => handleKitChange('prev');
 
@@ -62,7 +60,7 @@ const sequencerOptions = ({ sequencerState }) => {
       dispatch(sequencerSlice.setSongId(Math.random()));
       navigate(`/sequencer/id/${newKit._id}`);
     } else {
-      console.error('New kit is undefined. combinedKits:', combinedKits, 'newIndex:', newIndex);
+      console.error('Issue occurred while changing kit');
     }
   };
 

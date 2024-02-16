@@ -53,7 +53,6 @@ const UserSongsList = ({ sequencerState }) => {
     const sequencerState = sequencerService.getLocalSequencerState();
 
     if (sequencerState.pattern.length === 0) {
-      setIsLoading(false);
       dispatch(setError('Select a few cells first!'));
       return;
     }
@@ -66,7 +65,6 @@ const UserSongsList = ({ sequencerState }) => {
       };
 
       const savedNewSong = await createSong(newSong);
-
       setUserSongs([...userSongs, savedNewSong]);
       sequencerService.clearLocalSequencerState();
       dispatch(sequencerSlice.clearSequencerState());
@@ -93,7 +91,7 @@ const UserSongsList = ({ sequencerState }) => {
       setIsLoading(false);
     }
   };
-  // Compares the song to the current sequencerState and returns a boolean
+  // Compares a song to the current sequencerState and returns a boolean
   const compareSongToState = (song) =>
     song._id === sequencerState.songId &&
     arraysEqual(song.pattern, sequencerState.pattern) &&
@@ -112,15 +110,15 @@ const UserSongsList = ({ sequencerState }) => {
           <button className="save-song-btn" onClick={handleSaveSong} disabled={isLoading}>
             {isLoading ? <CircularProgress size={16} style={{ color: 'white' }} /> : 'SAVE'}
           </button>
-          <div className="user-songs-list">
+          <div key={userSongs.length} className="user-songs-list">
             {userSongs.length > 0
-              ? userSongs.map((song, index) =>
+              ? userSongs.map((song, i) =>
                   //prettier-ignore
-                  <div className={`user-song`} key={index}>
-                    <button className={`user-song-select-btn ${compareSongToState(song) ? 'selected' : ''}`}
-                      onClick={() => handleSongClick(song)}>S{index + 1}
+                  <div  className={`user-song`} key={i}>
+                    <button    className={`user-song-select-btn ${compareSongToState(song) ? 'selected' : ''}`}
+                      onClick={() => handleSongClick(song)}>S{i + 1}
                     </button>
-                    <button className={`user-song-delete-btn ${compareSongToState(song) ? 'selected' : ''}`}
+                    <button  className={`user-song-delete-btn ${compareSongToState(song) ? 'selected' : ''}`}
                       onClick={() => handleDeleteSong(song._id)}>X
                     </button>
                   </div>
