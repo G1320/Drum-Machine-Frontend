@@ -124,7 +124,7 @@ const sequencerOptions = ({ sequencerState }) => {
 
     let newNumOfSteps;
 
-    if (orientation?.includes('portrait') || windowWidth < 700 || !windowWidth) {
+    if (orientation?.includes('portrait') || windowWidth < 700) {
       newNumOfSteps = 8;
       //Saving the prev step config so that it can be restored when switching back to landscape
       sequencerService.setLocalNumOfStepsPrePortrait(savedNumOfSteps);
@@ -238,7 +238,7 @@ const sequencerOptions = ({ sequencerState }) => {
             max={220}
             step={1}
             onChange={handleBpmChange}
-            value={sequencerState.tempo}
+            value={sequencerState.tempo || 120}
           />
         </article>
         <article className="volume">

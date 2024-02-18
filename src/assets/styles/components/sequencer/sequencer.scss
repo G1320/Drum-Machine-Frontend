@@ -103,10 +103,10 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
     background-color: #9058f7;
   }
   &.current-step{
-    transition: 50ms;
     background-color: #36225c; 
-
+    
     &.selected{
+      transition: 20ms;
       background-color: #af4de7;
       border: 2px solid #fcfcfc !important;
       box-shadow: 0 0 5px 2px #fcfcfc !important;
@@ -128,7 +128,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
 .track-container {
   position: relative;
   display: grid;
-  transition: 50ms;
+  transition: background-color 200ms, border 200ms, box-shadow 200ms, padding-inline-start 200ms;
   margin-block-start: 0.5rem;
   gap: 1rem;
   &.xl:not(:first-of-type), &.xxl:not(:first-of-type) {
@@ -143,6 +143,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
     
     .current-step{
       &.selected{
+        transition: background-color 50ms;
         background-color: #af4de758;        
         box-shadow: 0 0 5px 2px #fcfcfc !important;
 

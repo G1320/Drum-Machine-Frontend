@@ -3,9 +3,9 @@ import { parseJSON, stringifyJSON } from '../utils/storageUtils';
 export const getLocalSequencerState = () => {
   const pattern = parseJSON('pattern', []);
   const mutedTracks = parseJSON('mutedTracks', []);
-  const tempo = parseJSON('tempo', 16);
+  const tempo = parseJSON('tempo', 120);
   const volume = parseJSON('volume', 0.5);
-  const numOfSteps = parseJSON('numOfSteps', 32);
+  const numOfSteps = parseJSON('numOfSteps', 16);
   const songId = parseJSON('songId', null);
   const reverb = parseJSON('reverb', 0);
   const delay = parseJSON('delay', 0);
