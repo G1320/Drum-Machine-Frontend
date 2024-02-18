@@ -140,7 +140,7 @@ function Sequencer() {
         //Handles the sound triggering logic for each step at its precise scheduled time (the sound will trigger when it's time is scheduled, not immediately)
         triggerTrackSamplers(time, step);
         // Sets the checked property of the current step's lamp 
-        if (lampsRef.current[step].checked) lampsRef.current[step].checked = true;
+       lampsRef.current[step].checked = true;
         // updating the current step in the sequencer state 
         dispatch(sequencerSlice.setStep(step));
         // Setting the Tone.Sequence instance to start at step 0 + config to 16th notes
@@ -150,7 +150,7 @@ function Sequencer() {
   const triggerTrackSamplers = (time, step) => {
     //prettier-ignore
     tracksRef.current.forEach((trk) => {
-      if (!trk.muted && stepsRef.current[trk.id]?.[step]?.checked &&
+      if ( stepsRef.current[trk.id]?.[step]?.checked && !trk.muted &&
         loadedSamplers === selectedKitSounds.length) {
         trk.sampler.triggerAttack(NOTE, time);
       }

@@ -42,90 +42,47 @@ export const clearLocalSequencerState = () => {
   });
 };
 
-export const getLocalPattern = () => {
-  return parseJSON('pattern', []);
-};
+export const getLocalPattern = () => parseJSON('pattern', []);
 
-export const setLocalPattern = (pattern) => {
-  stringifyJSON('pattern', pattern);
-};
+export const setLocalPattern = (pattern) => stringifyJSON('pattern', pattern);
 
-export const getLocalMutedTracks = () => {
-  return parseJSON('mutedTracks', []);
-};
+export const getLocalMutedTracks = () => parseJSON('mutedTracks', []);
 
-export const setLocalMutedTracks = (mutedTracks) => {
-  stringifyJSON('mutedTracks', mutedTracks);
-};
+export const setLocalMutedTracks = (mutedTracks) => stringifyJSON('mutedTracks', mutedTracks);
 
-export const getLocalTempo = () => {
-  return parseJSON('tempo', 120);
-};
+export const getLocalTempo = () => parseJSON('tempo', 120);
 
-export const setLocalTempo = (tempo) => {
-  stringifyJSON('tempo', tempo);
-};
+export const setLocalTempo = (tempo) => stringifyJSON('tempo', tempo);
 
-export const getLocalVolume = () => {
-  return parseJSON('volume', 0.5);
-};
+export const getLocalVolume = () => parseJSON('volume', 0.5);
 
-export const setLocalVolume = (volume) => {
-  stringifyJSON('volume', volume);
-};
+export const setLocalVolume = (volume) => stringifyJSON('volume', volume);
 
-export const getLocalNumOfSteps = () => {
-  return parseJSON('numOfSteps', 32);
-};
+export const getLocalNumOfSteps = () => parseJSON('numOfSteps', 32);
 
-export const setLocalNumOfSteps = (numOfSteps) => {
-  stringifyJSON('numOfSteps', numOfSteps);
-};
+export const setLocalNumOfSteps = (numOfSteps) => stringifyJSON('numOfSteps', numOfSteps);
 
-export const getLocalSongId = () => {
-  return parseJSON('songId', null);
-};
+export const getLocalSongId = () => parseJSON('songId', null);
 
-export const setLocalSongId = (songId) => {
-  stringifyJSON('songId', songId);
-};
+export const setLocalSongId = (songId) => stringifyJSON('songId', songId);
 
-export const getLocalNumOfStepsPrePortrait = () => {
-  return parseJSON('numOfStepsPrePortrait', 32);
-};
+export const getLocalNumOfStepsPrePortrait = () => parseJSON('numOfStepsPrePortrait', 32);
 
-export const setLocalNumOfStepsPrePortrait = (numOfSteps) => {
+export const setLocalNumOfStepsPrePortrait = (numOfSteps) =>
   stringifyJSON('numOfStepsPrePortrait', numOfSteps);
-};
 
-export const getLocalReverb = () => {
-  return parseJSON('reverb', 0);
-};
+export const getLocalReverb = () => parseJSON('reverb', 0);
 
-export const setLocalReverb = (reverb) => {
-  stringifyJSON('reverb', reverb);
-};
+export const setLocalReverb = (reverb) => stringifyJSON('reverb', reverb);
 
-export const getLocalDelay = () => {
-  return parseJSON('delay', 0);
-};
+export const getLocalDelay = () => parseJSON('delay', 0);
 
-export const setLocalDelay = (delay) => {
-  stringifyJSON('delay', delay);
-};
+export const setLocalDelay = (delay) => stringifyJSON('delay', delay);
 
-export const getLocalSwing = () => {
-  return parseJSON('swing', 0);
-};
+export const getLocalSwing = () => parseJSON('swing', 0);
 
-export const setLocalSwing = (swing) => {
-  stringifyJSON('swing', swing);
-};
+export const setLocalSwing = (swing) => stringifyJSON('swing', swing);
 
-export const getLocalStep = () => {
-  return parseJSON('step', 0);
-};
+export const getLocalStep = () => parseJSON('step', 0);
 
-export const setLocalStep = (step) => {
-  stringifyJSON('step', step);
-};
+export const setLocalStep = (step) => stringifyJSON('step', step);

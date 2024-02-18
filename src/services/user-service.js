@@ -3,9 +3,7 @@ import { parseJSON } from '../utils/storageUtils';
 
 const userEndpoint = '/users';
 
-export const getLocalUser = () => {
-  return parseJSON('user', null);
-};
+export const getLocalUser = () => parseJSON('user', null);
 
 export const createUser = async (userData) => {
   try {

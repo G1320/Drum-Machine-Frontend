@@ -124,7 +124,7 @@ const sequencerOptions = ({ sequencerState }) => {
 
     let newNumOfSteps;
 
-    if (orientation?.includes('portrait') || windowWidth < 700) {
+    if (orientation?.includes('portrait') || windowWidth < 700 || !windowWidth) {
       newNumOfSteps = 8;
       //Saving the prev step config so that it can be restored when switching back to landscape
       sequencerService.setLocalNumOfStepsPrePortrait(savedNumOfSteps);

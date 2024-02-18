@@ -28,7 +28,7 @@ function SequencerTrackLabelList({ kitId, numOfSteps, selectedKitSounds }) {
         {(provided) => (
           <ul
             key={'sounds'}
-            className="cell-title-list"
+            className={`cell-title-list ${isXl() ? 'xl' : ''} ${isXxl() ? 'xxl' : ''}`}
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
