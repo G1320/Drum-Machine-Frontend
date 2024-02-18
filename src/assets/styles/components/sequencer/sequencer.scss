@@ -106,7 +106,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
     background-color: #36225c; 
     
     &.selected{
-      transition: 20ms;
+      transition: background-color 20ms;
       background-color: #af4de7;
       border: 2px solid #fcfcfc !important;
       box-shadow: 0 0 5px 2px #fcfcfc !important;
@@ -143,7 +143,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
     
     .current-step{
       &.selected{
-        transition: background-color 50ms;
+        // transition: background-color 50ms;
         background-color: #af4de758;        
         box-shadow: 0 0 5px 2px #fcfcfc !important;
 

@@ -5,7 +5,7 @@ export const getLocalSequencerState = () => {
   const mutedTracks = parseJSON('mutedTracks', []);
   const tempo = parseJSON('tempo', 120);
   const volume = parseJSON('volume', 0.5);
-  const numOfSteps = parseJSON('numOfSteps', 16);
+  const numOfSteps = parseJSON('numOfSteps', 8);
   const songId = parseJSON('songId', null);
   const reverb = parseJSON('reverb', 0);
   const delay = parseJSON('delay', 0);
@@ -19,7 +19,7 @@ export const setLocalSequencerState = (sequencerState) => {
   stringifyJSON('mutedTracks', sequencerState.mutedTracks || []);
   stringifyJSON('tempo', sequencerState.tempo || 120);
   stringifyJSON('volume', sequencerState.volume || 0.5);
-  stringifyJSON('numOfSteps', sequencerState.numOfSteps || 16);
+  stringifyJSON('numOfSteps', sequencerState.numOfSteps || 8);
   stringifyJSON('songId', sequencerState._id || null);
   stringifyJSON('reverb', sequencerState.reverb || 0);
   stringifyJSON('delay', sequencerState.delay || 0);
@@ -58,7 +58,7 @@ export const getLocalVolume = () => parseJSON('volume', 0.5);
 
 export const setLocalVolume = (volume) => stringifyJSON('volume', volume);
 
-export const getLocalNumOfSteps = () => parseJSON('numOfSteps', 32);
+export const getLocalNumOfSteps = () => parseJSON('numOfSteps', 8);
 
 export const setLocalNumOfSteps = (numOfSteps) => stringifyJSON('numOfSteps', numOfSteps);
 

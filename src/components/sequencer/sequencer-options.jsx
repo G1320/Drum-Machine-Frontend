@@ -99,6 +99,10 @@ const sequencerOptions = ({ sequencerState }) => {
   };
 
   useEffect(() => {
+    handleSetNumOfSteps();
+  }, []);
+
+  useEffect(() => {
     const handleArrowKeyPress = (e) => {
       if (e.key === 'ArrowRight') {
         handleNextKit();
