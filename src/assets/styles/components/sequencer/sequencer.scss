@@ -1,3 +1,4 @@
+// @use '_variables' ;
 
 .sequencer-external-container{
   height: 550px;
@@ -20,7 +21,10 @@
 }
 
 .current-step{
+  // border: $curr-step-base-border;
+  // box-shadow: $curr-step-base-boxShadow;
   border:  2px solid #834de7 !important; 
+  
   box-shadow: 0 0 15px 5px #834de7 !important;
 }
 
@@ -96,6 +100,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   border: 2px solid #fcfcfc;
   border-radius: 8px;
   margin-block: 0.25rem;
+  transition: 50ms;
   &.xl {
     margin-block: 0.5rem;
   }
@@ -151,7 +156,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
     }
     
     .sequencer-cell {
-      transition: 200ms;
+      // transition: 200ms;
       background-color: #463f53;
       
       &.selected {

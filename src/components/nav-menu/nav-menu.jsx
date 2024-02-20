@@ -22,8 +22,8 @@ function NavMenu() {
         <Link to={`/sequencer/id/${validKitId}`} className="menu-item">
           Sequencer
         </Link>
-        <Link to="/create-kit">Create A Kit</Link>
 
+        {user && <Link to="/create-kit">Create A Kit</Link>}
         {user && user.isAdmin && (
           <Link to={`/pages/id/${validKitId}`} className="menu-item">
             Edit kit

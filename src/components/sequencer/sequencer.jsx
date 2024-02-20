@@ -24,7 +24,7 @@ function Sequencer() {
 
   const { data: selectedKitSounds } = useSounds(kitId);
   const sequencerState = useSelector((state) => state.sequencer);
-  let loadedSamplers = 0;
+  let loadedSamplers = 0; // keeps track of the number of sampler which have finished buffering
 
   const seqRef = useRef(null);
   const tracksRef = useRef([]);
@@ -46,9 +46,8 @@ function Sequencer() {
     handleCheckedStepsUpdate();
   }, [kitId, sequencerState.songId, selectedKitSounds.length, dispatch, sequencerState.numOfSteps]);
 
-  const handleCheckedStepsUpdate = () => {
+  const handleCheckedStepsUpdate = () =>
     sequencerState.pattern?.forEach((cellId) => updateStepCheckedState(cellId));
-  };
 
   const updateStepCheckedState = (cellId) => {
     const [trackIndex, stepIndex] = cellId.split('-').map(Number);
@@ -58,6 +57,7 @@ function Sequencer() {
 
   useEffect(() => {
     handleSequenceInitialization();
+
     return () => disposeOldSequence();
   }, [kitId, sequencerState.songId, selectedKitSounds.length, sequencerState.numOfSteps]);
 
@@ -133,6 +133,7 @@ function Sequencer() {
   // i.e, setTimeout(callback, 100) will only be invoked around 100 milliseconds after called.
   // Many musical applications require sub-millisecond accuracy. The Web Audio API only provides sample-accurate scheduling for methods like start, stop and setValueAtTime,
   // Thus we must use the precise time parameter created by Tone and passed into the callback to schedule methods within the callback.
+
   const createSequence = () => {
     seqRef.current = new Tone.Sequence(
       // Callback function that will be called on each step of the sequence
