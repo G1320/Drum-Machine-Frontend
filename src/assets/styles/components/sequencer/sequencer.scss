@@ -64,7 +64,6 @@
   align-content: space-evenly ;
   min-width: 680px;
   grid-template-columns: repeat(16, 1fr);
-
 }
 
 .sequencer-column {
@@ -136,6 +135,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   display: grid;
   transition: background-color 200ms, border 200ms, box-shadow 200ms, padding-inline-start 200ms;
   margin-block-start: 0.5rem;
+  border-radius: 8px;
   gap: 1rem;
   &.xl:not(:first-of-type), &.xxl:not(:first-of-type) {
     margin-block-start: 1rem;
@@ -143,7 +143,6 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
   &.muted {
     background-color: #463f53;
     padding-inline-start: 0.5rem;
-    border-radius: 8px;
     border: none;
     box-shadow: inset 0 0 0 2px #834de7;
     
@@ -280,7 +279,6 @@ input {
 @media screen and (max-width: 950px) {
   .sequencer-row, .sequencer-lamp-row {
     gap: 0.25rem;
-    grid-template-columns: repeat(16, 1fr);
   }
 
   .sequencer-cell {
