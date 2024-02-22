@@ -124,6 +124,7 @@ input[type='checkbox'], .sequencer-lamp input[type='radio'] {
     width: 0px;
   }
   input[type='checkbox']{
+    display: none;
     cursor: pointer;
     height: 100%;
     width: 100%;
@@ -315,6 +316,20 @@ input {
     grid-template-columns: repeat(8, 1fr);
     gap: 0rem;
   }
+
+    .sequencer-cell {
+    height: 40px;
+    width: 40px;
+  }
+  
+  .sequencer-lamp {
+    height: 12.5px;
+    width: 40px;
+
+    &.xxl{
+      height: 10px;
+    }
+  }
 }
 
 @media screen and (max-width: 700px) {
@@ -326,6 +341,18 @@ input {
 @media screen and (max-width: 630px) {
   .sequencer-row > *:nth-child(4n):not(:last-child), .sequencer-lamp-row > *:nth-child(4n):not(:last-child) {
     margin-inline-end: 2.5rem;
+  }
+}
+
+@media screen and (max-width: 545px) {
+  .sequencer-cell {
+    // height: 40px;
+    width: 22.5px;
+  }
+  
+  .sequencer-lamp {
+    height: 12.5px;
+    width: 22.5px;
   }
 }
 

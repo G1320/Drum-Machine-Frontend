@@ -31,7 +31,7 @@ function App() {
     async function fetchAndSetInitialData() {
       const sounds = await getSounds();
       dispatch(setAllSounds(sounds));
-      dispatch(setSelectedKit('6571e750ecffe8969f1e89ee'));
+      dispatch(setSelectedKit('6571e750ecffe8969f1e89eb'));
     }
     fetchAndSetInitialData();
   }, []);
@@ -42,7 +42,7 @@ function App() {
       <main>
         <section className="main-content">
           <Routes>
-            <Route path="/" element={<Navigate to="/sequencer/id/6571e750ecffe8969f1e89ee" />} />
+            <Route path="/" element={<Navigate to="/sequencer/id/6571e750ecffe8969f1e89eb" />} />
             <Route path="/create" element={<Create />} />
             <Route path="/read" element={<Read />} />
             <Route path="/update" element={<Update />} />

@@ -4,7 +4,7 @@
   font-size: 0.9rem;
   background-color: #9058f7;
   min-width: 300px;
-  grid-template-columns: auto auto auto  0.5fr 0.5fr;
+  grid-template-columns: auto auto 1fr;
   grid-template-rows: 25px;
   justify-items: start;
   border-radius: 6px;
@@ -18,6 +18,10 @@
 
   .options-wrapper {
    gap: 0.5rem;
+  }
+
+  .fa-icon-nav{
+    min-width: 22px;
   }
 
   button {
@@ -44,12 +48,10 @@
   }
 
   .range-controls {
-    grid-column: 6;
-    display: flex;
-    gap: 0.5rem;
-    width: 90%;
+    grid-column: 3;
+    display: flex ;
     justify-self: end;
-   
+    gap: 0.5rem;
   }
 
   .bpm,
@@ -95,7 +97,7 @@
   }
 
   .pagination-controls-wrapper {
-    max-width: 42px;
+    // max-width: 42px;
     min-width: min-content;
     .prev-button, .next-button {
       display: grid;
@@ -135,22 +137,32 @@
   }
 }
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 1000px) {
+  .sequencer-options .swing {
+    display: none;
+  }
+}
+
+@media  screen and (max-width: 900px) {
+   .sequencer-options .reverb {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 816px) {
+  
+  .sequencer-options .delay{
+    display: none;
+  }
+}
+
+@media screen and (max-width: 728px) {
   .sequencer-options .song-options-menu {
     display: none;
   }
 
   .sequencer-options .step-length-wrapper {
     display: none;
-  }
-
-  .sequencer-options .delay, .sequencer-options .reverb, .sequencer-options .swing {
-    display: none;
-  }
-
-  .range-controls {
-    width: 75%;
-    justify-self: end;
   }
 }
 

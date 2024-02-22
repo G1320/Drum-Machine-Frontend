@@ -4,7 +4,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import { updateKitSounds } from '../../services/kit-service';
 
-function SequencerTrackLabelList({ kitId, numOfSteps, selectedKitSounds }) {
+function SequencerTrackLabelList({ kitId, numOfSteps, selectedKitSounds, isXl, isXxl }) {
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
     // TODO: Fix drag end event, sounds always return to original position because sounds are fetched by order of updatedAt attribute
@@ -18,9 +18,6 @@ function SequencerTrackLabelList({ kitId, numOfSteps, selectedKitSounds }) {
       console.error(error);
     }
   };
-
-  const isXl = () => numOfSteps === 32;
-  const isXxl = () => numOfSteps === 64;
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>

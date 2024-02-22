@@ -183,10 +183,10 @@ const sequencerOptions = ({ sequencerState }) => {
 
         <section className="pagination-controls-wrapper">
           <button className="prev-button" onClick={handlePrevKit}>
-            <FontAwesomeIcon icon={faChevronLeft} />
+            <FontAwesomeIcon className="fa-icon-nav" icon={faChevronLeft} />
           </button>
           <button className="next-button" onClick={handleNextKit}>
-            <FontAwesomeIcon icon={faChevronRight} />
+            <FontAwesomeIcon className="fa-icon-nav" icon={faChevronRight} />
           </button>
         </section>
         <FilterKits />

@@ -14,7 +14,7 @@ function NavMenu() {
     return /^[a-f\d]{24}$/i.test(id);
   };
 
-  const validKitId = isValidObjectId(kitId) ? kitId : '6571e750ecffe8969f1e89ee';
+  const validKitId = isValidObjectId(kitId) ? kitId : '6571e750ecffe8969f1e89eb';
 
   return (
     <div className="nav-menu">

@@ -6,21 +6,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import { login as loginService } from '../../services/auth-service';
 import { login as loginAction } from '../../slices/authSlice';
 import { setError } from '../../slices/errorSlice';
-// import { setSuccess } from '../../slices/successSlice';
+import useCustomStorage from '../../hooks/useCustomStorage';
+// import { useStorage } from '@capacitor-community/storage-react';
+
+// import { createStorageService } from '../../services/storage-service';
 
 function Login() {
+  // const userStorageService = createStorageService('user', null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // const [user, setUser] = useStorage('user');
+
+  // const [user, setUser, clearUser] = useCustomStorage('user', null);
   const handleLogin = async () => {
     try {
-      const user = await loginService({ username, password });
-      if (!user) return;
-      dispatch(loginAction(user));
-      // dispatch(setSuccess('Login successful!'));
-      navigate('/sequencer/id/6571e750ecffe8969f1e89ee');
+      const loggedInUser = await loginService({ username, password });
+      if (!loggedInUser) return;
+
+      dispatch(loginAction(loggedInUser));
+      // setUser(loggedInUser);
+      navigate('/sequencer/id/6571e750ecffe8969f1e89eb');
     } catch (error) {
       console.error('Login failed', error);
       dispatch(setError(error?.response?.data || 'Login failed. Please try again.'));

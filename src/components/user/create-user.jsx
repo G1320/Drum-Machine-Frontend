@@ -30,7 +30,7 @@ export default function Create() {
         isAdmin,
       });
       dispatch(setSuccess('User created successfully!'));
-      navigate('/sequencer/id/6571e750ecffe8969f1e89ee');
+      navigate('/sequencer/id/6571e750ecffe8969f1e89eb');
     } catch (error) {
       console.log('error: ', error);
       dispatch(setError(error?.response?.data || 'Something went wrong!'));

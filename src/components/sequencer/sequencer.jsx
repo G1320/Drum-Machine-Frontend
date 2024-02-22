@@ -16,6 +16,7 @@ import * as sequencerService from '../../services/sequencer-service';
 import * as sequencerSlice from '../../slices/sequencerSlice';
 
 import { toggleArrayItem } from '../../utils/toggleArrayItem';
+import { numsEqual } from '../../utils/compareNums';
 
 function Sequencer() {
   const dispatch = useDispatch();
@@ -148,11 +149,10 @@ function Sequencer() {
       },stepIds,'16n').start(0);
   };
 
+  //prettier-ignore
   const triggerTrackSamplers = (time, step) => {
-    //prettier-ignore
     tracksRef.current.forEach((trk) => {
-      if ( stepsRef.current[trk.id]?.[step]?.checked && !trk.muted &&
-        loadedSamplers === selectedKitSounds.length) {
+      if ( stepsRef.current[trk.id]?.[step]?.checked && !trk.muted && loadedSamplers === selectedKitSounds.length) {
         trk.sampler.triggerAttack(NOTE, time);
       }
     });
@@ -218,6 +218,8 @@ function Sequencer() {
                   kitId={kitId}
                   selectedKitSounds={selectedKitSounds}
                   numOfSteps={sequencerState.numOfSteps}
+                  isXl={isXl}
+                  isXxl={isXxl}
                 />
 
                 <section key={sequencerState.songId} className="sequencer-column">
